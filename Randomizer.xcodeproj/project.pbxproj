@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD99282B07882000781D1D /* Assets.xcassets */; };
 		B1FD99252B07881D00781D1D /* HelloSwiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99242B07881D00781D1D /* HelloSwiftApp.swift */; };
 		B1FD99272B07881D00781D1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99262B07881D00781D1D /* ContentView.swift */; };
-		B1FD99292B07882000781D1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD99282B07882000781D1D /* Assets.xcassets */; };
 		B1FD992C2B07882000781D1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD992B2B07882000781D1D /* Preview Assets.xcassets */; };
 		B1FD99362B07882000781D1D /* HelloSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99352B07882000781D1D /* HelloSwiftTests.swift */; };
 		B1FD99402B07882000781D1D /* HelloSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD993F2B07882000781D1D /* HelloSwiftUITests.swift */; };
@@ -34,14 +34,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B1FD99212B07881D00781D1D /* HelloSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1C679D62B0D182F003217C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B1FD99212B07881D00781D1D /* Randomizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Randomizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1FD99242B07881D00781D1D /* HelloSwiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftApp.swift; sourceTree = "<group>"; };
 		B1FD99262B07881D00781D1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B1FD99282B07882000781D1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1FD992B2B07882000781D1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		B1FD99312B07882000781D1D /* HelloSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1FD99312B07882000781D1D /* RandomizerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomizerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1FD99352B07882000781D1D /* HelloSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftTests.swift; sourceTree = "<group>"; };
-		B1FD993B2B07882000781D1D /* HelloSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomizerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1FD993F2B07882000781D1D /* HelloSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftUITests.swift; sourceTree = "<group>"; };
 		B1FD99412B07882000781D1D /* HelloSwiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,9 +85,9 @@
 		B1FD99222B07881D00781D1D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B1FD99212B07881D00781D1D /* HelloSwift.app */,
-				B1FD99312B07882000781D1D /* HelloSwiftTests.xctest */,
-				B1FD993B2B07882000781D1D /* HelloSwiftUITests.xctest */,
+				B1FD99212B07881D00781D1D /* Randomizer.app */,
+				B1FD99312B07882000781D1D /* RandomizerTests.xctest */,
+				B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,6 +95,7 @@
 		B1FD99232B07881D00781D1D /* HelloSwift */ = {
 			isa = PBXGroup;
 			children = (
+				B1C679D62B0D182F003217C0 /* Info.plist */,
 				B1FD99242B07881D00781D1D /* HelloSwiftApp.swift */,
 				B1FD99262B07881D00781D1D /* ContentView.swift */,
 				B1FD99282B07882000781D1D /* Assets.xcassets */,
@@ -130,9 +132,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B1FD99202B07881D00781D1D /* HelloSwift */ = {
+		B1FD99202B07881D00781D1D /* Randomizer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B1FD99452B07882000781D1D /* Build configuration list for PBXNativeTarget "HelloSwift" */;
+			buildConfigurationList = B1FD99452B07882000781D1D /* Build configuration list for PBXNativeTarget "Randomizer" */;
 			buildPhases = (
 				B1FD991D2B07881D00781D1D /* Sources */,
 				B1FD991E2B07881D00781D1D /* Frameworks */,
@@ -142,14 +144,14 @@
 			);
 			dependencies = (
 			);
-			name = HelloSwift;
+			name = Randomizer;
 			productName = HelloSwift;
-			productReference = B1FD99212B07881D00781D1D /* HelloSwift.app */;
+			productReference = B1FD99212B07881D00781D1D /* Randomizer.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B1FD99302B07882000781D1D /* HelloSwiftTests */ = {
+		B1FD99302B07882000781D1D /* RandomizerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B1FD99482B07882000781D1D /* Build configuration list for PBXNativeTarget "HelloSwiftTests" */;
+			buildConfigurationList = B1FD99482B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerTests" */;
 			buildPhases = (
 				B1FD992D2B07882000781D1D /* Sources */,
 				B1FD992E2B07882000781D1D /* Frameworks */,
@@ -160,14 +162,14 @@
 			dependencies = (
 				B1FD99332B07882000781D1D /* PBXTargetDependency */,
 			);
-			name = HelloSwiftTests;
+			name = RandomizerTests;
 			productName = HelloSwiftTests;
-			productReference = B1FD99312B07882000781D1D /* HelloSwiftTests.xctest */;
+			productReference = B1FD99312B07882000781D1D /* RandomizerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B1FD993A2B07882000781D1D /* HelloSwiftUITests */ = {
+		B1FD993A2B07882000781D1D /* RandomizerUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B1FD994B2B07882000781D1D /* Build configuration list for PBXNativeTarget "HelloSwiftUITests" */;
+			buildConfigurationList = B1FD994B2B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerUITests" */;
 			buildPhases = (
 				B1FD99372B07882000781D1D /* Sources */,
 				B1FD99382B07882000781D1D /* Frameworks */,
@@ -178,9 +180,9 @@
 			dependencies = (
 				B1FD993D2B07882000781D1D /* PBXTargetDependency */,
 			);
-			name = HelloSwiftUITests;
+			name = RandomizerUITests;
 			productName = HelloSwiftUITests;
-			productReference = B1FD993B2B07882000781D1D /* HelloSwiftUITests.xctest */;
+			productReference = B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -206,7 +208,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B1FD991C2B07881D00781D1D /* Build configuration list for PBXProject "HelloSwift" */;
+			buildConfigurationList = B1FD991C2B07881D00781D1D /* Build configuration list for PBXProject "Randomizer" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -219,9 +221,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B1FD99202B07881D00781D1D /* HelloSwift */,
-				B1FD99302B07882000781D1D /* HelloSwiftTests */,
-				B1FD993A2B07882000781D1D /* HelloSwiftUITests */,
+				B1FD99202B07881D00781D1D /* Randomizer */,
+				B1FD99302B07882000781D1D /* RandomizerTests */,
+				B1FD993A2B07882000781D1D /* RandomizerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -231,8 +233,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */,
 				B1FD992C2B07882000781D1D /* Preview Assets.xcassets in Resources */,
-				B1FD99292B07882000781D1D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,12 +286,12 @@
 /* Begin PBXTargetDependency section */
 		B1FD99332B07882000781D1D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B1FD99202B07881D00781D1D /* HelloSwift */;
+			target = B1FD99202B07881D00781D1D /* Randomizer */;
 			targetProxy = B1FD99322B07882000781D1D /* PBXContainerItemProxy */;
 		};
 		B1FD993D2B07882000781D1D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B1FD99202B07881D00781D1D /* HelloSwift */;
+			target = B1FD99202B07881D00781D1D /* Randomizer */;
 			targetProxy = B1FD993C2B07882000781D1D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -419,24 +421,30 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HelloSwift/Preview Content\"";
 				DEVELOPMENT_TEAM = 245AVHR596;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HelloSwift/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Randomizer;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.HelloSwift;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.rndios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -448,24 +456,30 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HelloSwift/Preview Content\"";
 				DEVELOPMENT_TEAM = 245AVHR596;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HelloSwift/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Randomizer;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.HelloSwift;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.rndios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -488,7 +502,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloSwift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HelloSwift";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Randomizer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Randomizer";
 			};
 			name = Debug;
 		};
@@ -508,7 +522,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloSwift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HelloSwift";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Randomizer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Randomizer";
 			};
 			name = Release;
 		};
@@ -551,7 +565,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B1FD991C2B07881D00781D1D /* Build configuration list for PBXProject "HelloSwift" */ = {
+		B1FD991C2B07881D00781D1D /* Build configuration list for PBXProject "Randomizer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B1FD99432B07882000781D1D /* Debug */,
@@ -560,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B1FD99452B07882000781D1D /* Build configuration list for PBXNativeTarget "HelloSwift" */ = {
+		B1FD99452B07882000781D1D /* Build configuration list for PBXNativeTarget "Randomizer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B1FD99462B07882000781D1D /* Debug */,
@@ -569,7 +583,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B1FD99482B07882000781D1D /* Build configuration list for PBXNativeTarget "HelloSwiftTests" */ = {
+		B1FD99482B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B1FD99492B07882000781D1D /* Debug */,
@@ -578,7 +592,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B1FD994B2B07882000781D1D /* Build configuration list for PBXNativeTarget "HelloSwiftUITests" */ = {
+		B1FD994B2B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B1FD994C2B07882000781D1D /* Debug */,
