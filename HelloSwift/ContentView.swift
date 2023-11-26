@@ -5,41 +5,25 @@ import UniformTypeIdentifiers //fileimporter
 struct ContentView: View {
     @AppStorage("minValue") private var minValue: Int = 1 //OK
     @AppStorage("maxValue") private var maxValue: Int = 50
-    //@State private var minValue: Int = 1 //OK
-    //@State private var maxValue: Int = 50
-    @State private var drawCount = 1 //今何回目か
-    @State private var drawNumber = 20 //これは多分無駄！
-    var currentLimit: Int {
-        maxValue - minValue + 1
+    @State private var drawCount = 1 //今何回目？
+    var currentLimitLoad: Int {
+        return maxValue - minValue + 1
     }
-    var randomSeq: [Int]{
-        generateRandomNumber(min_val: minValue, max_val: maxValue) // すぐに更新されるの良くない
-    }//HOW compute not doing anything???
-    //@State private var currentLimit = 0
-    @State private var randomSeqStore = [Int]()
-    // @State private var csvNames = [] // 名前を読み込んで突っ込む
-    // @State private var csvEnabled = false // 読み込んだら有効
+    var randomSeqLoad: [Int] {
+        return generateRandomNumber(min_val: minValue, max_val: maxValue)
+    }
+    @State private var currentLimit: Int = 0
+    @State private var randomSeq: [Int] = [0]//@Stateがついていると代入できない。。or is it??
     @AppStorage("filePath") var fileName = "no file chosen"
     @State var openFile = false
     @FocusState private var amountIsFocused: Bool
     @State private var showingAlert = false //アラートは全部で2つ必要。数値を入力　と　StartOver..
     @State private var showingAlert2 = false
-    
-    /*init(){
-        randomSeq = randomSeqLoad
-        currentLimit = currentLimitLoad //行かれた！！！何も入ってな＝＝＝い！
-        print(randomSeqLoad)
-        print(currentLimitLoad)
-        print(randomSeq)
-        print(currentLimit)
-    }*/
 
-    /*    init() {
-     randomSeq = generateRandomNumber(min: maxValue, max: minValue)
-     drawNumber = randomSeq[drawCount - 1] //起動時に毎回リセットして保存されたMaxMinを元に生成してその一個目を表示。
-     currentLimit = maxValue - minValue + 1
-     print(randomSeq)
-     }*/
+    func generateRandomNumber(min_val: Int, max_val: Int) -> [Int] { //エンジン
+        let randomNumbers = Array(min_val...max_val).shuffled() //arrayLiteral: ??
+        return randomNumbers
+    }
     
     var body: some View {
         ZStack {
@@ -57,11 +41,11 @@ struct ContentView: View {
                         Spacer()//左端に表示するため
                     }
                     Spacer(minLength: 10) //こいつ。。。。。。
-                    Text("No.\(drawCount)") // ここへんのテキストあとで変えます
+                    Text("No.\(drawCount)")
                         .font(.system(size: 35, weight: .medium, design: .default))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
-                    Text("\(randomSeq[drawCount])")
+                    Text("\(randomSeq[drawCount - 1])")
                         .font(.system(size: 120, weight: .semibold, design: .default))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
@@ -112,8 +96,8 @@ struct ContentView: View {
                         Spacer()
                         Button(action: {
                             print("button 1 pressed")
-                            print("current draw is \(drawNumber) and No.\(drawCount)")
-                            print("up to No.\(currentLimit)")
+                            print("current draw is \(randomSeq[drawCount - 1]) and No.\(drawCount)")
+                            //print("up to No.\(currentLimit)")
                             if drawCount >= currentLimit{
                                 self.showingAlert.toggle()
                             }
@@ -142,11 +126,12 @@ struct ContentView: View {
                         
                         Button(action: {
                             print("button 2 pressed")
-                            //currentLimit = maxValue - minValue + 1//ここでいかにgetterSetter???
+                            currentLimit = maxValue - minValue + 1
+                            randomSeq = generateRandomNumber(min_val: minValue, max_val: maxValue)
                             drawCount = 1
-                            print("currentLimit is NOW \(currentLimit)")// calling
                             print(randomSeq)
-                            print("total draws would be \(currentLimit)")
+                            print("current draw is \(randomSeq[drawCount - 1]) and No.\(drawCount)")
+                            print("total would be No.\(currentLimit)")
                             //randomSeqStore = randomSeq //
                             
                         }) {
@@ -189,6 +174,13 @@ struct ContentView: View {
                 print("error reading file \(error.localizedDescription)")
             }
         })
+        .onAppear{
+            currentLimit = maxValue - minValue + 1
+            randomSeq = generateRandomNumber(min_val: minValue, max_val: maxValue)
+            print(randomSeq)
+            print("current draw is \(randomSeq[drawCount - 1]) and No.\(drawCount)")
+            print("total would be No.\(currentLimit)")
+        }
     }
 }
 
@@ -201,10 +193,5 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 
-
-func generateRandomNumber(min_val: Int, max_val: Int) -> [Int] { //エンジン
-    let randomNumbers = Array(min_val...max_val).shuffled() //arrayLiteral: ??
-    return randomNumbers
-}
 
 

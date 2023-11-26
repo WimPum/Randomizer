@@ -15,3 +15,8 @@ struct HelloSwiftApp: App {
         }
     }
 }
+
+func generateRandomNumber(min_val: Int, max_val: Int) -> [Int] { //エンジン
+    let randomNumbers = Array(min_val...max_val).shuffled() //arrayLiteral: ??
+    return randomNumbers
+}
