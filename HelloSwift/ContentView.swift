@@ -26,14 +26,24 @@ struct ContentView: View {
     @FocusState private var amountIsFocused: Bool
     @State private var showingAlert = false //アラートは全部で2つ
     @State private var showingAlert2 = false//数値を入力/StartOver押す指示
+    
+    @State private var value: Double = 0.0 //DEBUG ONLY
 
     func genRndNumber(min_val: Int, max_val: Int, list: inout [Int]?) -> Int {//本体
         var randomNum: Int = Int.random(in: min_val...max_val)
-        if list != nil{
-            repeat {
+        if var unwrappedList = list{
+            while unwrappedList.contains(randomNum) {
                 randomNum = Int.random(in: min_val...max_val)
-            } while list!.contains(randomNum) //多分
-            list!.append(randomNum)
+                print("Already picked: \(randomNum)")
+            }
+            // Append the random number to the list
+            unwrappedList.append(randomNum)
+            
+            // Update the original list with the modified one
+            list = unwrappedList
+        } else {
+            // If the list is nil, create a new list with the random number
+            list = [randomNum]
         }
         return randomNum
     }
@@ -44,7 +54,7 @@ struct ContentView: View {
                 .edgesIgnoringSafeArea(.all)//このグラデと背景を重ねるからZStack
             TabView {
                 VStack(){//１ページ目
-                    Spacer(minLength: 1)
+                    Spacer(minLength: 10)
                     HStack{
                         Button(action: {self.openingFile.toggle()}){
                             Text("open csv")
@@ -54,15 +64,17 @@ struct ContentView: View {
                         }
                         Spacer()//左端に表示するため
                     }
-                    Spacer(minLength: 15) //こいつ。。。
+                    Spacer(minLength: 10) //こいつ。。。
                     Text("No.\(drawCount)")
                         .font(.system(size: 32, weight: .medium, design: .default))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
-                    Text(verbatim: "\(dispNumber)")//カンマなし　５０の時変になる
-                        .font(.system(size: 142, weight: .semibold, design: .rounded))
+                    Text(verbatim: "\(dispNumber)")//カンマなし//dispValue
+                        .font(.system(size: 155, weight: .semibold, design: .rounded))
                         .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
+                        .frame(width: 400, height: 175)
+                        //.border(Color.red)
+                        .minimumScaleFactor(0.4)
                     Text(dispName)
                         .font(.system(size: 26, weight: .semibold, design: .default))
                         .foregroundColor(.white)
@@ -147,6 +159,7 @@ struct ContentView: View {
                         Button(action: {
                             print("button 1 pressed")
                             print("current draw is \(dispNumber) and No.\(drawCount)")
+                            print("HistorySequence \(historySeq as Any)")
                             //historySeq = nil
                             if drawCount >= currentLimit{
                                 self.showingAlert.toggle()
@@ -202,7 +215,7 @@ struct ContentView: View {
                                 }else{
                                     dispName = "J.Appleseed"
                                 }
-                                print(historySeq as Any)
+                                print("HistorySequence \(historySeq as Any)")
                                 print("current draw is \(dispNumber) and No.\(drawCount)")
                                 print("total would be No.\(currentLimit)")
                                 //randomSeqStore = randomSeq //
@@ -231,11 +244,32 @@ struct ContentView: View {
                 .tabItem {
                   Text("Main") }
                 .tag(0)
-            
-                Text("History Page")//リストを表示！
-                    .onAppear{//スワイプしたらキーボード隠す
-                        amountIsFocused = false
+                VStack(){
+                    Spacer()
+                    Text("History")//リストを表示！
+                        .font(.system(size: 20, weight: .semibold, design: .default))
+                        .foregroundColor(.white)
+                        /*.onAppear{//スワイプしたらキーボード隠す
+                            amountIsFocused = false
+                        }*/
+                    List {
+                        ForEach(0..<5){i in
+                            HStack(){
+                                Text("No.\(i+1)")//
+                                    .font(.system(size: 30, weight: .light, design: .default))
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Text("XXX")//
+                                    .font(.system(size: 40, weight: .semibold, design: .default))
+                                    .foregroundColor(.white)
+                            }.listRowBackground(Color.clear)
+                        }
                     }
+                        .scrollContentBackground(.hidden)
+                        .listStyle(.plain)
+                            //.background(Color.clear)
+                    Spacer()
+                }
                 .tabItem {
                   Text("History") }
                 .tag(1)
@@ -277,7 +311,7 @@ struct ContentView: View {
         .onAppear{
             currentLimit = maxValue - minValue + 1
             dispNumber = genRndNumber(min_val: minValue, max_val: maxValue, list: &historySeq)
-            print(historySeq as Any)
+            print("HistorySequence \(historySeq as Any)")
             print("current draw is \(dispNumber) and No.\(drawCount)")
             print("total would be No.\(currentLimit)")
             if fileSelected == true{
@@ -289,14 +323,34 @@ struct ContentView: View {
     }
 }
 
+extension View {
+    func scrollCBIfPossible(_ color: Color) -> some View {
+        if #available(iOS 16.0, *) {//iOS16以降なら
+            return self.scrollContentBackground(.hidden)
+            //return self
+        } else {
+            UITableView.appearance().backgroundColor = UIColor(color)
+            return self
+        }
+    }
+}
+
 func transposeCSV(fileURL: URL) -> [[String]]? {
     do {
         // CSVファイルの内容を文字列として読み込む
-        let csvString = try String(contentsOf: fileURL, encoding: .utf8)
+        var csvString = try String(contentsOf: fileURL, encoding: .utf8)
+        
+        // キャリッジリターン文字を改行文字に変換
+        csvString = csvString.replacingOccurrences(of: "\r", with: "")
         
         // 改行とカンマでCSVを分割し、行と列を取得
-        let rows = csvString.components(separatedBy: "\n").filter { !$0.isEmpty }//letでいいっていうから
-        let columns = rows[0].components(separatedBy: ",")
+        var rows = csvString.components(separatedBy: "\n").filter { !$0.isEmpty }
+        var columns = rows[0].components(separatedBy: ",")
+        
+        // 転置が必要な場合は行と列を入れ替える
+        if rows.count < columns.count {
+            (rows, columns) = (columns, rows)
+        }
         
         // 転置した結果を格納する配列
         var transposedCSV = [[String]]()
@@ -306,7 +360,13 @@ func transposeCSV(fileURL: URL) -> [[String]]? {
             var transposedRow = [String]()
             for rowIndex in 0..<rows.count {
                 let rowData = rows[rowIndex].components(separatedBy: ",")
-                transposedRow.append(rowData[columnIndex])
+                
+                // IndexOutOfRangeを防ぐために、rowDataの要素数がcolumnIndex未満の場合は空文字列を追加
+                if columnIndex < rowData.count {
+                    transposedRow.append(rowData[columnIndex])
+                } else {
+                    transposedRow.append("") // もしくはエラーハンドリングを追加
+                }
             }
             transposedCSV.append(transposedRow)
         }
