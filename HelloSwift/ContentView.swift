@@ -1,33 +1,46 @@
+//本コード
+
 import SwiftUI
 import Foundation //Random
 import Combine //TextField limitter
 import UniformTypeIdentifiers //fileImporter
 
 struct ContentView: View {
+    //main
     @AppStorage("minValue") private var minValue: Int = 1
     @AppStorage("maxValue") private var maxValue: Int = 50
-    @State private var maxValueLock: Int = 0//Start Overを押すと変更した値を反映するようにしたい
     @State private var minValueLock: Int = 0
-    //@State private var minValue: Int = 1//forDebug only
-    //@State private var maxValue: Int = 50//forDebug only
+    @State private var maxValueLock: Int = 0//Start Overを押すと変更した値を反映するようにしたい
+    @State private var dispNumber: Int = 0//今表示する番号。
     @State private var drawCount = 1 //今何回目か
     @State private var currentLimit: Int = 0
-    @State private var dispNumber: Int = 0//今表示する番号。
+    
+    //history&Shuffler
     @State private var historySeq: [Int]? = nil //保存できるようにするかも　今はしない
-    let maxNumberLen = 10 //最大桁数
+    @State private var displaySeq: [Int]? = [0]//表示する数字
+    @State private var buttonEnabled: Bool = true
+    @State private var counter: Int = 1//リスト上を移動
+    @State private var isTimerRunning: Bool = false
+    @State private var timer: Timer?
+    @State private var speedValue: Double = 25//実際のスピードをコントロール
+    let minSpeed: Double = 2.5
+    let maxSpeed: Double = 25
+    let countLimit: Int = 25//数字は25個だけど最後の数字が答え
+    @State private var remainderSeq: [Int] = [0]//残った数字初めに25回引けばいい？
+    
     //fileImporter
     @State var fileName = "select .csv file"
     @AppStorage("fileLocation") var fileLocation = URL(string: "file://")!//defalut値おかしいけどDont care
     @State var openingFile = false//開くときのダイアログ用
     @State private var fileSelected = false//ファイル選ばれたかどうか
     @State private var csvNames = [[String]]()//名前を保存しないので起動時にロードしなおします。
-    @State private var dispName: String = "J.Appleseed"
+    @State private var dispName: String = "J.Appleseed"//CSVなしの時のデフォ
     
-    @FocusState private var amountIsFocused: Bool
+    //misc
+    @FocusState private var amountIsFocused: Bool//キーボード
     @State private var showingAlert = false //アラートは全部で2つ
     @State private var showingAlert2 = false//数値を入力/StartOver押す指示
-    
-    @State private var value: Double = 0.0 //DEBUG ONLY
+    let maxNumberLen = 10 //最大桁数
 
     func genRndNumber(min_val: Int, max_val: Int, list: inout [Int]?) -> Int {//本体
         var randomNum: Int = Int.random(in: min_val...max_val)
@@ -48,6 +61,31 @@ struct ContentView: View {
         return randomNum
     }
     
+    func genRndNumberNRead(min_val: Int, max_val: Int, list: [Int]) -> Int {
+        var randomNum: Int = Int.random(in: min_val...max_val)
+        while list.contains(randomNum) {
+            randomNum = Int.random(in: min_val...max_val)
+            print("Already picked for roll?: \(randomNum)")
+        }
+        return randomNum
+    }
+    
+    func randomSeqGen(source: [Int]!, amount: Int, realValue: Int) -> [Int]{
+        var assignedValue: Int = 0
+        var returnArray: [Int]? = [Int]()
+        for i in 1...amount-1{
+            assignedValue = source.randomElement()!//ランダムに1つ抽出
+            if i > 1{//1回目以降は
+                while assignedValue == returnArray![i-2]{
+                    assignedValue = source.randomElement()!
+                }
+            }
+            returnArray!.append(assignedValue)
+        }
+        returnArray!.append(realValue)
+        return returnArray!
+    }
+    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .top, endPoint: .bottom)
@@ -61,7 +99,7 @@ struct ContentView: View {
                                 .font(.system(size: 22, weight: .semibold, design: .default))
                                 .foregroundColor(.white)
                                 .padding()
-                        }
+                        }.disabled(!buttonEnabled)
                         Spacer()//左端に表示するため
                     }
                     Spacer(minLength: 10) //こいつ。。。
@@ -69,7 +107,7 @@ struct ContentView: View {
                         .font(.system(size: 32, weight: .medium, design: .default))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
-                    Text(verbatim: "\(dispNumber)")//カンマなし//dispValue
+                    Text(verbatim: "\(displaySeq![counter-1])")//カンマなし//dispValue
                         .font(.system(size: 155, weight: .semibold, design: .rounded))
                         .foregroundColor(.white)
                         .frame(width: 400, height: 175)
@@ -109,7 +147,7 @@ struct ContentView: View {
                                         .foregroundStyle(.ultraThinMaterial)
                                         .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
                                 )
-                        }
+                        }.disabled(!buttonEnabled)
                     }
                     Spacer(minLength: 1)
                     HStack{
@@ -126,7 +164,7 @@ struct ContentView: View {
                                     if String(minValue).count > maxNumberLen {
                                         minValue = Int(String(minValue).prefix(maxNumberLen))!
                                     }
-                                }
+                                }.disabled(!buttonEnabled)
                         }
                         Spacer(minLength: 70)
                         VStack{
@@ -149,7 +187,7 @@ struct ContentView: View {
                                     if String(maxValue).count > maxNumberLen {
                                         maxValue = Int(String(maxValue).prefix(maxNumberLen))!
                                     }
-                                }
+                                }.disabled(!buttonEnabled)
                         }
                         Spacer(minLength: 60)
                     }
@@ -159,12 +197,13 @@ struct ContentView: View {
                         Button(action: {
                             print("button 1 pressed")
                             print("current draw is \(dispNumber) and No.\(drawCount)")
-                            print("HistorySequence \(historySeq as Any)")
+                            print("HistorySequence is\(historySeq as Any)")
                             //historySeq = nil
                             if drawCount >= currentLimit{
                                 self.showingAlert.toggle()
                             }
                             else{
+                                remainderSeq = [Int]()
                                 dispNumber = genRndNumber(min_val: minValue, max_val: maxValue, list: &historySeq)
                                 drawCount += 1 // draw next number
                                 if fileSelected == true{
@@ -172,6 +211,15 @@ struct ContentView: View {
                                 }else{
                                     dispName = "J.Appleseed"
                                 }
+                                for _ in (1...countLimit){
+                                    remainderSeq.append(genRndNumberNRead(min_val: minValue, max_val: maxValue, list: historySeq!))
+                                }
+                                displaySeq = randomSeqGen(source: remainderSeq, amount: countLimit, realValue: dispNumber)//どうしよう
+                                print("Randomly picked remain:\(remainderSeq)")
+                                print("displaySeq:\(displaySeq as Any)")//ロール中は押せないようにしようね！！
+                                counter = 1
+                                speedValue = 25
+                                startTimer()
                             }
                         }){
                             Text("Next draw")
@@ -186,7 +234,7 @@ struct ContentView: View {
                                         // ドロップシャドウで立体感を表現
                                         .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
                                 )
-                        }
+                        }.disabled(!buttonEnabled)
                         .alert("All drawn", isPresented: $showingAlert) {
                             // アクションボタンリスト
                         } message: {
@@ -209,13 +257,15 @@ struct ContentView: View {
                                 currentLimit = maxValue - minValue + 1
                                 historySeq = nil
                                 dispNumber = genRndNumber(min_val: minValue, max_val: maxValue, list: &historySeq)
+                                displaySeq = [dispNumber]
+                                counter = 1
                                 drawCount = 1
                                 if fileSelected == true{
                                     dispName = String(csvNames[0][dispNumber - 1])
                                 }else{
                                     dispName = "J.Appleseed"
                                 }
-                                print("HistorySequence \(historySeq as Any)")
+                                print("HistorySequence is\(historySeq as Any)")
                                 print("current draw is \(dispNumber) and No.\(drawCount)")
                                 print("total would be No.\(currentLimit)")
                                 //randomSeqStore = randomSeq //
@@ -231,7 +281,7 @@ struct ContentView: View {
                                         .foregroundStyle(.ultraThinMaterial)
                                         .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
                                 )
-                        }
+                        }.disabled(!buttonEnabled)
                         .alert("Error", isPresented: $showingAlert2) {
                             // アクションボタンリスト
                         } message: {
@@ -317,9 +367,45 @@ struct ContentView: View {
             if fileSelected == true{
                 dispName = String(csvNames[0][dispNumber - 1])
             }else{
-                dispName = "J.Appleseed"
+                dispName = "J.Appleseed"//なぜ再定義だ・？
             }
         }
+    }
+    
+    func startTimer() {
+        isTimerRunning = true
+        buttonEnabled = false
+        //counter = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 1 / speedValue, repeats: true) { timer in
+            counter += 1
+
+            if counter >= countLimit {
+                stopTimer()
+                buttonEnabled = true
+            }
+
+            let t: Double = Double(counter) / Double(countLimit)//カウントの進捗
+            speedValue = interpolateQuadratic(t: t, minValue: minSpeed, maxValue: maxSpeed)
+            updateTimerSpeed()
+        }
+    }
+
+    func stopTimer() {
+        isTimerRunning = false
+        timer?.invalidate()//タイマーを止める。
+        timer = nil
+    }
+
+    func updateTimerSpeed() {
+        if isTimerRunning {
+            stopTimer()
+            startTimer()
+        }
+    }
+
+    func interpolateQuadratic(t: Double, minValue: Double, maxValue: Double) -> Double {
+        let clampedT = max(0, min(1, t))//0から1の範囲で制限
+        return (1 - clampedT) * maxValue + clampedT * minValue
     }
 }
 
