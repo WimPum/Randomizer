@@ -12,20 +12,19 @@ struct ContentView: View {
     @State private var minBoxValueLock: Int = 0
     @State private var maxBoxValueLock: Int = 0 //Start Overを押すまでここにkeep
     @State private var bigDispNumber: Int = 0   //表示する番号
-    @State private var drawCount: Int = 1       //今何回目か
+    @State private var drawCount: Int = 0       //今何回目か
     @State private var drawLimit: Int = 0       //何回まで引けるか
     
     //history&Shuffler
     @State private var historySeq: [Int]? = nil     //履歴
-    //@State private var historySeqforRoll: [Int]? = nil     //履歴
-    @State private var remainderSeq: [Int] = [0]    //弾いていて残った数字 ロール用
+    @State private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
     @State private var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
     @State private var isButtonEnabled: Bool = true
     @State private var rollListCounter: Int = 1     //リスト上を移動
     @State private var isTimerRunning: Bool = false
     @State private var rollTimer: Timer?
     @State private var rollSpeed: Double = 25       //実際のスピードをコントロール
-    @State private var rollCountLimit: Int = 25                    //数字は25個だけど最後の数字が答え
+    @State private var rollCountLimit: Int = 25     //数字は25個だけど最後の数字が答え
     let rollMinSpeed: Double = 2.5
     let rollMaxSpeed: Double = 25
 
@@ -36,22 +35,22 @@ struct ContentView: View {
     //@AppStorage("fileSelected") private var isFileSelected: Bool = false//ファイルあるかどうか　活用
     @State private var isFileSelected: Bool = false
     @State private var isFileLoaded: Bool = false//ファイルが読めたらToggle!
-    @State private var csvNameStore = [[String]]()                              //名前を保存するはず
-    //@State private var displayName: String = "J.Appleseed"                      //CSVなしの時のデフォ
+    @State private var csvNameStore = [[String]]()                              //名前を格納する
     
     //misc
     @FocusState private var isInputFocused: Bool//キーボードOn/Off
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
     let inputMaxLength = 10                     //最大桁数
+    @State var selection = 1//ページを切り替える用
 
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all)//グラデとコンテンツを重ねるからZStack
-            TabView {
+            TabView(selection: $selection){
                 VStack(){//１ページ目
-                    Spacer(minLength: 10)
+                    Spacer().frame(height: 20)
                     HStack{
                         Button(action: {self.isOpeningFile.toggle()}){
                             Text("open csv")
@@ -66,14 +65,14 @@ struct ContentView: View {
                         .multilineTextAlignment(.center)
                     Text(verbatim: "\(rollDisplaySeq![rollListCounter-1])")//カンマなし
                         .fontSemiBoldRound(size: 155)
-                        .frame(width: 400, height: 175)
-                        .minimumScaleFactor(0.4)
-                    Text(isFileLoaded ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: "")//ファイルあれば
+                        .frame(width: UIScreen.current?.bounds.width, height: 175)
+                        .minimumScaleFactor(0.2)
+                    Text(isFileLoaded ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: " ")//ファイルあれば
                         .fontSemiBold(size: 26)
                         .multilineTextAlignment(.center)
                         .opacity(0.6)
                     
-                    Spacer(minLength: 68)
+                    Spacer(minLength: 50)
                     //Spacer() //バカみたい
                     HStack(){//ここは一時的なものですぐにでも変更したい箇所です。l
                         Text(self.openedFileName)
@@ -165,38 +164,46 @@ struct ContentView: View {
                 } //Main Interface Here
                 .tabItem {
                   Text("Main") }
-                .tag(0)
+                .tag(1)
                 VStack(){
-                    Spacer()
+                    //Spacer()
+                    Spacer().frame(height: 20)//this is genius!!
                     Text("History")//リストを表示！
                         .fontSemiBold(size: 20)
                         /*.onAppear{//スワイプしたらキーボード隠す
                             amountIsFocused = false
                         }*/
-                    List {
-                        ForEach(0..<5){i in
-                            HStack(){
-                                Text("No.\(i+1)")//
-                                    .fontLight(size: 30)
-                                Spacer()
-                                Text("XXX")//
-                                    .fontSemiBold(size: 40)
-                            }.listRowBackground(Color.clear)
+                    if let historySeq = historySeq{//値入ってたら
+                        List {
+                            //ForEach(0..<historySeq.count){ index in
+                            ForEach(0..<historySeq.count, id: \.self){ index in
+                                HStack(){
+                                    Text("No.\(index+1)")//
+                                        .fontLight(size: 30)
+                                    Spacer()
+                                    Text("\(historySeq[index])")
+                                        .fontSemiBold(size: 40)
+                                }.listRowBackground(Color.clear)//リストの項目の背景を無効化
+                            }
                         }
-                    }
-                        .scrollContentBackground(.hidden)
+                        .scrollCBIfPossible()//リストの背景を無効化
+                        //.background(Color.clear)
                         .listStyle(.plain)
-                            //.background(Color.clear)
+                        .frame(width: UIScreen.current?.bounds.width,
+                               height: (UIScreen.current?.bounds.height)!-200,
+                               alignment: .center)
+                        //.border(.red, width: 3)
+                    }
                     Spacer()
                 }
                 .tabItem {
                   Text("History") }
-                .tag(1)
+                .tag(2)
                 
                 Text("Setting Page")//リストを表示！
                 .tabItem {
                   Text("Setting") }
-                .tag(2)
+                .tag(3)
             }
             .tabViewStyle(PageTabViewStyle())
             //.padding()
@@ -321,9 +328,9 @@ struct ContentView: View {
         maxBoxValueLock = maxBoxValue//保存
         minBoxValueLock = minBoxValue
         drawLimit = maxBoxValue - minBoxValue + 1
-        bigDispNumber = give1RndNumber(min: minBoxValue, max: maxBoxValue, historyList: &historySeq)
+        //bigDispNumber = give1RndNumber(min: minBoxValue, max: maxBoxValue, historyList: &historySeq)
         print("HistorySequence \(historySeq as Any)")
-        print("current draw is \(bigDispNumber) and No.\(drawCount)")
+        //print("current draw is \(bigDispNumber) and No.\(drawCount)")
         print("total would be No.\(drawLimit)")
         if isFileSelected == true{
             print(openedFileLocation)
@@ -333,12 +340,8 @@ struct ContentView: View {
                 print(csvNameStore)
                 isFileLoaded = true
                 //audioFiles.append(AudioObject(id: UUID().uuidString, url: audioURL))
-                //dispName = String(csvNameStore[0][bigDispNumber - 1])
             }
-            
-        }/*else{
-            dispName = "J.Appleseed"//なぜ再定義だ・？
-        }*/
+        }
     }
     
     func buttonReset(){
@@ -357,16 +360,11 @@ struct ContentView: View {
             drawCount = 1//やり直しだから
             maxBoxValueLock = maxBoxValue//保存
             minBoxValueLock = minBoxValue
-            //print("mmBoxValLock: \(maxBoxValueLock), \(minBoxValueLock)")
             print("mmBoxVal: \(maxBoxValue), \(minBoxValue)")
             drawLimit = maxBoxValue - minBoxValue + 1
             let remaining = drawLimit - drawCount + 1
             historySeq = nil//リセットだから
-            //dispNumber = genRndNumber(min: minBoxValue, max: maxBoxValue, list: &historySeq)
             remainderSeq = [Int]()//リセット
-            /*for _ in (1...Int(remaining > rollCountLimit ? rollCountLimit : remaining)){
-                remainderSeq.append(give1RndNumberNoSave(min: minBoxValue, max: maxBoxValue, historyList: nil))//nilじゃなくてhistorySeqでもいい
-            }*/
             let switchRemainPick = remaining > rollCountLimit
             var historySeqforRoll = [Int]()     //履歴
             var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
@@ -392,12 +390,9 @@ struct ContentView: View {
             print("displaySeq:\(rollDisplaySeq as Any)")
             print("Randomly picked remain:\(remainderSeq)")
             //randomSeqStore = randomSeq //
-            remaining <= 1 ? () : startTimer()//ロール開始
-            /*if fileSelected == true{
-                dispName = String(csvNames[0][displaySeq![counter] - 1])//動的に変えたい
-            }else{
-                dispName = "J.Appleseed"
-            }*/
+            if remaining > 1 {
+                startTimer()//ロール開始
+            }
         }
     }
     
@@ -414,18 +409,6 @@ struct ContentView: View {
             drawCount += 1 // draw next number
             let remaining = drawLimit - drawCount + 1
             print("\(remaining) numbers remaining")
-            /*for i in (1...drawLimit){//ここを
-                var picked = genRndNumberNWrite(min_val: minValueLock, max_val: maxValueLock, list: historySeq!)//下のif節で片方取れるか？
-                if historySeq!.count >= currentLimit - 2{//2と1は特別
-                    while remainderSeq[i-2] == picked{
-                        picked = genRndNumberNWrite(min_val: minValueLock, max_val: maxValueLock, list: historySeq!)//下のif節で片方取れるか？
-                    }
-                    remainderSeq.append(picked)
-                }
-                else{
-                    remainderSeq.append(picked)
-                }
-            }*/
             let switchRemainPick = remaining > rollCountLimit
             var historySeqforRoll = [Int]()     //履歴
             var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
@@ -442,7 +425,7 @@ struct ContentView: View {
             }
             let realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: &historySeq)
             rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: rollCountLimit, realAnswer: realAnswer)//どうしよう
-            remaining <= 1 ? rollCountLimit = 1 : () //ロールアニメーションはこれで無効にできる！！！！！
+            //remaining <= 1 ? rollCountLimit = 1 : () //ロールアニメーションはこれで無効にできる?
             print("Randomly picked remain:\(remainderSeq)")
             print("displaySeq:\(rollDisplaySeq as Any)")//ロール中は押せない
             print("HistorySequence is \(historySeq as Any)")
@@ -450,12 +433,9 @@ struct ContentView: View {
             print("total is \(drawLimit)")
             print("displaySeq:\(rollDisplaySeq as Any)")
             print("Randomly picked remain:\(remainderSeq)")
-            remaining <= 1 ? () : startTimer() //ロールアニメーションはこれで無効にできる！！！！！
-            /*if fileSelected == true{
-                dispName = String(csvNames[0][displaySeq![counter] - 1])//動的に変えたい
-            }else{
-                dispName = "J.Appleseed"
-            }*/
+            if remaining > 1 {
+                startTimer()//ロール開始
+            }
         }
     }
     
@@ -463,9 +443,9 @@ struct ContentView: View {
         isTimerRunning = true
         isButtonEnabled = false
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
-            print("rollCounter was \(rollListCounter)")
+            //print("rollCounter was \(rollListCounter)")
             rollListCounter += 1
-            print("rollCounter is \(rollListCounter)")
+            //print("rollCounter is \(rollListCounter)")
             if rollListCounter >= rollCountLimit {
                 stopTimer()
                 isButtonEnabled = true
@@ -496,19 +476,19 @@ struct ContentView: View {
 }
 
 extension View {
-    func scrollCBIfPossible(_ color: Color) -> some View {
+    func scrollCBIfPossible() -> some View {
         if #available(iOS 16.0, *) {//iOS16以降なら
             return self.scrollContentBackground(.hidden)
             //return self
         } else {
-            UITableView.appearance().backgroundColor = UIColor(color)
+            UITableView.appearance().backgroundColor = UIColor(.clear)
             return self
         }
     }
     func fontLight(size: Int) -> some View {
         self
             .font(.system(size: CGFloat(size), weight: .light, design: .default))
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
     }
     func fontMedium(size: Int) -> some View {
         self
@@ -532,7 +512,24 @@ extension View {
                 .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
         )
     }
-    
+}
+
+extension UIWindow {
+    static var current: UIWindow? {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+            for window in windowScene.windows {
+                if window.isKeyWindow { return window }
+            }
+        }
+        return nil
+    }
+}
+
+extension UIScreen {
+    static var current: UIScreen? {
+        UIWindow.current?.screen
+    }
 }
 
 func loadCSV(fileURL: URL) -> [[String]]? {
