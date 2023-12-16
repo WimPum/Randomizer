@@ -4,6 +4,7 @@ import SwiftUI
 import Foundation //Random
 import Combine //TextField limitter
 import UniformTypeIdentifiers //fileImporter
+import class UIKit.UIImpactFeedbackGenerator//UIKitインポートしちゃった
 
 struct ContentView: View {
     //main
@@ -11,17 +12,17 @@ struct ContentView: View {
     @AppStorage("maxValue") private var maxBoxValue: Int = 50
     @State private var minBoxValueLock: Int = 0
     @State private var maxBoxValueLock: Int = 0 //Start Overを押すまでここにkeep
-    @State private var bigDispNumber: Int = 0   //表示する番号
     @State private var drawCount: Int = 0       //今何回目か
     @State private var drawLimit: Int = 0       //何回まで引けるか
     
     //history&Shuffler
-    @State private var historySeq: [Int]? = nil     //履歴
+    @State private var historySeq: [Int]? = nil //履歴
     @State private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
     @State private var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
-    @State private var isButtonEnabled: Bool = true
+    //@State private var isButtonEnabled: Bool = true
     @State private var rollListCounter: Int = 1     //リスト上を移動
     @State private var isTimerRunning: Bool = false
+    @State private var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
     @State private var rollTimer: Timer?
     @State private var rollSpeed: Double = 25       //実際のスピードをコントロール
     @State private var rollCountLimit: Int = 25     //数字は25個だけど最後の数字が答え
@@ -29,20 +30,26 @@ struct ContentView: View {
     let rollMaxSpeed: Double = 25
 
     //fileImporter
-    @State var openedFileName = "select .csv file"
+    @State var openedFileName = ""
     @AppStorage("fileLocation") var openedFileLocation = URL(string: "file://")!//defalut値確認
     @State var isOpeningFile = false                                            //ファイルダイアログを開く変数
     //@AppStorage("fileSelected") private var isFileSelected: Bool = false//ファイルあるかどうか　活用
     @State private var isFileSelected: Bool = false
     @State private var isFileLoaded: Bool = false//ファイルが読めたらToggle!
     @State private var csvNameStore = [[String]]()                              //名前を格納する
+    @State private var showMessage: String = ""
     
     //misc
     @FocusState private var isInputFocused: Bool//キーボードOn/Off
+    @State private var showCSVButton: Bool = true
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
+    @State var selection = 1                    //ページを切り替える用
+    @State private var dummyConfig1: Bool = false//ダミー
+    @State private var dummyConfig2: Bool = false//ダミー
+    @State private var dummyConfig3: Bool = false//ダミー
     let inputMaxLength = 10                     //最大桁数
-    @State var selection = 1//ページを切り替える用
+    let feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)//Taptic Feedback
 
     var body: some View {
         ZStack {
@@ -50,109 +57,173 @@ struct ContentView: View {
                 .edgesIgnoringSafeArea(.all)//グラデとコンテンツを重ねるからZStack
             TabView(selection: $selection){
                 VStack(){//１ページ目
-                    Spacer().frame(height: 20)
-                    HStack{
-                        Button(action: {self.isOpeningFile.toggle()}){
-                            Text("open csv")
-                                .fontSemiBold(size: 22)
-                                .padding()
-                        }.disabled(!isButtonEnabled)
-                        Spacer()//左端に表示する
+                    Spacer().frame(height: 5)
+                    if showCSVButton == true{
+                        //withAnimation{
+                            HStack{
+                                Button(action: {self.isOpeningFile.toggle()}){
+                                    Text("open csv")
+                                        .fontSemiBold(size: 24)
+                                    //.opacity()
+                                        .padding()
+                                }.disabled(isButtonPressed)
+                                Spacer()//左端に表示する
+                            }//.border(.black)
+                        //}
                     }
-                    Spacer(minLength: 10)
-                    Text("No.\(drawCount)")
-                        .fontMedium(size: 32)
-                        .multilineTextAlignment(.center)
-                    Text(verbatim: "\(rollDisplaySeq![rollListCounter-1])")//カンマなし
-                        .fontSemiBoldRound(size: 155)
-                        .frame(width: UIScreen.current?.bounds.width, height: 175)
-                        .minimumScaleFactor(0.2)
-                    Text(isFileLoaded ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: " ")//ファイルあれば
-                        .fontSemiBold(size: 26)
-                        .multilineTextAlignment(.center)
-                        .opacity(0.6)
-                    
-                    Spacer(minLength: 50)
-                    //Spacer() //バカみたい
-                    HStack(){//ここは一時的なものですぐにでも変更したい箇所です。l
-                        Text(self.openedFileName)
-                            .fontMedium(size: 20)
+                    //Spacer().frame(height: 5)
+                    VStack(){//OutOfRangeにならないようにする
+                        Text("No.\(drawCount)")
+                            .fontMedium(size: 32)
                         Button(action: {
-                            fileReset()
+                            if isButtonPressed == false{
+                                isButtonPressed = true
+                                buttonNext()
+                            }
                         }){
-                            Text("clear names")
-                                .fontSemiBold(size: 18)
-                                .padding()
-                                .frame(width:140, height: 36)
-                                .glassMaterial(cornerRadius: 24)
-                        }.disabled(!isButtonEnabled)
-                    }
-                    Spacer(minLength: 1)
-                    HStack{
-                        Spacer(minLength: 60)
-                        VStack{//ここ同じにしてもいいかな？
-                            Text("Min")
-                                .fontMedium(size: 24)
-                            TextField("Min", value: $minBoxValue, formatter: NumberFormatter())
-                                .textFieldStyle(.roundedBorder)
-                                .focused($isInputFocused)
-                                .keyboardType(.numberPad)
-                                .onReceive(Just(minBoxValue)) { _ in//文字数制限.
-                                    if String(minBoxValue).count > inputMaxLength {
-                                        minBoxValue = Int(String(minBoxValue).prefix(inputMaxLength))!
-                                    }
-                                }.disabled(!isButtonEnabled)
-                        }
-                        Spacer(minLength: 70)
-                        VStack{
-                            Text("Max")
-                                .fontMedium(size: 24)
-                            TextField("Max", value: $maxBoxValue, formatter: NumberFormatter())
-                                .textFieldStyle(.roundedBorder)
-                                .focused($isInputFocused)
-                                .keyboardType(.numberPad) // 追加
-                                .toolbar {
-                                    ToolbarItemGroup(placement: .keyboard) {
-                                        Spacer()
-                                        Button("Done") {// Doneボタンを片方に追加
-                                            isInputFocused = false
-                                        }
-                                    }
+                            Text(verbatim: "\(rollDisplaySeq![rollListCounter-1])")
+                                .fontSemiBoldRound(size: 160, rolling: isTimerRunning)
+                                .frame(width: UIScreen.current?.bounds.width, height: 180)
+                                .minimumScaleFactor(0.2)
+                                .border(.red)
+                        }.disabled(isButtonPressed)
+                            .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in
+                                if isButtonPressed == false{
+                                    isButtonPressed = true
+                                    buttonNext()
                                 }
-                                .onReceive(Just(maxBoxValue)) { _ in
-                                    if String(maxBoxValue).count > inputMaxLength {
-                                        maxBoxValue = Int(String(maxBoxValue).prefix(inputMaxLength))!
-                                    }
-                                }.disabled(!isButtonEnabled)
+                            }
+                        Text(isFileLoaded ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: showMessage)//ファイルあれば
+                            .fontSemiBold(size: 26)
+                            .multilineTextAlignment(.center)
+                            .opacity(0.6)
+                            //.padding()
+                            .frame(height: 60)
+                            .minimumScaleFactor(0.2)
+                    }//.frame(height: 200)
+                    .border(.yellow)
+                    Spacer() //バカみたい
+                    VStack(){
+                        if isFileSelected == false {
+                            Spacer(minLength: 10)
+                            HStack{
+                                Spacer(minLength: 60)
+                                VStack{//ここ同じにしてもいいかな？
+                                    Text("Min")
+                                        .fontMedium(size: 24)
+                                    TextField("Min", value: $minBoxValue, formatter: NumberFormatter())
+                                        .onTapGesture {
+                                            // Code to execute when TextField gains focus
+                                            print("TextField Min tapped")
+                                            withAnimation {
+                                                showCSVButton = false
+                                            }
+                                        }
+                                        .textFieldStyle(.roundedBorder)
+                                        .focused($isInputFocused)
+                                        .keyboardType(.numberPad)
+                                        .onReceive(Just(minBoxValue)) { _ in//文字数制限.
+                                            if String(minBoxValue).count > inputMaxLength {
+                                                minBoxValue = Int(String(minBoxValue).prefix(inputMaxLength))!
+                                            }
+                                        }.disabled(isButtonPressed)
+                                }
+                                Spacer(minLength: 70)
+                                VStack{
+                                    Text("Max")
+                                        .fontMedium(size: 24)
+                                    TextField("Max", value: $maxBoxValue, formatter: NumberFormatter())
+                                        .onTapGesture {
+                                            // Code to execute when TextField gains focus
+                                            print("TextField Max tapped")
+                                            withAnimation {
+                                                showCSVButton = false
+                                            }
+                                        }
+                                        .textFieldStyle(.roundedBorder)
+                                        .focused($isInputFocused)
+                                        .keyboardType(.numberPad) // 追加
+                                        .toolbar {
+                                            ToolbarItemGroup(placement: .keyboard) {
+                                                Spacer()
+                                                Button("Done") {// Doneボタンを片方に追加
+                                                    //Enterでも変更できるようにしたい
+                                                    isInputFocused = false
+//                                                    withAnimation{
+                                                        showCSVButton = true
+//                                                    }
+                                                    if maxBoxValue != maxBoxValueLock || minBoxValue != minBoxValueLock{
+                                                        withAnimation{
+                                                            showMessage = "press Start Over to apply changes"
+                                                        }
+                                                    }else{
+                                                        withAnimation{
+                                                            showMessage = ""
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .onReceive(Just(maxBoxValue)) { _ in
+                                            if String(maxBoxValue).count > inputMaxLength {
+                                                maxBoxValue = Int(String(maxBoxValue).prefix(inputMaxLength))!
+                                            }
+                                        }.disabled(isButtonPressed)
+                                }
+                                Spacer(minLength: 60)
+                            }
                         }
-                        Spacer(minLength: 60)
-                    }
-                    Spacer(minLength: 48)
-                    HStack(spacing: 40){ // lower buttons.
+                        else{
+                            HStack(){//ここは一時的なものですぐにでも変更したい箇所です。l
+                                Text(self.openedFileName)// select csv file
+                                    .fontMedium(size: 20)
+                                //.padding()
+                            }
+                            Button(action: {
+                                fileReset()
+                            }){
+                                Text("clear names")
+                                    .fontSemiBold(size: 18)
+                                    .padding()
+                                    .frame(width:140, height: 36)
+                                    .glassMaterial(cornerRadius: 24)
+                            }.disabled(isButtonPressed)
+                        }
+                    }.frame(height: 100)
+                        .border(.green)
+                    Spacer()
+                    HStack(){ // lower buttons.
                         Spacer()
                         Button(action: {
-                            buttonNext()
+                            if isButtonPressed == false{
+                                isButtonPressed = true
+                                buttonNext()
+                            }
                         }){
                             Text("Next draw")
                                 .fontSemiBold(size: 22)
                                 .padding()
-                                .frame(width:135, height: 60)
+                                .frame(width:135, height: 55)
                                 .glassMaterial(cornerRadius: 12)
-                        }.disabled(!isButtonEnabled)
+                        }.disabled(isButtonPressed)
                         .alert("All drawn", isPresented: $showingAlert) {
                             // アクションボタンリスト
                         } message: {
                             Text("Press Start Over to Reset")
                         }
+                        Spacer()
                         Button(action: {
-                            buttonReset()
+                            if isButtonPressed == false{
+                                isButtonPressed = true
+                                buttonReset()
+                            }
                         }) {
                             Text("Start over")
                                 .fontSemiBold(size: 22)
                                 .padding()
-                                .frame(width:135, height: 60)
+                                .frame(width:135, height: 55)
                                 .glassMaterial(cornerRadius: 12)
-                        }.disabled(!isButtonEnabled)
+                        }.disabled(isButtonPressed)
                         .alert("Error", isPresented: $showingAlert2) {
                             // アクションボタンリスト
                         } message: {
@@ -160,29 +231,32 @@ struct ContentView: View {
                         }
                         Spacer()
                     }
-                    Spacer(minLength: 65)
+                    Spacer(minLength: 20)
                 } //Main Interface Here
                 .tabItem {
                   Text("Main") }
                 .tag(1)
+                
                 VStack(){
-                    //Spacer()
-                    Spacer().frame(height: 20)//this is genius!!
+                    Spacer(minLength: 5)
+                    //Spacer().frame(height: 20)//this is genius!!
                     Text("History")//リストを表示！
                         .fontSemiBold(size: 20)
-                        /*.onAppear{//スワイプしたらキーボード隠す
-                            amountIsFocused = false
-                        }*/
+                        .padding()//should be here
                     if let historySeq = historySeq{//値入ってたら
                         List {
-                            //ForEach(0..<historySeq.count){ index in
                             ForEach(0..<historySeq.count, id: \.self){ index in
                                 HStack(){
-                                    Text("No.\(index+1)")//
-                                        .fontLight(size: 30)
+                                    Text("No.\(index+1)")
+                                        .fontLight(size: 25)
                                     Spacer()
                                     Text("\(historySeq[index])")
                                         .fontSemiBold(size: 40)
+                                        .frame(width: (UIScreen.current?.bounds.width)!-140,
+                                               height: 40,
+                                               alignment: .trailing)
+                                        .border(.red)
+                                        .minimumScaleFactor(0.2)
                                 }.listRowBackground(Color.clear)//リストの項目の背景を無効化
                             }
                         }
@@ -190,17 +264,41 @@ struct ContentView: View {
                         //.background(Color.clear)
                         .listStyle(.plain)
                         .frame(width: UIScreen.current?.bounds.width,
-                               height: (UIScreen.current?.bounds.height)!-200,
+                               //height: (UIScreen.current?.bounds.height)!-120,//CRASHED
                                alignment: .center)
                         //.border(.red, width: 3)
+                    }else{
+                        Spacer()
+                            .frame(width: UIScreen.current?.bounds.width,
+                                   //height: (UIScreen.current?.bounds.height)!-120,//CRASHED
+                                   alignment: .center)
                     }
-                    Spacer()
-                }
+                    Spacer(minLength: 20)/*.frame(height: 10)*/
+                }//クラッシュの元がここに
                 .tabItem {
                   Text("History") }
                 .tag(2)
                 
-                Text("Setting Page")//リストを表示！
+                VStack(){
+                    HStack{
+                        Text("Settings")//リストを表示！
+                            .fontSemiBold(size: 40)
+                            .padding()
+                        Spacer()
+                    }
+                    List{
+                        VStack(){
+                            Toggle(isOn: $dummyConfig1){//ff
+                                Text("Enable Dots1")
+                            }
+                            Toggle(isOn: $dummyConfig2){//ff
+                                Text("Enable Dots2")
+                            }
+                        }//.listRowBackground(Color.clear)//どうしたら？？
+                    }.scrollCBIfPossible()//リストの背景を無効化
+                    Spacer()
+                    Text("Randomizer v0.1")//VersionStringを
+                }
                 .tabItem {
                   Text("Setting") }
                 .tag(3)
@@ -241,87 +339,17 @@ struct ContentView: View {
         }
     }
     
-    func give1RndNumber(min: Int, max: Int, historyList: inout [Int]?) -> Int {//１個だけ生成
-        var randomNum: Int = Int.random(in: min...max)
-        print("今の届いたリスト: \(String(describing: historyList))")
-        print("min: \(min), max: \(max)")
-        if var unwrappedList = historyList{
-            while unwrappedList.contains(randomNum) {//historyにある数字がでたらループ
-                print("Already picked: \(randomNum)")
-                randomNum = Int.random(in: min...max)
-            }
-            // Append the random number to the list
-            unwrappedList.append(randomNum)
-            
-            // Update the original list with the modified one
-            historyList = unwrappedList
-        } else {
-            // If the list is nil, create a new list with the random number
-            historyList = [randomNum]
-        }
-        return randomNum
-    }
-    
-    func give1RndNumberNoSave(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保持なし
-        guard let historyList = historyList, !historyList.isEmpty else{ //guard文を覚える
-            print("direct output")
-            return Int.random(in: min...max)
-        }
-        //var randomNum: Int = Int.random(in: min...max) //ロール用に使うときにはまずhistoryを作る?
-        print("今の届いたリストforRoll: \(String(describing: historyList))")
-        print("min: \(min), max: \(max)")
-        var randomNum: Int
-        var attempts = 0
-        repeat{
-            randomNum = Int.random(in: min...max)
-            attempts += 1
-            /*if attempts > (max - min + 1){
-                // Break the loop if all numbers are in remainedList
-                // This prevents potential infinite loop
-                assertionFailure("All numbers are in remainedList")
-                return -1 // Or handle this case differently based on your requirements
-            }*/
-        }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
-        print("picked \(randomNum)")
-        return randomNum
-    }
-    
-    func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//ロールの数列生成
-        var assignedValue: Int = 0
-        var returnArray: [Int]? = [Int]()
-        let listLength: Int = contents.count//リストの長さ
-        if listLength > 1{
-            for i in 1...length-1{
-                assignedValue = contents.randomElement()!//ランダムに1つ抽出
-                if i > 1{//1回目以降は
-                    while assignedValue == returnArray![i-2]{//0換算で-1, その一個前だから-2
-                        assignedValue = contents.randomElement()!
-                    }
-                }
-                returnArray!.append(assignedValue)
-            }
-        }/*else{
-            for _ in 1...2{//amount無視
-                assignedValue = contents.randomElement()!
-                returnArray!.append(assignedValue)
-            }
-        }*/
-        returnArray!.append(realAnswer)
-        return returnArray!
-    }
     
     func fileReset(){
         print("button 00 pressed")
         isFileLoaded = false
         print("cleared files")
-        openedFileName = "select .csv file"//リセット
+        openedFileName = ""//リセット
         csvNameStore = [[String]]()
         //fileURLは初期化されないが使われないようになる。
         isFileSelected = false
         //仕様の構想
         //ファイルが見つからなければ無視する
-        //選んだ時点でMinMaxは消すようにする。
-        //リセットしたら再表示する。
     }
     
     func initReset(){//起動時に実行
@@ -348,11 +376,17 @@ struct ContentView: View {
         print("button 2 (RESEt) pressed")
         if minBoxValue >= maxBoxValue{
             self.showingAlert2.toggle()
+            print("isItReset \(isButtonPressed)")
+            isButtonPressed = false
         }
         else{
             if isFileSelected == true{ //ファイルが選ばれたら自動入力
                 maxBoxValue = csvNameStore[0].count
                 minBoxValue = 1
+            }
+            //isButtonPressed = false
+            withAnimation{
+                showMessage = ""
             }
             rollCountLimit = 25//上でリセット
             rollListCounter = 1//リセット
@@ -393,6 +427,7 @@ struct ContentView: View {
             if remaining > 1 {
                 startTimer()//ロール開始
             }
+            //isButtonPressed = false
         }
     }
     
@@ -401,8 +436,12 @@ struct ContentView: View {
         //historySeq = nil
         if drawCount >= drawLimit{
             self.showingAlert.toggle()
+            print("isItNext \(isButtonPressed)")
+            isButtonPressed = false
         }
         else{
+            //isButtonPressed = false
+            showMessage = ""
             remainderSeq = [Int]()
             rollSpeed = 25
             rollListCounter = 1
@@ -414,10 +453,10 @@ struct ContentView: View {
             var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
             for _ in (1...Int(switchRemainPick ? rollCountLimit : remaining)){//ここもどうやって全部取り出すん？
                 if switchRemainPick{
-                    remainderSeq.append(give1RndNumberNoSave(min: minBoxValue, max: maxBoxValue, historyList: historySeq))//ここ変えます
+                    remainderSeq.append(give1RndNumberNoSave(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq))//ここ変えます
                 }else{
                     repeat{
-                        pickedNumber = give1RndNumberNoSave(min: minBoxValue, max: maxBoxValue, historyList: historySeq)
+                        pickedNumber = give1RndNumberNoSave(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
                     }while(historySeqforRoll.contains(pickedNumber))
                     historySeqforRoll.append(pickedNumber)
                     remainderSeq.append(pickedNumber)
@@ -436,19 +475,21 @@ struct ContentView: View {
             if remaining > 1 {
                 startTimer()//ロール開始
             }
+            //isButtonPressed = false
         }
     }
     
     func startTimer() {
+        //if isAlreadyTimerRunning == true{ return }
         isTimerRunning = true
-        isButtonEnabled = false
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
             //print("rollCounter was \(rollListCounter)")
             rollListCounter += 1
+            feedbackGenerator.impactOccurred()//触覚
             //print("rollCounter is \(rollListCounter)")
             if rollListCounter >= rollCountLimit {
                 stopTimer()
-                isButtonEnabled = true
+                isButtonPressed = false
             }
             let t: Double = Double(rollListCounter) / Double(rollCountLimit)//カウントの進捗
             rollSpeed = interpolateQuadratic(t: t, minValue: rollMinSpeed, maxValue: rollMaxSpeed)
@@ -500,10 +541,18 @@ extension View {
             .font(.system(size: CGFloat(size), weight: .semibold, design: .default))
             .foregroundColor(.white)
     }
-    func fontSemiBoldRound(size: Int) -> some View {
-        self
-            .font(.system(size: CGFloat(size), weight: .semibold, design: .rounded))
-            .foregroundColor(.white)
+    func fontSemiBoldRound(size: Int, rolling: Bool) -> some View {
+        if rolling == true{
+            return self
+                .font(.system(size: CGFloat(size), weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+                .opacity(0.4)
+        }else{
+            return self
+                .font(.system(size: CGFloat(size), weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+                .opacity(1)
+            }
     }
     func glassMaterial(cornerRadius: Int) -> some View {
         self.background(
@@ -524,6 +573,10 @@ extension UIWindow {
         }
         return nil
     }
+    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionEnded(motion, with: event)
+        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event)
+    }
 }
 
 extension UIScreen {
@@ -532,48 +585,8 @@ extension UIScreen {
     }
 }
 
-func loadCSV(fileURL: URL) -> [[String]]? {
-    do {
-        // CSVファイルの内容を文字列として読み込む
-        var csvString = try String(contentsOf: fileURL, encoding: .utf8)
-        
-        // キャリッジリターン文字を改行文字に変換
-        csvString = csvString.replacingOccurrences(of: "\r", with: "")
-        
-        // 改行とカンマでCSVを分割し、行と列を取得
-        var rows = csvString.components(separatedBy: "\n").filter { !$0.isEmpty }
-        var columns = rows[0].components(separatedBy: ",")
-        
-        // 転置が必要な場合は行と列を入れ替える
-        if rows.count < columns.count {
-            (rows, columns) = (columns, rows)
-        }
-        
-        // 転置した結果を格納する配列
-        var transposedCSV = [[String]]()
-        
-        // 各列ごとに行を作成して転置
-        for columnIndex in 0..<columns.count {
-            var transposedRow = [String]()
-            for rowIndex in 0..<rows.count {
-                let rowData = rows[rowIndex].components(separatedBy: ",")
-                
-                // IndexOutOfRangeを防ぐために、rowDataの要素数がcolumnIndex未満の場合は空文字列を追加
-                if columnIndex < rowData.count {
-                    transposedRow.append(rowData[columnIndex])
-                } else {
-                    transposedRow.append("") // もしくはエラーハンドリングを追加
-                }
-            }
-            transposedCSV.append(transposedRow)
-        }
-        
-        return transposedCSV
-    } catch {
-        // エラーが発生した場合はnilを返す
-        print("Error reading CSV file: \(error)")
-        return nil
-    }
+extension NSNotification.Name {
+    public static let deviceDidShakeNotification = NSNotification.Name("DeviceDidShakeNotification")
 }
 
 struct ContentView_Previews: PreviewProvider {
