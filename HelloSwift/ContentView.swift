@@ -37,10 +37,12 @@ struct ContentView: View {
     @State private var isFileSelected: Bool = false
     @State private var isFileLoaded: Bool = false//ファイルが読めたらToggle!
     @State private var csvNameStore = [[String]]()                              //名前を格納する
-    @State private var showMessage: String = ""
+    @State private var showMessage: String = "press Start Over to apply changes"
+    @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
     
     //misc
-    @FocusState private var isInputFocused: Bool//キーボードOn/Off
+    @FocusState private var isInputMinFocused: Bool//キーボードOn/Off
+    @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
     @State private var showCSVButton: Bool = true
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
@@ -65,7 +67,7 @@ struct ContentView: View {
                                     Text("open csv")
                                         .fontSemiBold(size: 24)
                                     //.opacity()
-                                        .padding()
+                                        .padding(13)
                                 }.disabled(isButtonPressed)
                                 Spacer()//左端に表示する
                             }//.border(.black)
@@ -75,6 +77,7 @@ struct ContentView: View {
                     VStack(){//OutOfRangeにならないようにする
                         Text("No.\(drawCount)")
                             .fontMedium(size: 32)
+                            .frame(height: 40)
                         Button(action: {
                             if isButtonPressed == false{
                                 isButtonPressed = true
@@ -83,7 +86,7 @@ struct ContentView: View {
                         }){
                             Text(verbatim: "\(rollDisplaySeq![rollListCounter-1])")
                                 .fontSemiBoldRound(size: 160, rolling: isTimerRunning)
-                                .frame(width: UIScreen.current?.bounds.width, height: 180)
+                                .frame(width: UIScreen.current?.bounds.width, height: 170)
                                 .minimumScaleFactor(0.2)
                                 .border(.red)
                         }.disabled(isButtonPressed)
@@ -96,7 +99,7 @@ struct ContentView: View {
                         Text(isFileLoaded ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: showMessage)//ファイルあれば
                             .fontSemiBold(size: 26)
                             .multilineTextAlignment(.center)
-                            .opacity(0.6)
+                            .opacity(showMessageOpacity)
                             //.padding()
                             .frame(height: 60)
                             .minimumScaleFactor(0.2)
@@ -115,12 +118,13 @@ struct ContentView: View {
                                         .onTapGesture {
                                             // Code to execute when TextField gains focus
                                             print("TextField Min tapped")
+                                            isInputMinFocused = true
                                             withAnimation {
                                                 showCSVButton = false
                                             }
                                         }
                                         .textFieldStyle(.roundedBorder)
-                                        .focused($isInputFocused)
+                                        .focused($isInputMinFocused)
                                         .keyboardType(.numberPad)
                                         .onReceive(Just(minBoxValue)) { _ in//文字数制限.
                                             if String(minBoxValue).count > inputMaxLength {
@@ -136,34 +140,14 @@ struct ContentView: View {
                                         .onTapGesture {
                                             // Code to execute when TextField gains focus
                                             print("TextField Max tapped")
+                                            isInputMaxFocused = true
                                             withAnimation {
                                                 showCSVButton = false
                                             }
                                         }
                                         .textFieldStyle(.roundedBorder)
-                                        .focused($isInputFocused)
+                                        .focused($isInputMaxFocused)
                                         .keyboardType(.numberPad) // 追加
-                                        .toolbar {
-                                            ToolbarItemGroup(placement: .keyboard) {
-                                                Spacer()
-                                                Button("Done") {// Doneボタンを片方に追加
-                                                    //Enterでも変更できるようにしたい
-                                                    isInputFocused = false
-//                                                    withAnimation{
-                                                        showCSVButton = true
-//                                                    }
-                                                    if maxBoxValue != maxBoxValueLock || minBoxValue != minBoxValueLock{
-                                                        withAnimation{
-                                                            showMessage = "press Start Over to apply changes"
-                                                        }
-                                                    }else{
-                                                        withAnimation{
-                                                            showMessage = ""
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
                                         .onReceive(Just(maxBoxValue)) { _ in
                                             if String(maxBoxValue).count > inputMaxLength {
                                                 maxBoxValue = Int(String(maxBoxValue).prefix(inputMaxLength))!
@@ -189,7 +173,15 @@ struct ContentView: View {
                                     .glassMaterial(cornerRadius: 24)
                             }.disabled(isButtonPressed)
                         }
-                    }.frame(height: 100)
+                    }.toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Done") {
+                                buttonDone()
+                            }
+                        }
+                    }
+                    .frame(height: 90)
                         .border(.green)
                     Spacer()
                     HStack(){ // lower buttons.
@@ -383,11 +375,16 @@ struct ContentView: View {
             if isFileSelected == true{ //ファイルが選ばれたら自動入力
                 maxBoxValue = csvNameStore[0].count
                 minBoxValue = 1
+                showMessageOpacity = 0.6
+            }else{
+                withAnimation{//まず非表示？
+                    showMessageOpacity = 0.0
+                }
             }
+            isInputMaxFocused = false
+            isInputMinFocused = false
+            showCSVButton = true
             //isButtonPressed = false
-            withAnimation{
-                showMessage = ""
-            }
             rollCountLimit = 25//上でリセット
             rollListCounter = 1//リセット
             rollSpeed = 25//リセット
@@ -441,7 +438,12 @@ struct ContentView: View {
         }
         else{
             //isButtonPressed = false
-            showMessage = ""
+            withAnimation{//非表示
+                showMessageOpacity = 0.0
+            }
+            isInputMaxFocused = false
+            isInputMinFocused = false
+            showCSVButton = true
             remainderSeq = [Int]()
             rollSpeed = 25
             rollListCounter = 1
@@ -476,6 +478,21 @@ struct ContentView: View {
                 startTimer()//ロール開始
             }
             //isButtonPressed = false
+        }
+    }
+    
+    func buttonDone(){
+        isInputMaxFocused = false
+        isInputMinFocused = false
+        showCSVButton = true
+        if maxBoxValue != maxBoxValueLock || minBoxValue != minBoxValueLock{
+            withAnimation{
+                showMessageOpacity = 0.6
+            }
+        }else{
+            withAnimation{
+                showMessageOpacity = 0.0
+            }
         }
     }
     
