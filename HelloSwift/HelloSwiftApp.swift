@@ -16,30 +16,30 @@ struct HelloSwiftApp: App {
     }
 }
 
-func give1RndNumber(min: Int, max: Int, historyList: inout [Int]?) -> Int {//１個だけ生成
-    var randomNum: Int = Int.random(in: min...max)
-    print("今の届いたリスト: \(String(describing: historyList))")
-    print("min: \(min), max: \(max)")
-    if var unwrappedList = historyList{
-        while unwrappedList.contains(randomNum) {//historyにある数字がでたらループ
-            print("Already picked: \(randomNum)")
-            randomNum = Int.random(in: min...max)
-        }
-        // Append the random number to the list
-        unwrappedList.append(randomNum)
-        
-        // Update the original list with the modified one
-        historyList = unwrappedList
-    } else {
-        // If the list is nil, create a new list with the random number
-        historyList = [randomNum]
-    }
-    return randomNum
-}
+//func give1RndNumber(min: Int, max: Int, historyList: inout [Int]?) -> Int {//１個だけ生成, Auto history saving
+//    var randomNum: Int = Int.random(in: min...max)
+//    print("今の届いたリスト: \(String(describing: historyList))")
+//    print("min: \(min), max: \(max)")
+//    if var unwrappedList = historyList{
+//        while unwrappedList.contains(randomNum) {//historyにある数字がでたらループ
+//            print("Already picked: \(randomNum)")
+//            randomNum = Int.random(in: min...max)
+//        }
+//        // Append the random number to the list
+//        unwrappedList.append(randomNum)
+//        
+//        // Update the original list with the modified one
+//        historyList = unwrappedList
+//    } else {
+//        // If the list is nil, create a new list with the random number
+//        historyList = [randomNum]
+//    }
+//    return randomNum
+//}
 
-func give1RndNumberNoSave(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保持なし
+func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保持なし
     guard let historyList = historyList, !historyList.isEmpty else{ //guard文を覚える
-        print("direct output")
+        print("give1rnd direct output")
         return Int.random(in: min...max)
     }
     //var randomNum: Int = Int.random(in: min...max) //ロール用に使うときにはまずhistoryを作る?
@@ -59,7 +59,7 @@ func give1RndNumberNoSave(min: Int, max: Int, historyList: [Int]?) -> Int {//履
     }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
     print("picked \(randomNum)")
     return randomNum
-}
+}//元NoSave
 
 func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//ロールの数列生成
     var assignedValue: Int = 0
@@ -129,3 +129,86 @@ func loadCSV(fileURL: URL) -> [[String]]? {
     }
 }
 
+extension View {
+    func scrollCBIfPossible() -> some View {
+        if #available(iOS 16.0, *) {//iOS16以降なら
+            //print("here! iOS 16 or UP")
+            return self.scrollContentBackground(.hidden)
+            //return self
+        } else {
+            UITableView.appearance().backgroundColor = UIColor(.clear)
+            return self
+        }
+    }
+    func fontLight(size: Int) -> some View {
+        self
+            .font(.system(size: CGFloat(size), weight: .light, design: .default))
+            .foregroundStyle(.white)
+    }
+    func fontMedium(size: Int) -> some View {
+        self
+            .font(.system(size: CGFloat(size), weight: .medium, design: .default))
+            .foregroundColor(.white)
+    }
+    func fontSemiBold(size: Int) -> some View {
+        self
+            .font(.system(size: CGFloat(size), weight: .semibold, design: .default))
+            .foregroundColor(.white)
+    }
+    func fontSemiBoldRound(size: Int, rolling: Bool) -> some View {
+        if rolling == true{
+            return self
+                .font(.system(size: CGFloat(size), weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+                .opacity(0.4)
+        }else{
+            return self
+                .font(.system(size: CGFloat(size), weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+                .opacity(1)
+            }
+    }
+    func glassMaterial(cornerRadius: Int) -> some View {
+        self.background(
+            RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
+                .foregroundStyle(.ultraThinMaterial)
+                .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
+        )
+    }
+}
+
+extension UIWindow {
+    static var current: UIWindow? {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+            for window in windowScene.windows {
+                if window.isKeyWindow { return window }
+            }
+        }
+        return nil
+    }
+    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionEnded(motion, with: event)
+        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event)
+    }
+}
+
+extension UIScreen {
+    static var current: UIScreen? {
+        UIWindow.current?.screen
+    }
+}
+
+extension NSNotification.Name {
+    public static let deviceDidShakeNotification = NSNotification.Name("DeviceDidShakeNotification")
+}
+
+//extension LinearGradient{
+//    func gradient(number: Int) -> Gradient{
+//        let gradient1
+//        let gradient2
+//        let gradient3
+//        let gradient4
+//        return gradient1
+//    }
+//}
