@@ -11,14 +11,10 @@ struct SettingsView: View {
     @Binding var isPresentedLocal: Bool
     @ObservedObject var configStore: SettingsBridge     //設定を連れてくる
     let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-//    @State var dummyConfig1forSlide: Bool = false//ダミー
-//    @State var dummyConfig2forSlide: Bool = false//ダミー
-//    @State var dummyConfig3forSlide: Bool = false//ダミー
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
                 Form{
-                    //VStack(){
                     Toggle(isOn: $configStore.dummyConf1){//ffこのような変数どうする？？
                         Text("Enable Dots1")
                     }
@@ -39,12 +35,15 @@ struct SettingsView: View {
                             isPresentedLocal = false
                         }){//どうしよう？
                             Text("Done")
-                                .padding()
+                                .bold()
+                                .padding(5)
                         }
                     }
                 }
                 Spacer()
                 Text("Randomizer v\(appVersion) by Ulyssa")
+                Text("running on \(UIDevice.current.name), \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)")
+                    .padding(5)
                 
             }.onAppear{
                 UINavigationBar.appearance().prefersLargeTitles = true
@@ -54,7 +53,6 @@ struct SettingsView: View {
                 ZStack(){
                     //Color("SettingsBackgroundColors")
                     Form{
-                        //VStack(){
                         Toggle(isOn: $configStore.dummyConf1){
                             Text("Enable Dots1")
                         }
@@ -63,7 +61,7 @@ struct SettingsView: View {
                         }
                         Toggle(isOn: $configStore.dummyConf3){
                             Text("Enable Dots3")
-                        }//半透明にしたい Material使う
+                        }
                     }   .navigationTitle(Text("Settings"))//タイトルでないですが？
                         .navigationBarTitleDisplayMode(.large)
                         .navigationViewStyle(.stack)
@@ -74,13 +72,18 @@ struct SettingsView: View {
                                     isPresentedLocal = false
                                 }){//どうしよう？
                                     Text("Done")
-                                    //.padding()
+                                        .bold()
+                                        .padding(5)
                                 }
                             }
                         }
                     Spacer()
                     Text("Randomizer v\(appVersion)")
+                    Text("running on \(UIDevice.current.name), \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)")
+                        .padding(5)
                 }
+            }.onAppear{
+                UINavigationBar.appearance().prefersLargeTitles = true
             }
         }
     }

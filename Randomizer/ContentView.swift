@@ -82,7 +82,7 @@ struct ContentView: View {
                                     .fontSemiBold(size: 24)
                                     .padding(.trailing, 12.0)
                             }//.disabled(isButtonPressed)
-                        }//.border(.black)
+                        }.border(.black)
                     }
                     //Spacer().frame(height: 5)
                     VStack(){                                                               //上半分
@@ -100,7 +100,7 @@ struct ContentView: View {
                                 .fontSemiBoldRound(size: 160, rolling: isTimerRunning)
                                 .frame(width: UIScreen.current?.bounds.width, height: 170)
                                 .minimumScaleFactor(0.2)
-                                .border(.red)
+                                //.border(.red)
                         }.disabled(isButtonPressed)
                             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
                                 if isButtonPressed == false{
@@ -188,9 +188,11 @@ struct ContentView: View {
                     }.toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
                             Spacer()
-                            Button("Done") {
+                            Button(action: {
                                 print("keyboard done! pressed")
                                 buttonKeyDone()
+                            }){
+                                Text("Done").bold()
                             }
                         }
                     }
@@ -265,7 +267,7 @@ struct ContentView: View {
                                             .frame(width: screenWidth - 140,
                                                    height: 40,
                                                    alignment: .trailing)
-                                            .border(.red)
+                                            //.border(.red)
                                             .minimumScaleFactor(0.2)
                                     }.listRowBackground(Color.clear)//リストの項目の背景を無効化
                                 }
@@ -310,13 +312,27 @@ struct ContentView: View {
                     print(openedFileLocation)
                     if openedFileLocation.startAccessingSecurityScopedResource() {
                         print("loading files")
-                        csvNameStore = loadCSV(fileURL: openedFileLocation)!
-                        print(csvNameStore)
-                        isFileSelected = true
-                        buttonReset()
+                        if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
+                            isButtonPressed = true //ボタンを押せないようにする
+                            csvNameStore = csvNames
+                            print(csvNameStore)
+                            isFileSelected = true
+                            buttonReset()
+                        }else{
+                            isFileSelected = false
+                            print("no files")
+                            openedFileName = ""//リセット
+                            csvNameStore = [[String]]()//空
+                            showMessage = "Error loading files. \nConsider loading from local storage."//この時だけこれ
+                            withAnimation{
+                                showMessageOpacity = 0.6
+                            }
+                            //isFileSelected = false
+                            
+                        }
                     }
                 }
-                catch{
+                catch{//このcatchとelse機能してない
                     print("error reading file \(error.localizedDescription)")
                 }
             }
@@ -336,11 +352,12 @@ struct ContentView: View {
     func fileReset() {
         print("cleared files")
         openedFileName = ""//リセット
-        csvNameStore = [[String]]()//空
         withAnimation{
             showMessageOpacity = 0.0
         }
+        showMessage = "press Start Over to apply changes"//変更するけど見えない
         isFileSelected = false
+        csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
         //仕様の構想
         //ファイルが見つからなければ無視する
     }
@@ -375,6 +392,7 @@ struct ContentView: View {
                 withAnimation{//まず非表示？
                     showMessageOpacity = 0.0
                 }
+                showMessage = "press Start Over to apply changes"//違ったら戻す
             }
             //Reset固有
             historySeq = []//リセットだから
@@ -398,9 +416,12 @@ struct ContentView: View {
         }
         else{
             if isFileSelected == false{ //ファイルが選ばれてなかったら
-                withAnimation{//まず非表示？
-                    showMessageOpacity = 0.0
+                if maxBoxValue == maxBoxValueLock && minBoxValue == minBoxValueLock{
+                    withAnimation{//まず非表示？
+                        showMessageOpacity = 0.0
+                    }
                 }
+                showMessage = "press Start Over to apply changes"//違ったら戻す
             }
             drawCount += 1 // draw next number
             
@@ -413,6 +434,7 @@ struct ContentView: View {
         isInputMinFocused = false
         showCSVButton = true
         if maxBoxValue != maxBoxValueLock || minBoxValue != minBoxValueLock{
+            showMessage = "press Start Over to apply changes"//絶対にStartOverと表示
             withAnimation{
                 showMessageOpacity = 0.6
             }
@@ -461,8 +483,11 @@ struct ContentView: View {
         rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: rollCountLimit, realAnswer: realAnswer)
         //remaining <= 1 ? rollCountLimit = 1 : () //ロールアニメーションはこれで無効にできる?
         logging(realAnswer: realAnswer)
+        print(remaining)
         if remaining > 1 {
             startTimer()//ロール開始, これで履歴にも追加
+        }else{//1番最後
+            isButtonPressed = false
         }
     }
     
@@ -508,9 +533,13 @@ struct ContentView: View {
 }
 
 final class SettingsBridge: ObservableObject{
-    @Published var dummyConf1: Bool = false//ダミー
-    @Published var dummyConf2: Bool = false//ダミー
-    @Published var dummyConf3: Bool = false//ダミー
+//    @Published var dummyConf1: Bool = false//ダミー
+//    @Published var dummyConf2: Bool = false//ダミー
+//    @Published var dummyConf3: Bool = false//ダミー
+    
+    @AppStorage("dummyConf1") var dummyConf1: Bool = false//ダミー
+    @AppStorage("dummyConf2") var dummyConf2: Bool = false//ダミー
+    @AppStorage("dummyConf3") var dummyConf3: Bool = false//ダミー
 }
 
 struct ContentView_Previews: PreviewProvider {

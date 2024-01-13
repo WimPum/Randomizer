@@ -9,12 +9,9 @@
 /* Begin PBXBuildFile section */
 		B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1519AE02B36BC5900D84B6D /* SettingsView.swift */; };
 		B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD99282B07882000781D1D /* Assets.xcassets */; };
-		B1FD99252B07881D00781D1D /* HelloSwiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99242B07881D00781D1D /* HelloSwiftApp.swift */; };
+		B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99242B07881D00781D1D /* RandomizerApp.swift */; };
 		B1FD99272B07881D00781D1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99262B07881D00781D1D /* ContentView.swift */; };
 		B1FD992C2B07882000781D1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD992B2B07882000781D1D /* Preview Assets.xcassets */; };
-		B1FD99362B07882000781D1D /* HelloSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99352B07882000781D1D /* HelloSwiftTests.swift */; };
-		B1FD99402B07882000781D1D /* HelloSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD993F2B07882000781D1D /* HelloSwiftUITests.swift */; };
-		B1FD99422B07882000781D1D /* HelloSwiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99412B07882000781D1D /* HelloSwiftUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,15 +35,12 @@
 		B1519AE02B36BC5900D84B6D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B1C679D62B0D182F003217C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B1FD99212B07881D00781D1D /* Randomizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Randomizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1FD99242B07881D00781D1D /* HelloSwiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftApp.swift; sourceTree = "<group>"; };
+		B1FD99242B07881D00781D1D /* RandomizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizerApp.swift; sourceTree = "<group>"; };
 		B1FD99262B07881D00781D1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B1FD99282B07882000781D1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1FD992B2B07882000781D1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B1FD99312B07882000781D1D /* RandomizerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomizerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1FD99352B07882000781D1D /* HelloSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftTests.swift; sourceTree = "<group>"; };
 		B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomizerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1FD993F2B07882000781D1D /* HelloSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftUITests.swift; sourceTree = "<group>"; };
-		B1FD99412B07882000781D1D /* HelloSwiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloSwiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,9 +71,7 @@
 		B1FD99182B07881D00781D1D = {
 			isa = PBXGroup;
 			children = (
-				B1FD99232B07881D00781D1D /* HelloSwift */,
-				B1FD99342B07882000781D1D /* HelloSwiftTests */,
-				B1FD993E2B07882000781D1D /* HelloSwiftUITests */,
+				B1FD99232B07881D00781D1D /* Randomizer */,
 				B1FD99222B07881D00781D1D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,17 +86,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B1FD99232B07881D00781D1D /* HelloSwift */ = {
+		B1FD99232B07881D00781D1D /* Randomizer */ = {
 			isa = PBXGroup;
 			children = (
 				B1C679D62B0D182F003217C0 /* Info.plist */,
-				B1FD99242B07881D00781D1D /* HelloSwiftApp.swift */,
+				B1FD99242B07881D00781D1D /* RandomizerApp.swift */,
 				B1FD99262B07881D00781D1D /* ContentView.swift */,
 				B1FD99282B07882000781D1D /* Assets.xcassets */,
 				B1FD992A2B07882000781D1D /* Preview Content */,
 				B1519AE02B36BC5900D84B6D /* SettingsView.swift */,
 			);
-			path = HelloSwift;
+			path = Randomizer;
 			sourceTree = "<group>";
 		};
 		B1FD992A2B07882000781D1D /* Preview Content */ = {
@@ -113,23 +105,6 @@
 				B1FD992B2B07882000781D1D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		B1FD99342B07882000781D1D /* HelloSwiftTests */ = {
-			isa = PBXGroup;
-			children = (
-				B1FD99352B07882000781D1D /* HelloSwiftTests.swift */,
-			);
-			path = HelloSwiftTests;
-			sourceTree = "<group>";
-		};
-		B1FD993E2B07882000781D1D /* HelloSwiftUITests */ = {
-			isa = PBXGroup;
-			children = (
-				B1FD993F2B07882000781D1D /* HelloSwiftUITests.swift */,
-				B1FD99412B07882000781D1D /* HelloSwiftUITestsLaunchTests.swift */,
-			);
-			path = HelloSwiftUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,7 +239,7 @@
 			files = (
 				B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */,
 				B1FD99272B07881D00781D1D /* ContentView.swift in Sources */,
-				B1FD99252B07881D00781D1D /* HelloSwiftApp.swift in Sources */,
+				B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +247,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1FD99362B07882000781D1D /* HelloSwiftTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,8 +254,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1FD99402B07882000781D1D /* HelloSwiftUITests.swift in Sources */,
-				B1FD99422B07882000781D1D /* HelloSwiftUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
