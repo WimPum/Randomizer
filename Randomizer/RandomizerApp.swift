@@ -43,7 +43,7 @@ func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保
         return Int.random(in: min...max)
     }
     //var randomNum: Int = Int.random(in: min...max) //ロール用に使うときにはまずhistoryを作る?
-    print("今の届いたリストforRoll: \(String(describing: historyList))")
+    //print("今の届いたリストforRoll: \(String(describing: historyList))")//ログが多いと遅くなる
     print("min: \(min), max: \(max)")
     var randomNum: Int
     var attempts = 0

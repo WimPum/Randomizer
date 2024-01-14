@@ -26,7 +26,7 @@ struct ContentView: View {
     @State private var isTimerRunning: Bool = false
     @State private var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
     @State private var rollTimer: Timer?
-    let rollMinSpeed: Double = 2.5//始めは早く段々遅く　の設定
+    let rollMinSpeed: Double = 1.3//始めは早く段々遅く　の設定
     let rollMaxSpeed: Double = 25
 
     //fileImporter
@@ -46,7 +46,8 @@ struct ContentView: View {
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
     let inputMaxLength = 10                      //最大桁数
-    let feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)//Haptic Feedback
+    let feedbackSoftGenerator = UIImpactFeedbackGenerator(style: .soft)//Haptic Feedback
+    let feedbackHardGenerator = UIImpactFeedbackGenerator(style: .medium)//Haptic Feedback
     
     //設定画面用
 //    @State var dummyConfig1: Bool = false//ダミー
@@ -82,8 +83,9 @@ struct ContentView: View {
                                     .fontSemiBold(size: 24)
                                     .padding(.trailing, 12.0)
                             }//.disabled(isButtonPressed)
-                        }.border(.black)
+                        }//.border(.black)
                     }
+                    Spacer() //
                     //Spacer().frame(height: 5)
                     VStack(){                                                               //上半分
                         Text("No.\(drawCount)")
@@ -117,7 +119,7 @@ struct ContentView: View {
                             .frame(height: 60)
                             .minimumScaleFactor(0.2)
                     }//.frame(height: 200)
-                    .border(.yellow)
+                    //.border(.yellow)
                     Spacer() //バカみたい
                     VStack(){                                                               //下半分
                         if isFileSelected == false {
@@ -197,7 +199,7 @@ struct ContentView: View {
                         }
                     }
                     .frame(height: 90)
-                        .border(.green)
+                        //.border(.green)
                     Spacer()
                     HStack(){ // lower buttons.
                         Spacer()
@@ -368,6 +370,11 @@ struct ContentView: View {
         drawLimit = maxBoxValue - minBoxValue + 1
         print("HistorySequence \(historySeq as Any)")
         print("total would be No.\(drawLimit)")
+//        for i in 1...99990{
+//            historySeq!.append(i)
+//            print(i)
+//        }//履歴に数字をたくさん追加してパフォーマンス計測
+        
 //        if isFileSelected == true{//AppStorage保存もしないので無効
 //            print(openedFileLocation)
 //            if openedFileLocation.startAccessingSecurityScopedResource() {//ロード不可
@@ -497,10 +504,12 @@ struct ContentView: View {
         isTimerRunning = true
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
             //print("rollCounter was \(rollListCounter)")
+            feedbackSoftGenerator.impactOccurred()//触覚
             rollListCounter += 1
-            feedbackGenerator.impactOccurred()//触覚
+            
             //print("rollCounter is \(rollListCounter)")
             if rollListCounter >= rollCountLimit {
+                feedbackHardGenerator.impactOccurred()//触覚
                 stopTimer()
                 //withAnimation(){//iOS 15, 16でアニメーション起きない
                     historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer

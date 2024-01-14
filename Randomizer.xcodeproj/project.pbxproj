@@ -14,23 +14,6 @@
 		B1FD992C2B07882000781D1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD992B2B07882000781D1D /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		B1FD99322B07882000781D1D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B1FD99192B07881D00781D1D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B1FD99202B07881D00781D1D;
-			remoteInfo = HelloSwift;
-		};
-		B1FD993C2B07882000781D1D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B1FD99192B07881D00781D1D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B1FD99202B07881D00781D1D;
-			remoteInfo = HelloSwift;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		B1519AE02B36BC5900D84B6D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B1C679D62B0D182F003217C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -39,26 +22,10 @@
 		B1FD99262B07881D00781D1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B1FD99282B07882000781D1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1FD992B2B07882000781D1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		B1FD99312B07882000781D1D /* RandomizerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomizerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomizerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B1FD991E2B07881D00781D1D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B1FD992E2B07882000781D1D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B1FD99382B07882000781D1D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -80,8 +47,6 @@
 			isa = PBXGroup;
 			children = (
 				B1FD99212B07881D00781D1D /* Randomizer.app */,
-				B1FD99312B07882000781D1D /* RandomizerTests.xctest */,
-				B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,42 +92,6 @@
 			productReference = B1FD99212B07881D00781D1D /* Randomizer.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B1FD99302B07882000781D1D /* RandomizerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B1FD99482B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerTests" */;
-			buildPhases = (
-				B1FD992D2B07882000781D1D /* Sources */,
-				B1FD992E2B07882000781D1D /* Frameworks */,
-				B1FD992F2B07882000781D1D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B1FD99332B07882000781D1D /* PBXTargetDependency */,
-			);
-			name = RandomizerTests;
-			productName = HelloSwiftTests;
-			productReference = B1FD99312B07882000781D1D /* RandomizerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		B1FD993A2B07882000781D1D /* RandomizerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B1FD994B2B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerUITests" */;
-			buildPhases = (
-				B1FD99372B07882000781D1D /* Sources */,
-				B1FD99382B07882000781D1D /* Frameworks */,
-				B1FD99392B07882000781D1D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B1FD993D2B07882000781D1D /* PBXTargetDependency */,
-			);
-			name = RandomizerUITests;
-			productName = HelloSwiftUITests;
-			productReference = B1FD993B2B07882000781D1D /* RandomizerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,14 +104,6 @@
 				TargetAttributes = {
 					B1FD99202B07881D00781D1D = {
 						CreatedOnToolsVersion = 15.1;
-					};
-					B1FD99302B07882000781D1D = {
-						CreatedOnToolsVersion = 15.1;
-						TestTargetID = B1FD99202B07881D00781D1D;
-					};
-					B1FD993A2B07882000781D1D = {
-						CreatedOnToolsVersion = 15.1;
-						TestTargetID = B1FD99202B07881D00781D1D;
 					};
 				};
 			};
@@ -200,8 +121,6 @@
 			projectRoot = "";
 			targets = (
 				B1FD99202B07881D00781D1D /* Randomizer */,
-				B1FD99302B07882000781D1D /* RandomizerTests */,
-				B1FD993A2B07882000781D1D /* RandomizerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -213,20 +132,6 @@
 			files = (
 				B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */,
 				B1FD992C2B07882000781D1D /* Preview Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B1FD992F2B07882000781D1D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B1FD99392B07882000781D1D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,34 +148,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B1FD992D2B07882000781D1D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B1FD99372B07882000781D1D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B1FD99332B07882000781D1D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B1FD99202B07881D00781D1D /* Randomizer */;
-			targetProxy = B1FD99322B07882000781D1D /* PBXContainerItemProxy */;
-		};
-		B1FD993D2B07882000781D1D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B1FD99202B07881D00781D1D /* Randomizer */;
-			targetProxy = B1FD993C2B07882000781D1D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B1FD99432B07882000781D1D /* Debug */ = {
@@ -401,11 +279,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.1;
-				DEVELOPMENT_ASSET_PATHS = "\"HelloSwift/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Randomizer/Preview Content\"";
 				DEVELOPMENT_TEAM = 245AVHR596;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = HelloSwift/Info.plist;
+				INFOPLIST_FILE = Randomizer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Randomizer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -439,11 +317,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.1;
-				DEVELOPMENT_ASSET_PATHS = "\"HelloSwift/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Randomizer/Preview Content\"";
 				DEVELOPMENT_TEAM = 245AVHR596;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = HelloSwift/Info.plist;
+				INFOPLIST_FILE = Randomizer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Randomizer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -468,82 +346,6 @@
 			};
 			name = Release;
 		};
-		B1FD99492B07882000781D1D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 245AVHR596;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.HelloSwiftTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Randomizer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Randomizer";
-			};
-			name = Debug;
-		};
-		B1FD994A2B07882000781D1D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 245AVHR596;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.HelloSwiftTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Randomizer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Randomizer";
-			};
-			name = Release;
-		};
-		B1FD994C2B07882000781D1D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 245AVHR596;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.HelloSwiftUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = HelloSwift;
-			};
-			name = Debug;
-		};
-		B1FD994D2B07882000781D1D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 245AVHR596;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.HelloSwiftUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = HelloSwift;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -561,24 +363,6 @@
 			buildConfigurations = (
 				B1FD99462B07882000781D1D /* Debug */,
 				B1FD99472B07882000781D1D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B1FD99482B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B1FD99492B07882000781D1D /* Debug */,
-				B1FD994A2B07882000781D1D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B1FD994B2B07882000781D1D /* Build configuration list for PBXNativeTarget "RandomizerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B1FD994C2B07882000781D1D /* Debug */,
-				B1FD994D2B07882000781D1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
