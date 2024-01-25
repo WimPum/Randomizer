@@ -21,19 +21,17 @@ struct ContentView: View {
     @State private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
     @State private var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
     @State private var rollListCounter: Int = 1     //ロールのリスト上を移動
-    @State private var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
-    @State private var rollCountLimit: Int = 25     //数字は25個だけど最後の数字が答え
     @State private var isTimerRunning: Bool = false
     @State private var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
     @State private var rollTimer: Timer?
-    let rollMinSpeed: Double = 1.3//始めは早く段々遅く　の設定
-    let rollMaxSpeed: Double = 25
+    @State private var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
+    let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
+    let rollMaxSpeed: Double = 6
 
     //fileImporter
     @State var openedFileName = ""//ファイル名表示用
     @AppStorage("fileLocation") var openedFileLocation = URL(string: "file://")!//defalut値確認
     @State var isOpeningFile = false                                            //ファイルダイアログを開く変数
-    //@AppStorage("fileSelected") private var isFileSelected: Bool = false//ファイルあるかどうか　活用
     @State private var isFileSelected: Bool = false//isFileLoadedは起動時にファイルを読み込もうとしていた時の遺産
     @State private var csvNameStore = [[String]]()                              //名前を格納する
     @State private var showMessage: String = "press Start Over to apply changes"
@@ -50,20 +48,17 @@ struct ContentView: View {
     let feedbackHardGenerator = UIImpactFeedbackGenerator(style: .medium)//Haptic Feedback
     
     //設定画面用
-//    @State var dummyConfig1: Bool = false//ダミー
-//    @State var dummyConfig2: Bool = false//ダミー
-//    @State var dummyConfig3: Bool = false//ダミー
     @ObservedObject var configStore = SettingsBridge()//設定をここに置いていく
 
     //misc
     @State var viewSelection = 3    //ページを切り替える用
-    @State var gradientColor = 1    //背景の色設定用　・・まだ機能なし
-    @State var isSettingsView: Bool = false//設定画面を開くよう
+    @State var gradientPicker = 0    //背景の色設定用　・・まだ機能なし
+    @State var isSettingsView: Bool = false//設定画面を開く用
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
-            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]),
-                           startPoint: .top, endPoint: .bottom)
+            LinearGradient(gradient: Gradient(colors: returnGradient(index: gradientPicker)),
+                           startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
                 .edgesIgnoringSafeArea(.all)
             TabView(selection: $viewSelection){
                 VStack(){//１ページ目
@@ -77,15 +72,13 @@ struct ContentView: View {
                             }.disabled(isButtonPressed)
                             Spacer()//左端に表示する
                             Button(action: {self.isSettingsView.toggle()}){
-                                //Text("Settings") //アイコンの方がいいかな？
                                 Image(systemName: "gearshape.fill")
-                                    //.foregroundColor(.white)
-                                    .fontSemiBold(size: 24)
+                                    .fontSemiBold(size: 24)//フォントとあるがSF Symbolsだから
                                     .padding(.trailing, 12.0)
-                            }//.disabled(isButtonPressed)
+                            }.disabled(isButtonPressed)
                         }//.border(.black)
                     }
-                    Spacer() //
+                    Spacer()
                     //Spacer().frame(height: 5)
                     VStack(){                                                               //上半分
                         Text("No.\(drawCount)")
@@ -120,7 +113,7 @@ struct ContentView: View {
                             .minimumScaleFactor(0.2)
                     }//.frame(height: 200)
                     //.border(.yellow)
-                    Spacer() //バカみたい
+                    Spacer()//何とか
                     VStack(){                                                               //下半分
                         if isFileSelected == false {
                             Spacer(minLength: 10)
@@ -171,10 +164,9 @@ struct ContentView: View {
                             }
                         }
                         else{
-                            HStack(){//
+                            HStack(){
                                 Text(self.openedFileName)// select csv file
                                     .fontMedium(size: 20)
-                                //.padding()
                             }
                             Button(action: {
                                 print("button csvClear! pressed")
@@ -243,7 +235,7 @@ struct ContentView: View {
                         Spacer()
                     }
                     Spacer(minLength: 20)
-                } //Main Interface Here
+                }
                 .tabItem {
                   Text("Main") }
                 .tag(1)
@@ -251,12 +243,11 @@ struct ContentView: View {
                 
                 VStack(){
                     Spacer(minLength: 5)
-                    //Spacer().frame(height: 20)//this is genius!!
-                    Text("History")//リストを表示！
+                    //Spacer().frame(height: 20)//これは知らなかった
+                    Text("History")//リストを表示
                         .fontSemiBold(size: 20)
                         .padding()//should be here
-                    if let screenWidth = UIScreen.current?.bounds.width, let historySeq = historySeq{
-                        //if let historySeq = historySeq {//値入ってたら
+                    if let screenWidth = UIScreen.current?.bounds.width, let historySeq = historySeq{//historySeqに値入ってたら
                         if historySeq.count > 0{
                             List {
                                 ForEach(0..<historySeq.count, id: \.self){ index in
@@ -281,7 +272,6 @@ struct ContentView: View {
                                    alignment: .center)
                             //.border(.red, width: 3)
                         }else{
-                            //Spacer()
                             Color.clear
                                 .frame(width: UIScreen.current?.bounds.width,
                                        //height: (UIScreen.current?.bounds.height)!-120,//CRASHED
@@ -293,11 +283,6 @@ struct ContentView: View {
                 .tabItem {
                   Text("History") }
                 .tag(2)
-            
-//                
-//                .tabItem {
-//                  Text("Setting") }
-//                .tag(3)
             }
             .tabViewStyle(PageTabViewStyle())
             //.padding()
@@ -329,8 +314,6 @@ struct ContentView: View {
                             withAnimation{
                                 showMessageOpacity = 0.6
                             }
-                            //isFileSelected = false
-                            
                         }
                     }
                 }
@@ -403,7 +386,7 @@ struct ContentView: View {
             }
             //Reset固有
             historySeq = []//リセットだから
-            rollCountLimit = 25//上でリセット
+            //configStore.rollingCountLimit = 25//上でリセット
             drawCount = 1//やり直しだから
             maxBoxValueLock = maxBoxValue//保存
             minBoxValueLock = minBoxValue
@@ -453,7 +436,7 @@ struct ContentView: View {
     }
     
     func logging(realAnswer: Int) {
-        print("roll count limit: \(rollCountLimit)")
+        print("roll count limit: \(configStore.rollingCountLimit)")
         print("Randomly picked remain: \(remainderSeq)")
         print("displaySeq: \(rollDisplaySeq as Any)")//ロール中は押せない
         print("HistorySequence is \(historySeq as Any)")
@@ -471,11 +454,11 @@ struct ContentView: View {
         
         let remaining = drawLimit - drawCount + 1
         print("\(remaining) numbers remaining")
-        let switchRemainPick = remaining > rollCountLimit
+        let switchRemainPick = remaining > configStore.rollingCountLimit
         var historySeqforRoll = [Int]()     //履歴
         var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
         
-        for _ in (1...Int(switchRemainPick ? rollCountLimit : remaining)){
+        for _ in (1...Int(switchRemainPick ? configStore.rollingCountLimit : remaining)){
             if switchRemainPick{
                 remainderSeq.append(give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq))//ここ変えます
             }else{
@@ -487,13 +470,17 @@ struct ContentView: View {
             }
         }
         realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-        rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: rollCountLimit, realAnswer: realAnswer)
-        //remaining <= 1 ? rollCountLimit = 1 : () //ロールアニメーションはこれで無効にできる?
+        rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
         logging(realAnswer: realAnswer)
         print(remaining)
-        if remaining > 1 {
+        
+        if configStore.isRollingOn && remaining > 1{
             startTimer()//ロール開始, これで履歴にも追加
         }else{//1番最後
+            if configStore.isHapticsOn {//触覚が有効なら
+                feedbackHardGenerator.impactOccurred()//触覚
+            }
+            historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
             isButtonPressed = false
         }
     }
@@ -504,20 +491,24 @@ struct ContentView: View {
         isTimerRunning = true
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
             //print("rollCounter was \(rollListCounter)")
-            feedbackSoftGenerator.impactOccurred()//触覚
+            if configStore.isHapticsOn {//触覚が有効なら
+                feedbackSoftGenerator.impactOccurred()//触覚
+            }
             rollListCounter += 1
             
             //print("rollCounter is \(rollListCounter)")
-            if rollListCounter >= rollCountLimit {
-                feedbackHardGenerator.impactOccurred()//触覚
+            if rollListCounter >= configStore.rollingCountLimit {
+                if configStore.isHapticsOn{
+                    feedbackHardGenerator.impactOccurred()//触覚
+                }
                 stopTimer()
                 //withAnimation(){//iOS 15, 16でアニメーション起きない
-                    historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
+                historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
                 //}
                 isButtonPressed = false
             }
-            let t: Double = Double(rollListCounter) / Double(rollCountLimit)//カウントの進捗
-            rollSpeed = interpolateQuadratic(t: t, minValue: rollMinSpeed, maxValue: rollMaxSpeed)
+            let t: Double = Double(rollListCounter) / Double(configStore.rollingCountLimit)//カウントの進捗
+            rollSpeed = interpolateQuadratic(t: t, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算
             updateTimerSpeed()
         }
     }
@@ -542,14 +533,13 @@ struct ContentView: View {
 }
 
 final class SettingsBridge: ObservableObject{
-//    @Published var dummyConf1: Bool = false//ダミー
-//    @Published var dummyConf2: Bool = false//ダミー
-//    @Published var dummyConf3: Bool = false//ダミー
-    
-    @AppStorage("dummyConf1") var dummyConf1: Bool = false//ダミー
-    @AppStorage("dummyConf2") var dummyConf2: Bool = false//ダミー
-    @AppStorage("dummyConf3") var dummyConf3: Bool = false//ダミー
+    @AppStorage("Haptics") var isHapticsOn: Bool = true
+    @AppStorage("rollingAnimation") var isRollingOn: Bool = true
+    @AppStorage("rollingAmount") var rollingCountLimit: Int = 25//数字は25個だけど最後の数字が答え
+    @AppStorage("rollingSpeed") var rollingSpeed: Int = 3//1から5まで
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

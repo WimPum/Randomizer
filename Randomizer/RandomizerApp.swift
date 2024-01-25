@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct HelloSwiftApp: App {
+struct RandomizerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -129,12 +129,14 @@ func loadCSV(fileURL: URL) -> [[String]]? {
     }
 }
 
+func returnGradient(index: Int) -> [Color] {
+    return [Color.blue, Color.purple]//ランダムに返せるようにします。どのコンボにも名前をつける。
+}
+
 extension View {
     func scrollCBIfPossible() -> some View {
         if #available(iOS 16.0, *) {//iOS16以降なら
-            //print("here! iOS 16 or UP")
             return self.scrollContentBackground(.hidden)
-            //return self
         } else {
             UITableView.appearance().backgroundColor = UIColor(.clear)
             return self
@@ -202,13 +204,3 @@ extension UIScreen {
 extension NSNotification.Name {
     public static let deviceDidShakeNotification = NSNotification.Name("DeviceDidShakeNotification")
 }
-
-//extension LinearGradient{
-//    func gradient(number: Int) -> Gradient{
-//        let gradient1
-//        let gradient2
-//        let gradient3
-//        let gradient4
-//        return gradient1
-//    }
-//}
