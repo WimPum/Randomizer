@@ -129,8 +129,27 @@ func loadCSV(fileURL: URL) -> [[String]]? {
     }
 }
 
-func returnGradient(index: Int) -> [Color] {
-    return [Color.blue, Color.purple]//ランダムに返せるようにします。どのコンボにも名前をつける。
+func randomBackground(conf: Int, current: Int) -> Int{
+    if 0...3 ~= conf{//confが0以上3以下なら　つまりconfをそのまgradPickerに
+        return conf//currentを直接編集しない
+    }else{
+        var randomNumber: Int
+        repeat{
+            randomNumber = Int.random(in: 0...3)//0...3は自分で色と対応させる
+        }while current == randomNumber
+        return randomNumber
+    }
+}
+
+func returnColorCombo(index: Int) -> [Color] {
+    //var randomNumber: Int
+    let colorList: [[Color]] = [
+        [Color.red, Color.green],
+        [Color.green, Color.blue],
+        [Color.blue, Color.red],
+        [Color.blue, Color.purple]
+    ]
+    return colorList[index]//どのコンボにも名前をつける。
 }
 
 extension View {

@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Binding var isPresentedLocal: Bool
     @ObservedObject var configStore: SettingsBridge     //設定を連れてくる
+//    @State private var selectedColorCombo: Int
     let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -34,7 +35,9 @@ struct SettingsView: View {
                                 Text("Animation count: \(configStore.rollingCountLimit)")
                             }
                         }
-                        //Picker
+//                        Picker("Background color", selection: $selectedColorCombo){//選ばれたら
+//                            
+//                        }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true

@@ -52,12 +52,12 @@ struct ContentView: View {
 
     //misc
     @State var viewSelection = 3    //ページを切り替える用
-    @State var gradientPicker = 0    //背景の色設定用　・・まだ機能なし
+    @AppStorage("currentGradient") var gradientPicker: Int = 0    //背景の色設定用
     @State var isSettingsView: Bool = false//設定画面を開く用
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
-            LinearGradient(gradient: Gradient(colors: returnGradient(index: gradientPicker)),
+            LinearGradient(gradient: Gradient(colors: returnColorCombo(index: gradientPicker)),
                            startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
                 .edgesIgnoringSafeArea(.all)
             TabView(selection: $viewSelection){
@@ -193,6 +193,11 @@ struct ContentView: View {
                     .frame(height: 90)
                         //.border(.green)
                     Spacer()
+                    Button(action: {gradientPicker = randomBackground(conf: configStore.configBgColor, current: gradientPicker)}){
+                        Text("Here")
+                            .frame(width:140, height: 36)
+                            .border(.black)
+                    }
                     HStack(){ // lower buttons.
                         Spacer()
                         Button(action: {
@@ -351,6 +356,7 @@ struct ContentView: View {
         maxBoxValueLock = maxBoxValue//保存
         minBoxValueLock = minBoxValue
         drawLimit = maxBoxValue - minBoxValue + 1
+        gradientPicker = randomBackground(conf: configStore.configBgColor, current: gradientPicker)//背景初期化
         print("HistorySequence \(historySeq as Any)")
         print("total would be No.\(drawLimit)")
 //        for i in 1...99990{
@@ -454,29 +460,29 @@ struct ContentView: View {
         
         let remaining = drawLimit - drawCount + 1
         print("\(remaining) numbers remaining")
-        let switchRemainPick = remaining > configStore.rollingCountLimit
-        var historySeqforRoll = [Int]()     //履歴
-        var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
-        
-        for _ in (1...Int(switchRemainPick ? configStore.rollingCountLimit : remaining)){
-            if switchRemainPick{
-                remainderSeq.append(give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq))//ここ変えます
-            }else{
-                repeat{
-                    pickedNumber = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-                }while(historySeqforRoll.contains(pickedNumber))
-                historySeqforRoll.append(pickedNumber)
-                remainderSeq.append(pickedNumber)
-            }
-        }
         realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-        rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
         logging(realAnswer: realAnswer)
         print(remaining)
         
         if configStore.isRollingOn && remaining > 1{
+            let switchRemainPick = remaining > configStore.rollingCountLimit
+            var historySeqforRoll = [Int]()     //履歴
+            var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
+            for _ in (1...Int(switchRemainPick ? configStore.rollingCountLimit : remaining)){
+                if switchRemainPick{
+                    remainderSeq.append(give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq))//ここ変えます
+                }else{
+                    repeat{
+                        pickedNumber = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
+                    }while(historySeqforRoll.contains(pickedNumber))
+                    historySeqforRoll.append(pickedNumber)
+                    remainderSeq.append(pickedNumber)
+                }
+            }
+            rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
             startTimer()//ロール開始, これで履歴にも追加
         }else{//1番最後
+            rollDisplaySeq = [realAnswer]//答えだけ追加
             if configStore.isHapticsOn {//触覚が有効なら
                 feedbackHardGenerator.impactOccurred()//触覚
             }
@@ -503,6 +509,10 @@ struct ContentView: View {
                 }
                 stopTimer()
                 //withAnimation(){//iOS 15, 16でアニメーション起きない
+//                withAnimation(){//やはりアニメーションが起きない
+                    gradientPicker = randomBackground(conf: configStore.configBgColor, current: gradientPicker)//最後に背景色変える
+                    //ピッカーからランダム選んだ時のみ有効
+//                }
                 historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
                 //}
                 isButtonPressed = false
@@ -537,6 +547,7 @@ final class SettingsBridge: ObservableObject{
     @AppStorage("rollingAnimation") var isRollingOn: Bool = true
     @AppStorage("rollingAmount") var rollingCountLimit: Int = 25//数字は25個だけど最後の数字が答え
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 3//1から5まで
+    @AppStorage("configBackgroundColor") var configBgColor = 4 //0はデフォルト、この番号が大きかったらランダムで色を
 }
 
 
