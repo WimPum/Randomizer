@@ -107,11 +107,18 @@ struct SettingsView: View {
                             }
                         }
                         //Picker
+                        Stepper(value: $configStore.configBgColor, in: 0...4){//M1 Macでは使えない
+                            Text("BackgroundNumber: \(configStore.configBgColor)")
+                        } onEditingChanged: { _ in//使わないとき_を入れる
+                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                        }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true
-                            configStore.rollingCountLimit = 25
-                            configStore.rollingSpeed = 3
+                            configStore.rollingCountLimit = 20
+                            configStore.rollingSpeed = 4
+                            configStore.configBgColor = 3
+                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
                         })
                     }
                     Section(header: Text("info"), footer: Text("End of section")){
