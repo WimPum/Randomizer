@@ -39,12 +39,12 @@ struct RandomizerApp: App {
 
 func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保持なし
     guard let historyList = historyList, !historyList.isEmpty else{ //guard文を覚える
-        print("give1rnd direct output")
+        //print("give1rnd direct output")
         return Int.random(in: min...max)
     }
     //var randomNum: Int = Int.random(in: min...max) //ロール用に使うときにはまずhistoryを作る?
     //print("今の届いたリストforRoll: \(String(describing: historyList))")//ログが多いと遅くなる
-    print("min: \(min), max: \(max)")
+    //print("min: \(min), max: \(max)")
     var randomNum: Int
     var attempts = 0
     repeat{
@@ -57,7 +57,7 @@ func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保
             return -1 // Or handle this case differently based on your requirements
         }*/
     }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
-    print("picked \(randomNum)")
+    //print("picked \(randomNum)")
     return randomNum
 }//元NoSave
 

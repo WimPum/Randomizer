@@ -38,11 +38,18 @@ struct SettingsView: View {
 //                        Picker("Background color", selection: $selectedColorCombo){//選ばれたら
 //                            
 //                        }
+                        Stepper(value: $configStore.configBgColor, in: 0...4){//M1 Macでは使えない
+                            Text("BackgroundNumber: \(configStore.configBgColor)")
+                        } onEditingChanged: { _ in//使わないとき_を入れる
+                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                        }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true
-                            configStore.rollingCountLimit = 25
-                            configStore.rollingSpeed = 3
+                            configStore.rollingCountLimit = 20
+                            configStore.rollingSpeed = 4
+                            configStore.configBgColor = 3
+                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
                         })
                     }
                     Section(header: Text("info"), footer: Text("End of section")){
@@ -71,7 +78,9 @@ struct SettingsView: View {
 //                Text("running on \(UIDevice.current.name), \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)")
 //                    .padding(5)
                 
-            }.onAppear{
+            }
+            //.tint(.pink)//グラデーションの色と一致させる？
+            .onAppear{
                 UINavigationBar.appearance().prefersLargeTitles = true//実機でいうことを聞かない部分
             }
         } 
@@ -138,7 +147,9 @@ struct SettingsView: View {
 //                Text("Randomizer v\(appVersion) by Ulyssa")
 //                Text("running on \(UIDevice.current.name), \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)")
 //                    .padding(5)
-            }.onAppear{
+            }
+            //.tint(.pink)
+            .onAppear{
                 UINavigationBar.appearance().prefersLargeTitles = true
             }
         }
