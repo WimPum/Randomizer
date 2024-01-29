@@ -35,14 +35,20 @@ struct SettingsView: View {
                                 Text("Animation count: \(configStore.rollingCountLimit)")
                             }
                         }
-//                        Picker("Background color", selection: $selectedColorCombo){//選ばれたら
-//                            
-//                        }
-                        Stepper(value: $configStore.configBgColor, in: 0...4){//M1 Macでは使えない
-                            Text("BackgroundNumber: \(configStore.configBgColor)")
-                        } onEditingChanged: { _ in//使わないとき_を入れる
+                        Picker("Background color", selection: $configStore.configBgColor){
+                            Text("Mountain").tag(0)
+                            Text("Ocean").tag(1)
+                            Text("Twilight").tag(2)
+                            Text("Default").tag(3)
+                            Text("Random").tag(4)
+                        }.onChange(of: configStore.configBgColor) { _ in
                             configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
                         }
+//                        Stepper(value: $configStore.configBgColor, in: 0...4){//M1 Macでは使えない
+//                            Text("BackgroundNumber: \(configStore.configBgColor)")
+//                        } onEditingChanged: { _ in//使わないとき_を入れる
+//                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+//                        }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true
@@ -106,12 +112,20 @@ struct SettingsView: View {
                                 Text("Animation count: \(configStore.rollingCountLimit)")
                             }
                         }
-                        //Picker
-                        Stepper(value: $configStore.configBgColor, in: 0...4){//M1 Macでは使えない
-                            Text("BackgroundNumber: \(configStore.configBgColor)")
-                        } onEditingChanged: { _ in//使わないとき_を入れる
+                        Picker("Background color", selection: $configStore.configBgColor){
+                            Text("Mountain").tag(0)
+                            Text("Ocean").tag(1)
+                            Text("Twilight").tag(2)
+                            Text("Default").tag(3)
+                            Text("Random").tag(4)
+                        }.onChange(of: configStore.configBgColor) { _ in
                             configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
                         }
+//                        Stepper(value: $configStore.configBgColor, in: 0...4){//M1 Macでは使えない
+//                            Text("BackgroundNumber: \(configStore.configBgColor)")
+//                        } onEditingChanged: { _ in//使わないとき_を入れる
+//                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+//                        }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true

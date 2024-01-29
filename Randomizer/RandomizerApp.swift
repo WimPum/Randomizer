@@ -130,7 +130,7 @@ func loadCSV(fileURL: URL) -> [[String]]? {
 }
 
 func randomBackground(conf: Int, current: Int) -> Int{
-    if 0...3 ~= conf{//confが0以上3以下なら　つまりconfをそのまgradPickerに
+    if 0...3 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
         return conf//currentを直接編集しない
     }else{
         var randomNumber: Int
