@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1519AE02B36BC5900D84B6D /* SettingsView.swift */; };
 		B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD99282B07882000781D1D /* Assets.xcassets */; };
+		B1F431F72BAC13EB004A92D0 /* IntSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F431F62BAC13EB004A92D0 /* IntSlider.swift */; };
 		B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99242B07881D00781D1D /* RandomizerApp.swift */; };
 		B1FD99272B07881D00781D1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FD99262B07881D00781D1D /* ContentView.swift */; };
 		B1FD992C2B07882000781D1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD992B2B07882000781D1D /* Preview Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* Begin PBXFileReference section */
 		B1519AE02B36BC5900D84B6D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B1C679D62B0D182F003217C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B1F431F62BAC13EB004A92D0 /* IntSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntSlider.swift; sourceTree = "<group>"; };
 		B1FD99212B07881D00781D1D /* Randomizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Randomizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1FD99242B07881D00781D1D /* RandomizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizerApp.swift; sourceTree = "<group>"; };
 		B1FD99262B07881D00781D1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				B1FD99282B07882000781D1D /* Assets.xcassets */,
 				B1FD992A2B07882000781D1D /* Preview Content */,
 				B1519AE02B36BC5900D84B6D /* SettingsView.swift */,
+				B1F431F62BAC13EB004A92D0 /* IntSlider.swift */,
 			);
 			path = Randomizer;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1F431F72BAC13EB004A92D0 /* IntSlider.swift in Sources */,
 				B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */,
 				B1FD99272B07881D00781D1D /* ContentView.swift in Sources */,
 				B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */,
@@ -296,13 +300,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "0.1-alpha";
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.rndios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -335,13 +339,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "0.1-alpha";
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ulyssas.rndios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

@@ -25,13 +25,13 @@ struct ContentView: View {
     @State private var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
     @State private var rollTimer: Timer?
     @State private var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
-    let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
-    let rollMaxSpeed: Double = 6
+    private let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
+    private let rollMaxSpeed: Double = 6
 
     //fileImporter
-    @State var openedFileName = ""//ファイル名表示用
-    @AppStorage("fileLocation") var openedFileLocation = URL(string: "file://")!//defalut値確認
-    @State var isOpeningFile = false                                            //ファイルダイアログを開く変数
+    @State private var openedFileName = ""//ファイル名表示用
+    @AppStorage("fileLocation") private var openedFileLocation = URL(string: "file://")!//defalut値確認
+    @State private var isOpeningFile = false                                            //ファイルダイアログを開く変数
     @State private var isFileSelected: Bool = false//isFileLoadedは起動時にファイルを読み込もうとしていた時の遺産
     @State private var csvNameStore = [[String]]()                              //名前を格納する
     @State private var showMessage: String = "press Start Over to apply changes"
@@ -43,7 +43,7 @@ struct ContentView: View {
     @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
-    let inputMaxLength = 10                      //最大桁数
+    private let inputMaxLength = 10                      //最大桁数
     let feedbackSoftGenerator = UIImpactFeedbackGenerator(style: .soft)//Haptic Feedback
     let feedbackHardGenerator = UIImpactFeedbackGenerator(style: .medium)//Haptic Feedback
     
@@ -51,7 +51,7 @@ struct ContentView: View {
     @ObservedObject var configStore = SettingsBridge()//設定をここに置いていく
 
     //misc
-    @State var viewSelection = 3    //ページを切り替える用
+    @State private var viewSelection = 3    //ページを切り替える用
     @State var isSettingsView: Bool = false//設定画面を開く用
 
     var body: some View {
@@ -342,8 +342,6 @@ struct ContentView: View {
         showMessage = "press Start Over to apply changes"//変更するけど見えない
         isFileSelected = false
         csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
-        //仕様の構想
-        //ファイルが見つからなければ無視する
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0
@@ -439,6 +437,8 @@ struct ContentView: View {
         print("roll count limit: \(configStore.rollingCountLimit)")
         print("Randomly picked remain: \(remainderSeq)")
         print("displaySeq: \(rollDisplaySeq as Any)")//ロール中は押せない
+        print("displaySeqLength: \(configStore.rollingCountLimit)")
+        print("displaySeqSpeedo: \(configStore.rollingSpeed)")
         print("HistorySequence is \(historySeq as Any)")
         print("current draw is \(realAnswer) and No.\(drawCount)")
         print("total is \(drawLimit)")
@@ -487,7 +487,6 @@ struct ContentView: View {
     
     //タイマーに使用される関数
     func startTimer() {
-        //if isAlreadyTimerRunning == true{ return }
         isTimerRunning = true
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
             //print("rollCounter was \(rollListCounter)")

@@ -16,27 +16,6 @@ struct RandomizerApp: App {
     }
 }
 
-//func give1RndNumber(min: Int, max: Int, historyList: inout [Int]?) -> Int {//１個だけ生成, Auto history saving
-//    var randomNum: Int = Int.random(in: min...max)
-//    print("今の届いたリスト: \(String(describing: historyList))")
-//    print("min: \(min), max: \(max)")
-//    if var unwrappedList = historyList{
-//        while unwrappedList.contains(randomNum) {//historyにある数字がでたらループ
-//            print("Already picked: \(randomNum)")
-//            randomNum = Int.random(in: min...max)
-//        }
-//        // Append the random number to the list
-//        unwrappedList.append(randomNum)
-//        
-//        // Update the original list with the modified one
-//        historyList = unwrappedList
-//    } else {
-//        // If the list is nil, create a new list with the random number
-//        historyList = [randomNum]
-//    }
-//    return randomNum
-//}
-
 func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保持なし
     guard let historyList = historyList, !historyList.isEmpty else{ //guard文を覚える
         //print("give1rnd direct output")
@@ -50,12 +29,12 @@ func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保
     repeat{
         randomNum = Int.random(in: min...max)
         attempts += 1
-        /*if attempts > (max - min + 1){
-            // Break the loop if all numbers are in remainedList
-            // This prevents potential infinite loop
-            assertionFailure("All numbers are in remainedList")
-            return -1 // Or handle this case differently based on your requirements
-        }*/
+//        if attempts > (max - min + 1){
+//            // Break the loop if all numbers are in remainedList
+//            // This prevents potential infinite loop
+//            assertionFailure("All numbers are in remainedList")
+//            return -1 // Or handle this case differently based on your requirements
+//        }
     }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
     //print("picked \(randomNum)")
     return randomNum
@@ -85,7 +64,7 @@ func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//�
     return returnArray!
 }
 
-func loadCSV(fileURL: URL) -> [[String]]? {
+func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
     do {
         // CSVファイルの内容を文字列として読み込む
         var csvString = try String(contentsOf: fileURL, encoding: .utf8)
@@ -142,7 +121,6 @@ func randomBackground(conf: Int, current: Int) -> Int{
 }
 
 func returnColorCombo(index: Int) -> [Color] {
-    //var randomNumber: Int
     let colorList: [[Color]] = [
         [Color.red, Color.green],
         [Color.green, Color.blue],
@@ -196,6 +174,27 @@ extension View {
                 .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
         )
     }
+}
+
+extension Color { // from https://blog.ottijp.com/2023/12/17/swift-hex-color/
+  /// create new object with hex string
+  init?(hex: String, opacity: Double = 1.0) {
+    // delete "#" prefix
+    let hexNorm = hex.hasPrefix("#") ? String(hex.dropFirst(1)) : hex
+
+    // scan each byte of RGB respectively
+    let scanner = Scanner(string: hexNorm)
+    var color: UInt64 = 0
+    if scanner.scanHexInt64(&color) {
+      let red = CGFloat((color & 0xFF0000) >> 16) / 255.0
+      let green = CGFloat((color & 0x00FF00) >> 8) / 255.0
+      let blue = CGFloat(color & 0x0000FF) / 255.0
+      self.init(red: red, green: green, blue: blue, opacity: opacity)
+    } else {
+      // invalid format
+      return nil
+    }
+  }
 }
 
 extension UIWindow {
