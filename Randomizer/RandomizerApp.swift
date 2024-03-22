@@ -108,13 +108,13 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
     }
 }
 
-func randomBackground(conf: Int, current: Int) -> Int{
-    if 0...3 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
+func giveRandomBackground(conf: Int, current: Int) -> Int{
+    if 0...5 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
         return conf//currentを直接編集しない
     }else{
         var randomNumber: Int
         repeat{
-            randomNumber = Int.random(in: 0...3)//0...3は自分で色と対応させる
+            randomNumber = Int.random(in: 0...5)//0...3は自分で色と対応させる
         }while current == randomNumber
         return randomNumber
     }
@@ -122,10 +122,12 @@ func randomBackground(conf: Int, current: Int) -> Int{
 
 func returnColorCombo(index: Int) -> [Color] {
     let colorList: [[Color]] = [
-        [Color.red, Color.green],
-        [Color.green, Color.blue],
-        [Color.blue, Color.red],
-        [Color.blue, Color.purple]
+        [Color.blue, Color.purple], // Default
+        [Color.blue, Color.red], // Twilight
+        [Color.red, Color.green], // Mountain
+        [Color.green, Color.blue], // Ocean
+        [Color.mint, Color.indigo], // Sky
+        [Color.black, Color.green] // 実験体
     ]
     return colorList[index]//どのコンボにも名前をつける。
 }
@@ -173,6 +175,13 @@ extension View {
                 .foregroundStyle(.ultraThinMaterial)
                 .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
         )
+    }
+    func setUnderline() -> some View { // TextFieldに使います
+        self
+            //.padding(.vertical, 10)
+            .overlay(Rectangle().frame(height: 2).padding(.top, 35))
+            .foregroundColor(.white)
+            //.padding(10)
     }
 }
 

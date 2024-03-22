@@ -8,8 +8,8 @@ import class UIKit.UIImpactFeedbackGenerator//UIKitインポートしちゃっ�
 
 struct ContentView: View {
     //main
-    @AppStorage("minValue") private var minBoxValue: Int = 1
-    @AppStorage("maxValue") private var maxBoxValue: Int = 50
+    @AppStorage("minValue") private var minBoxValue: String = "1"
+    @AppStorage("maxValue") private var maxBoxValue: String = "50"
     @State private var minBoxValueLock: Int = 1
     @State private var maxBoxValueLock: Int = 50//Start Overを押すまでここにkeep
     @State private var drawCount: Int = 0       //今何回目か
@@ -38,12 +38,12 @@ struct ContentView: View {
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
     
     //1st view(main) variables
-    @State private var showCSVButton: Bool = true
+    @State private var showCSVButtonAndName: Bool = true // キーボード入力する時に1番上と名前表示する部分を隠す
     @FocusState private var isInputMinFocused: Bool//キーボードOn/Off
     @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
-    private let inputMaxLength = 10                      //最大桁数
+    private let inputMaxLength: Int = 10                      //最大桁数
     let feedbackSoftGenerator = UIImpactFeedbackGenerator(style: .soft)//Haptic Feedback
     let feedbackHardGenerator = UIImpactFeedbackGenerator(style: .medium)//Haptic Feedback
     
@@ -51,7 +51,7 @@ struct ContentView: View {
     @ObservedObject var configStore = SettingsBridge()//設定をここに置いていく
 
     //misc
-    @State private var viewSelection = 3    //ページを切り替える用
+    @State private var viewSelection = 1    //ページを切り替える用
     @State var isSettingsView: Bool = false//設定画面を開く用
 
     var body: some View {
@@ -62,7 +62,7 @@ struct ContentView: View {
             TabView(selection: $viewSelection){
                 VStack(){//１ページ目
                     Spacer().frame(height: 5)
-                    if showCSVButton == true{
+                    if showCSVButtonAndName == true{ //キーボード出す時は隠してます
                         HStack{
                             Button(action: {self.isOpeningFile.toggle()}){
                                 Text("open csv")
@@ -103,63 +103,72 @@ struct ContentView: View {
                                     buttonNext()
                                 }
                             }
-                        Text(isFileSelected ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: showMessage)//ファイルあれば
-                            .fontSemiBold(size: 26)
-                            .multilineTextAlignment(.center)
-                            .opacity(showMessageOpacity)
-                            //.padding()
-                            .frame(height: 60)
-                            .minimumScaleFactor(0.2)
+                        if showCSVButtonAndName == true{ //キーボード出す時は隠してます
+                            Text(isFileSelected ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: showMessage)//ファイルあれば
+                                .fontSemiBold(size: 26)
+                                .multilineTextAlignment(.center)
+                                .opacity(showMessageOpacity)
+                                //.padding()
+                                .frame(height: 60)
+                                .minimumScaleFactor(0.2)
+                        }
+                        
                     }//.frame(height: 200)
                     //.border(.yellow)
                     Spacer()//何とか
                     VStack(){                                                               //下半分
                         if isFileSelected == false {
                             Spacer(minLength: 10)
-                            HStack{
-                                Spacer(minLength: 60)
+                            HStack(){
+                                Spacer()
                                 VStack{//ここstructとかで省略できないか？
                                     Text("Min")
                                         .fontMedium(size: 24)
-                                    TextField("Min", value: $minBoxValue, formatter: NumberFormatter())
+                                    limitedTextField(value: $minBoxValue, placeHolder: "Min", maxLength: inputMaxLength)
                                         .onTapGesture {
                                             print("TextField Min tapped")
                                             isInputMinFocused = true
                                             withAnimation {
-                                                showCSVButton = false
+                                                showCSVButtonAndName = false
                                             }
                                         }
-                                        .textFieldStyle(.roundedBorder)
+                                        .background(Color.clear)
+                                        .setUnderline()
+                                        .frame(width: 120)
                                         .focused($isInputMinFocused)
-                                        .keyboardType(.numberPad)
-                                        .onReceive(Just(minBoxValue)) { _ in//文字数制限.
-                                            if String(minBoxValue).count > inputMaxLength {
-                                                minBoxValue = Int(String(minBoxValue).prefix(inputMaxLength))!
-                                            }
-                                        }.disabled(isButtonPressed)
+//                                        .onReceive(Just(minBoxValue)) { _ in//文字数制限. iOS 17では入力中に修正、iOS 16以前ではDone押したときに修正, iOS 15では修正が起きない
+//                                        //print("Im INNNNNNNNNN!!!!!!")
+//                                            if String(minBoxValue).count > inputMaxLength {
+//                                                minBoxValue = String(minBoxValue.prefix(inputMaxLength))
+//                                                //print("FIDEDXMIN")
+//                                           }
+//                                        }
+                                        .disabled(isButtonPressed)
                                 }
-                                Spacer(minLength: 70)
+                                Spacer()
                                 VStack{
                                     Text("Max")
                                         .fontMedium(size: 24)
-                                    TextField("Max", value: $maxBoxValue, formatter: NumberFormatter())
+                                    limitedTextField(value: $maxBoxValue, placeHolder: "Max", maxLength: inputMaxLength)
                                         .onTapGesture {
                                             print("TextField Max tapped")
                                             isInputMaxFocused = true
                                             withAnimation {
-                                                showCSVButton = false
+                                                showCSVButtonAndName = false
                                             }
                                         }
-                                        .textFieldStyle(.roundedBorder)
+                                        .background(Color.clear)
+                                        .setUnderline()
+                                        .frame(width: 120)
                                         .focused($isInputMaxFocused)
-                                        .keyboardType(.numberPad) // 追加
-                                        .onReceive(Just(maxBoxValue)) { _ in
-                                            if String(maxBoxValue).count > inputMaxLength {
-                                                maxBoxValue = Int(String(maxBoxValue).prefix(inputMaxLength))!
-                                            }
-                                        }.disabled(isButtonPressed)
+//                                        .onReceive(Just(maxBoxValue)) { _ in
+//                                            if String(maxBoxValue).count > inputMaxLength {
+//                                                maxBoxValue = String(maxBoxValue.prefix(inputMaxLength))
+//                                            }
+//                                        }
+                                        .disabled(isButtonPressed)
                                 }
-                                Spacer(minLength: 60)
+                                Spacer()
                             }
                         }
                         else{
@@ -284,6 +293,13 @@ struct ContentView: View {
                 .tag(2)
             }
             .tabViewStyle(PageTabViewStyle())
+            .onChange(of: viewSelection, perform: { _ in // 入力中にページが切り替わっても隠れた物は元に戻る
+                if viewSelection == 2{ // 1以外ないけど
+                    showCSVButtonAndName = true
+                    isInputMaxFocused = false
+                    isInputMinFocused = false
+                }
+            })
             //.padding()
             .ignoresSafeArea(edges: .top)
         }
@@ -345,16 +361,16 @@ struct ContentView: View {
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0
-        maxBoxValueLock = maxBoxValue//保存
-        minBoxValueLock = minBoxValue
-        drawLimit = maxBoxValue - minBoxValue + 1
-        configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
+        maxBoxValueLock = Int(maxBoxValue)!//保存
+        minBoxValueLock = Int(minBoxValue)!
+        drawLimit = maxBoxValueLock - minBoxValueLock + 1
+        configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
         print("HistorySequence \(historySeq as Any)")
         print("total would be No.\(drawLimit)")
 //        for i in 1...99990{
 //            historySeq!.append(i)
 //            print(i)
-//        }//履歴に数字をたくさん追加してパフォーマンス計測
+//        }//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
         
 //        if isFileSelected == true{//AppStorage保存もしないので無効
 //            print(openedFileLocation)
@@ -373,8 +389,8 @@ struct ContentView: View {
         }
         else{
             if isFileSelected == true{ //ファイルが選ばれたら自動入力
-                maxBoxValue = csvNameStore[0].count
-                minBoxValue = 1
+                maxBoxValue = String(csvNameStore[0].count)
+                minBoxValue = "1"
                 showMessageOpacity = 0.6
             }else{
                 withAnimation{//まず非表示？
@@ -386,10 +402,10 @@ struct ContentView: View {
             historySeq = []//リセットだから
             //configStore.rollingCountLimit = 25//上でリセット
             drawCount = 1//やり直しだから
-            maxBoxValueLock = maxBoxValue//保存
-            minBoxValueLock = minBoxValue
-            print("mmBoxVal: \(maxBoxValue), \(minBoxValue)")
-            drawLimit = maxBoxValue - minBoxValue + 1
+            maxBoxValueLock = Int(maxBoxValue)!//保存
+            minBoxValueLock = Int(minBoxValue)!
+            print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
+            drawLimit = maxBoxValueLock - minBoxValueLock + 1
             
             randomNumberPicker()//まとめた
             
@@ -404,7 +420,7 @@ struct ContentView: View {
         }
         else{
             if isFileSelected == false{ //ファイルが選ばれてなかったら
-                if maxBoxValue == maxBoxValueLock && minBoxValue == minBoxValueLock{
+                if maxBoxValue == String(maxBoxValueLock) && minBoxValue == String(minBoxValueLock){
                     withAnimation{//まず非表示？
                         showMessageOpacity = 0.0
                     }
@@ -418,19 +434,25 @@ struct ContentView: View {
     }
     
     func buttonKeyDone(){
+        showMessageOpacity = 0.0 // 名前欄の透明度リセットします
+        minBoxValue = String(minBoxValue.prefix(inputMaxLength))
+        maxBoxValue = String(maxBoxValue.prefix(inputMaxLength)) // 文字数制限を適用
+        showCSVButtonAndName = true
         isInputMaxFocused = false
         isInputMinFocused = false
-        showCSVButton = true
-        if maxBoxValue != maxBoxValueLock || minBoxValue != minBoxValueLock{
-            showMessage = "press Start Over to apply changes"//絶対にStartOverと表示
-            withAnimation{
-                showMessageOpacity = 0.6
-            }
-        }else{
-            withAnimation{
-                showMessageOpacity = 0.0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
+                showMessage = "press Start Over to apply changes"//絶対にStartOverと表示
+                withAnimation{
+                    showMessageOpacity = 0.6
+                }
+            }else{
+                withAnimation{
+                    showMessageOpacity = 0.0
+                }
             }
         }
+
     }
     
     func logging(realAnswer: Int) {
@@ -445,9 +467,11 @@ struct ContentView: View {
     }
     
     func randomNumberPicker(){//アクションを一つにまとめるだけで、他では使わない
+        showMessageOpacity = 0.0 // 名前欄の透明度リセットします
+        showCSVButtonAndName = true
         isInputMaxFocused = false
         isInputMinFocused = false
-        showCSVButton = true
+
         remainderSeq = [Int]()
         rollSpeed = 25
         rollListCounter = 1
@@ -479,7 +503,7 @@ struct ContentView: View {
             if configStore.isHapticsOn {//触覚が有効なら
                 feedbackHardGenerator.impactOccurred()//触覚
             }
-            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
+            configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
             historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
             isButtonPressed = false
         }
@@ -503,7 +527,7 @@ struct ContentView: View {
                 stopTimer()
                 //withAnimation(){//iOS 15, 16でアニメーション起きない
 //                withAnimation(){//やはりアニメーションが起きない
-                    configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
+                    configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
                     //ピッカーからランダム選んだ時のみ有効
 //                }
                 historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
@@ -535,13 +559,16 @@ struct ContentView: View {
     }
 }
 
+
+
+
 final class SettingsBridge: ObservableObject{
     @AppStorage("Haptics") var isHapticsOn: Bool = true
     @AppStorage("rollingAnimation") var isRollingOn: Bool = true
     @AppStorage("rollingAmount") var rollingCountLimit: Int = 20//数字は25個だけど最後の数字が答え
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 4//1から5まで
-    @AppStorage("currentGradient") var gradientPicker: Int = 3    //今の背景の色設定用　設定画面ではいじれません
-    @AppStorage("configBackgroundColor") var configBgColor = 3 //0はデフォルト、この番号が大きかったらランダムで色を
+    @AppStorage("currentGradient") var gradientPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
+    @AppStorage("configBackgroundColor") var configBgColor = 0 //0はデフォルト、この番号が大きかったらランダムで色を
 }
 
 

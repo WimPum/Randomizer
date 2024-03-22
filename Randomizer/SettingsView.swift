@@ -52,21 +52,25 @@ struct SettingsView: View {
 
                         }
                         Picker("Background color", selection: $configStore.configBgColor){
-                            Text("Mountain").tag(0)
-                            Text("Ocean").tag(1)
-                            Text("Twilight").tag(2)
-                            Text("Default").tag(3)
-                            Text("Random").tag(4)
+                            Text("Default").tag(0)
+                            Text("Twilight").tag(1)
+                            Text("Mountain").tag(2)
+                            Text("Ocean").tag(3)
+                            Text("Sky").tag(4)//dummy
+                            Text("Exp1").tag(5)//dummy2
+                            Text("Random").tag(6)
                         }.onChange(of: configStore.configBgColor) { _ in
-                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                            withAnimation(){
+                                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                            }
                         }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true
                             configStore.rollingCountLimit = 20
                             configStore.rollingSpeed = 4
-                            configStore.configBgColor = 3
-                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                            configStore.configBgColor = 0
+                            configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
                         })
                     }
                     Section(header: Text("info")){
@@ -134,21 +138,25 @@ struct SettingsView: View {
                             }
                         }
                         Picker("Background color", selection: $configStore.configBgColor){
-                            Text("Mountain").tag(0)
-                            Text("Ocean").tag(1)
-                            Text("Twilight").tag(2)
-                            Text("Default").tag(3)
-                            Text("Random").tag(4)
+                            Text("Default").tag(0)
+                            Text("Twilight").tag(1)
+                            Text("Mountain").tag(2)
+                            Text("Ocean").tag(3)
+                            Text("Sky").tag(4)//dummy
+                            Text("Exp1").tag(5)//dummy2
+                            Text("Random").tag(6)
                         }.onChange(of: configStore.configBgColor) { _ in
-                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                            withAnimation(){
+                                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                            }
                         }
                         Button("Reset setting", action:{
                             configStore.isHapticsOn = true
                             configStore.isRollingOn = true
                             configStore.rollingCountLimit = 20
                             configStore.rollingSpeed = 4
-                            configStore.configBgColor = 3
-                            configStore.gradientPicker = randomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                            configStore.configBgColor = 0
+                            configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
                         })
                     }
                     Section(header: Text("info")){
