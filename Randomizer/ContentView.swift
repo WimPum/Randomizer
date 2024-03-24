@@ -136,13 +136,6 @@ struct ContentView: View {
                                         .setUnderline()
                                         .frame(width: 120)
                                         .focused($isInputMinFocused)
-//                                        .onReceive(Just(minBoxValue)) { _ in//文字数制限. iOS 17では入力中に修正、iOS 16以前ではDone押したときに修正, iOS 15では修正が起きない
-//                                        //print("Im INNNNNNNNNN!!!!!!")
-//                                            if String(minBoxValue).count > inputMaxLength {
-//                                                minBoxValue = String(minBoxValue.prefix(inputMaxLength))
-//                                                //print("FIDEDXMIN")
-//                                           }
-//                                        }
                                         .disabled(isButtonPressed)
                                 }
                                 Spacer()
@@ -383,6 +376,7 @@ struct ContentView: View {
     }
     
     func buttonReset() {
+        showCSVButtonAndName = true
         if minBoxValue >= maxBoxValue{
             self.showingAlert2.toggle()
             isButtonPressed = false
@@ -401,19 +395,20 @@ struct ContentView: View {
             //Reset固有
             historySeq = []//リセットだから
             //configStore.rollingCountLimit = 25//上でリセット
-            drawCount = 1//やり直しだから
             maxBoxValueLock = Int(maxBoxValue)!//保存
             minBoxValueLock = Int(minBoxValue)!
             print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
             drawLimit = maxBoxValueLock - minBoxValueLock + 1
             
-            randomNumberPicker()//まとめた
+            randomNumberPicker(mode: 2)//まとめた
             
             //Nextと共通
         }
     }
     
     func buttonNext() {
+        showCSVButtonAndName = true
+        
         if drawCount >= drawLimit{
             self.showingAlert.toggle()
             isButtonPressed = false
@@ -427,10 +422,12 @@ struct ContentView: View {
                 }
                 showMessage = "press Start Over to apply changes"//違ったら戻す
             }
-            drawCount += 1 // draw next number
-            
-            randomNumberPicker()//まとめました
+            randomNumberPicker(mode: 1)//まとめました
         }
+    }
+    
+    func autoGenMode() {
+        buttonNext()
     }
     
     func buttonKeyDone(){
@@ -466,9 +463,7 @@ struct ContentView: View {
         print("total is \(drawLimit)")
     }
     
-    func randomNumberPicker(){//アクションを一つにまとめるだけで、他では使わない
-        showMessageOpacity = 0.0 // 名前欄の透明度リセットします
-        showCSVButtonAndName = true
+    func randomNumberPicker(mode: Int){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
         isInputMaxFocused = false
         isInputMinFocused = false
 
@@ -506,6 +501,12 @@ struct ContentView: View {
             configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
             historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
             isButtonPressed = false
+        }
+        if mode == 1{ // mode 1はnext
+            drawCount += 1 // draw next number
+        }
+        else if mode == 2{
+            drawCount = 1
         }
     }
     
