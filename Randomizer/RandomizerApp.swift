@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import class UIKit.UIImpactFeedbackGenerator//UIKitインポートしちゃった
 
 @main
 struct RandomizerApp: App {
@@ -38,14 +39,14 @@ func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保
     }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
     //print("picked \(randomNum)")
     return randomNum
-}//元NoSave
+}
 
-func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//ロールの数列生成
+func giveRandomSeq(contents: [Int]!, length: Int) -> [Int]{//ロールの数列生成
     var assignedValue: Int = 0
     var returnArray: [Int]? = [Int]()
     let listLength: Int = contents.count//リストの長さ
     if listLength > 1{
-        for i in 1...length-1{
+        for i in 1...length{
             assignedValue = contents.randomElement()!//ランダムに1つ抽出
             if i > 1{//1回目以降は
                 while assignedValue == returnArray![i-2]{//0換算で-1, その一個前だから-2
@@ -54,14 +55,25 @@ func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//�
             }
             returnArray!.append(assignedValue)
         }
-    }/*else{
-        for _ in 1...2{//amount無視
-            assignedValue = contents.randomElement()!
-            returnArray!.append(assignedValue)
-        }
-    }*/
-    returnArray!.append(realAnswer)
+    }
     return returnArray!
+}
+
+func interpolateQuadratic(t: Double, minValue: Double, maxValue: Double) -> Double { // 二次関数
+    let clampedT = max(0, min(1, t))//0から1の範囲で制限
+    return (1 - clampedT) * maxValue + clampedT * minValue
+}
+
+func giveHaptics(impactType: String, ifActivate: Bool){
+    if ifActivate == false{
+        return
+    }
+    else if impactType == "soft"{
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()//Haptic Feedback
+    }
+    else if impactType == "medium"{
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()//Haptic Feedback
+    }
 }
 
 func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
@@ -129,18 +141,21 @@ func returnColorCombo(index: Int) -> [Color] {
         [Color.mint, Color.indigo], // Sky
         [Color.black, Color.green] // 実験体
     ]
-    return colorList[index]//どのコンボにも名前をつける。
+    return colorList[index]
 }
 
 extension View {
+    //iOSバージョンで分岐 リスト背景透明化
     func scrollCBIfPossible() -> some View {
-        if #available(iOS 16.0, *) {//iOS16以降なら
+        if #available(iOS 16.0, *) {//iOS16以降ならこっちでリスト透明化
             return self.scrollContentBackground(.hidden)
         } else {
             UITableView.appearance().backgroundColor = UIColor(.clear)
             return self
         }
     }
+    
+    //色とか スタイル
     func fontLight(size: Int) -> some View {
         self
             .font(.system(size: CGFloat(size), weight: .light, design: .default))
@@ -158,7 +173,7 @@ extension View {
     }
     func fontSemiBoldRound(size: Int, rolling: Bool) -> some View {
         if rolling == true{
-            return self
+            return self // ロール中は半透明
                 .font(.system(size: CGFloat(size), weight: .semibold, design: .rounded))
                 .foregroundColor(.white)
                 .opacity(0.4)
@@ -178,10 +193,15 @@ extension View {
     }
     func setUnderline() -> some View { // TextFieldに使います
         self
-            //.padding(.vertical, 10)
             .overlay(Rectangle().frame(height: 2).padding(.top, 35))
             .foregroundColor(.white)
-            //.padding(10)
+    }
+    func glassButton() -> some View {
+        self
+            .fontSemiBold(size: 22)
+            .padding()
+            .frame(width:135, height: 55)
+            .glassMaterial(cornerRadius: 12)
     }
 }
 
