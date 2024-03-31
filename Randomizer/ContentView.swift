@@ -471,7 +471,7 @@ struct ContentView: View {
                     remainderSeq.append(pickedNumber)
                 }
             }
-            rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit)
+            rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
             startTimer()//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
             configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える

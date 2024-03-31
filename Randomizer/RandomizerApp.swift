@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import class UIKit.UIImpactFeedbackGenerator//UIKitインポートしちゃった
+import UIKit
 
 @main
 struct RandomizerApp: App {
@@ -41,12 +41,12 @@ func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保
     return randomNum
 }
 
-func giveRandomSeq(contents: [Int]!, length: Int) -> [Int]{//ロールの数列生成
+func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//ロールの数列生成
     var assignedValue: Int = 0
     var returnArray: [Int]? = [Int]()
     let listLength: Int = contents.count//リストの長さ
     if listLength > 1{
-        for i in 1...length{
+        for i in 1...length-1{
             assignedValue = contents.randomElement()!//ランダムに1つ抽出
             if i > 1{//1回目以降は
                 while assignedValue == returnArray![i-2]{//0換算で-1, その一個前だから-2
@@ -55,6 +55,7 @@ func giveRandomSeq(contents: [Int]!, length: Int) -> [Int]{//ロールの数列�
             }
             returnArray!.append(assignedValue)
         }
+        returnArray!.append(realAnswer)
     }
     return returnArray!
 }
@@ -70,6 +71,7 @@ func giveHaptics(impactType: String, ifActivate: Bool){
     }
     else if impactType == "soft"{
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()//Haptic Feedback
+        //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
     }
     else if impactType == "medium"{
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()//Haptic Feedback
