@@ -65,6 +65,29 @@ func interpolateQuadratic(t: Double, minValue: Double, maxValue: Double) -> Doub
     return (1 - clampedT) * maxValue + clampedT * minValue
 }
 
+func firstLang() -> String {
+    let prefLang = Locale.preferredLanguages.first
+    return prefLang!
+}
+
+func setMessageReset(language: String) -> String {
+    if language.hasPrefix("ja"){
+        return "やり直しを押して変更を適用"
+    }
+    else {
+        return "press Start Over to apply changes"
+    }
+}
+
+func setMessageErrorLoad(language: String) -> String {
+    if language.hasPrefix("ja"){
+        return "ファイルを読み込めませんでした。\n「このiPhone内」から選択してください。"
+    }
+    else {
+        return "Error loading files. \nPlease load files from local storage."
+    }
+}
+
 func giveHaptics(impactType: String, ifActivate: Bool){
     if ifActivate == false{
         return

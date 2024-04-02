@@ -32,7 +32,7 @@ struct ContentView: View {
     @State private var isOpeningFile = false                                            //ファイルダイアログを開く変数
     @State private var isFileSelected: Bool = false//isFileLoadedは起動時にファイルを読み込もうとしていた時の遺産
     @State private var csvNameStore = [[String]]()                              //名前を格納する
-    @State private var showMessage: String = "press Start Over to apply changes"
+    @State private var showMessage: String = ""
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
     
     //1st view(main) variables
@@ -195,7 +195,7 @@ struct ContentView: View {
                         .alert("All drawn", isPresented: $showingAlert) {
                             // アクションボタンリスト
                         } message: {
-                            Text("Press Start Over to Reset")
+                            Text("press Start over to reset")
                         }
                         Spacer()
                         Button(action: {
@@ -302,7 +302,7 @@ struct ContentView: View {
                             print("no files")
                             openedFileName = ""//リセット
                             csvNameStore = [[String]]()//空
-                            showMessage = "Error loading files. \nConsider loading from local storage."//この時だけこれ
+                            showMessage = setMessageErrorLoad(language: firstLang())//この時だけこれ
                             withAnimation{
                                 showMessageOpacity = 0.6
                             }
@@ -325,7 +325,7 @@ struct ContentView: View {
         withAnimation{
             showMessageOpacity = 0.0
         }
-        showMessage = "press Start Over to apply changes"//変更するけど見えない
+        showMessage = setMessageReset(language: firstLang())//変更するけど見えない
         isFileSelected = false
         csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
     }
@@ -335,6 +335,7 @@ struct ContentView: View {
         minBoxValueLock = Int(minBoxValue)!//保存から復元
         maxBoxValueLock = Int(maxBoxValue)!
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
+        showMessage = setMessageReset(language: firstLang())
         configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
         print("HistorySequence \(historySeq as Any)\ntotal would be No.\(drawLimit)")
 //        for i in 1...99990{
@@ -360,7 +361,7 @@ struct ContentView: View {
                 withAnimation{//まず非表示？
                     showMessageOpacity = 0.0
                 }
-                showMessage = "press Start Over to apply changes"//違ったら戻す
+                showMessage = setMessageReset(language: firstLang())//違ったら戻す
             }
             //Reset固有
             historySeq = []//リセットだから?????????????
@@ -387,7 +388,7 @@ struct ContentView: View {
                         showMessageOpacity = 0.0
                     }
                 }
-                showMessage = "press Start Over to apply changes"//違ったら戻す
+                showMessage = setMessageReset(language: firstLang())//違ったら戻す
             }
             randomNumberPicker(mode: 1)//まとめました
         }
@@ -406,7 +407,7 @@ struct ContentView: View {
         maxBoxValue = String(maxBoxValue.prefix(inputMaxLength)) // 文字数制限を適用
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
-                showMessage = "press Start Over to apply changes"//絶対にStartOverと表示
+                showMessage = setMessageReset(language: firstLang())//絶対にStartOverと表示
                 withAnimation{
                     showMessageOpacity = 0.6
                 }
