@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NumberList: View {
-    @State var historySeq: [Int]?
+    @Binding var historySeq: [Int]?
     let screenWidth: CGFloat
     var index: Int
     

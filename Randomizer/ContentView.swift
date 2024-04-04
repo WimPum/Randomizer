@@ -45,16 +45,20 @@ struct ContentView: View {
     
     //設定画面用
     @ObservedObject var configStore = SettingsBridge()//設定をここに置いていく
-
+    
+    //外部ディスプレイ用
+    @EnvironmentObject var externalStore: ExternalBridge
+    
     //misc
     @State private var viewSelection = 1    //ページを切り替える用
-    @State var isSettingsView: Bool = false//設定画面を開く用
+    @State private var isSettingsView: Bool = false//設定画面を開く用
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
             LinearGradient(gradient: Gradient(colors: returnColorCombo(index: configStore.gradientPicker)),
                            startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
                 .edgesIgnoringSafeArea(.all)
+                .transition(.opacity)
             TabView(selection: $viewSelection){
                 VStack(){//１ページ目
                     Spacer().frame(height: 5)
@@ -444,7 +448,7 @@ struct ContentView: View {
         else if mode == 2{
             drawCount = 1
         }
-        
+        externalStore.externalDraw = drawCount
         remainderSeq = [Int]()
         
         //rollSpeed = 25 // 特に理由はなし speedはこれに係数をかけている
@@ -456,7 +460,7 @@ struct ContentView: View {
         print("\(remaining) numbers remaining")
         realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
         logging(realAnswer: realAnswer) // ログ　releaseでは消す
-        
+        externalStore.externalNumber = realAnswer // 実験
         if configStore.isRollingOn && remaining > 1{
             let ifRemainedMore = remaining > configStore.rollingCountLimit // ロール用に選ぶ数字の量を決定 少ない時は残りの数 多ければrollingCountLimitの数選ぶ
             var historySeqforRoll = [Int]()     //履歴
@@ -490,11 +494,11 @@ struct ContentView: View {
             if rollListCounter + 1 >= configStore.rollingCountLimit {
                 rollListCounter += 1
                 stopTimer()
-                withAnimation(){
+                //withAnimation(){
                     configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
                     //iOS 17 ではボタンの文字までアニメーションされる
                     //iOS 15,16ではそもそも発生しない
-                }
+                //}
                 historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
                 giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
                 isButtonPressed = false
@@ -525,17 +529,6 @@ struct ContentView: View {
         }
     }
 }
-
-
-final class SettingsBridge: ObservableObject{
-    @AppStorage("Haptics") var isHapticsOn: Bool = true
-    @AppStorage("rollingAnimation") var isRollingOn: Bool = true
-    @AppStorage("rollingAmount") var rollingCountLimit: Int = 20//数字は25個だけど最後の数字が答え
-    @AppStorage("rollingSpeed") var rollingSpeed: Int = 4//1から7まで
-    @AppStorage("currentGradient") var gradientPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
-    @AppStorage("configBackgroundColor") var configBgColor = 0 //0はデフォルト、この番号が大きかったらランダムで色を
-}
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

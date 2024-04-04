@@ -8,8 +8,21 @@
 import SwiftUI
 
 struct ExternalView: View {
+    @EnvironmentObject var externalStore: ExternalBridge
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack(){
+            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]),
+                           startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
+                .edgesIgnoringSafeArea(.all)
+            VStack(){
+                Text("No.\(externalStore.externalDraw)")
+                    .fontMedium(size: 128)
+                    //.frame(height: 160)
+                Text(verbatim: String(externalStore.externalNumber)).fontSemiBoldRound(size: 640, rolling: false) // rollingも変えられるようにする
+                    .frame(height: 540)
+                    .minimumScaleFactor(0.2)
+            }
+        }
     }
 }
 

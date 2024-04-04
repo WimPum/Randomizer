@@ -246,18 +246,6 @@
         }
       }
     },
-    "press Start Over to apply changes" : {
-      "comment" : "動かない。。。。。。。。",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "やり直しを押して変更を適用"
-          }
-        }
-      }
-    },
     "press Start over to reset" : {
       "localizations" : {
         "ja" : {

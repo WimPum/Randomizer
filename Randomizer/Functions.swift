@@ -159,21 +159,3 @@ func returnColorCombo(index: Int) -> [Color] {
     ]
     return colorList[index]
 }
-
-final class SettingsBridge: ObservableObject{
-    @AppStorage("Haptics") var isHapticsOn: Bool = true
-    @AppStorage("rollingAnimation") var isRollingOn: Bool = true
-    @AppStorage("rollingAmount") var rollingCountLimit: Int = 20//数字は25個だけど最後の数字が答え
-    @AppStorage("rollingSpeed") var rollingSpeed: Int = 4//1から7まで
-    @AppStorage("currentGradient") var gradientPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
-    @AppStorage("configBackgroundColor") var configBgColor = 0 //0はデフォルト、この番号が大きかったらランダムで色を
-}
-
-final class ExternalBridge: ObservableObject{ // ContentViewで使える？
-    @Published var externalNumber: String = ""
-    @Published var isShowingOnExternal: Bool = false
-}
-
-
-
-
