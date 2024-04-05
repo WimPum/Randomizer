@@ -341,6 +341,7 @@ struct ContentView: View {
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
         showMessage = setMessageReset(language: firstLang())
         configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
+        externalStore.externalGradient = configStore.gradientPicker
         print("HistorySequence \(historySeq as Any)\ntotal would be No.\(drawLimit)")
 //        for i in 1...99990{
 //            historySeq!.append(i)
@@ -448,19 +449,18 @@ struct ContentView: View {
         else if mode == 2{
             drawCount = 1
         }
-        externalStore.externalDraw = drawCount
         remainderSeq = [Int]()
         
         //rollSpeed = 25 // 特に理由はなし speedはこれに係数をかけている
         rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
         
         rollListCounter = 1
+        externalStore.externalRollCount = 1
         
         let remaining = drawLimit - drawCount + 1 // 残り
         print("\(remaining) numbers remaining")
         realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
         logging(realAnswer: realAnswer) // ログ　releaseでは消す
-        externalStore.externalNumber = realAnswer // 実験
         if configStore.isRollingOn && remaining > 1{
             let ifRemainedMore = remaining > configStore.rollingCountLimit // ロール用に選ぶ数字の量を決定 少ない時は残りの数 多ければrollingCountLimitの数選ぶ
             var historySeqforRoll = [Int]()     //履歴
@@ -477,11 +477,14 @@ struct ContentView: View {
                 }
             }
             rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
+            externalStore.externalRollSeq = rollDisplaySeq
             startTimer()//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
             configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
+            externalStore.externalGradient = configStore.gradientPicker
             historySeq?.append(realAnswer)//履歴追加
             rollDisplaySeq = [realAnswer]//答えだけ追加
+            externalStore.externalRollSeq = rollDisplaySeq // もっといい実装あるでしょう (もう一つenvironmentObj作るとか)
             giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
             isButtonPressed = false
         }
@@ -490,12 +493,15 @@ struct ContentView: View {
     //タイマーに使用される関数
     func startTimer() {
         isTimerRunning = true
+        externalStore.isExternalRolling = isTimerRunning
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
             if rollListCounter + 1 >= configStore.rollingCountLimit {
                 rollListCounter += 1
+                externalStore.externalRollCount = rollListCounter
                 stopTimer()
                 //withAnimation(){
                     configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
+                externalStore.externalGradient = configStore.gradientPicker
                     //iOS 17 ではボタンの文字までアニメーションされる
                     //iOS 15,16ではそもそも発生しない
                 //}
@@ -512,12 +518,14 @@ struct ContentView: View {
                 // print("Now rolling aty \(rollSpeed), t is \(t)")
                 updateTimerSpeed()
                 rollListCounter += 1
+                externalStore.externalRollCount = rollListCounter
             }
         }
     }
 
     func stopTimer() {
         isTimerRunning = false
+        externalStore.isExternalRolling = isTimerRunning
         rollTimer?.invalidate()//タイマーを止める。
         rollTimer = nil // 大丈夫か？止まらない説
     }

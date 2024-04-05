@@ -11,17 +11,16 @@ struct ExternalView: View {
     @EnvironmentObject var externalStore: ExternalBridge
     var body: some View {
         ZStack(){
-            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]),
+            LinearGradient(gradient: Gradient(colors: returnColorCombo(index: externalStore.externalGradient)),
                            startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
                 .edgesIgnoringSafeArea(.all)
             VStack(){
-                Text("No.\(externalStore.externalDraw)")
-                    .fontMedium(size: 128)
-                    //.frame(height: 160)
-                Text(verbatim: String(externalStore.externalNumber)).fontSemiBoldRound(size: 640, rolling: false) // rollingも変えられるようにする
-                    .frame(height: 540)
+//                Text(verbatim: String(externalStore.externalNumber)).fontSemiBoldRound(size: 2000, rolling: false) // rollingも変えられるようにする
+                Text(verbatim: "\(externalStore.externalRollSeq![externalStore.externalRollCount-1])")
+                    .fontSemiBoldRound(size: 2000, rolling: externalStore.isExternalRolling)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .minimumScaleFactor(0.2)
-            }
+            }.padding()
         }
     }
 }

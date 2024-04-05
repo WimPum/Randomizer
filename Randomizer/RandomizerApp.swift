@@ -29,8 +29,10 @@ final class SettingsBridge: ObservableObject{
 }
 
 final class ExternalBridge: ObservableObject{ // ContentViewで使える？
-    @Published var externalNumber: Int = 0
-    @Published var externalDraw: Int = 0
+    @Published var externalRollSeq: [Int]? = [0]
+    @Published var externalRollCount: Int = 1
+    @Published var isExternalRolling: Bool = false
+    @Published var externalGradient: Int = 0
     static let shared = ExternalBridge()
 }
 

@@ -78,6 +78,7 @@ struct SettingsView: View { // will be called from ContentView
 
 struct SettingsList: View{
     @ObservedObject var configStore: SettingsBridge // SettingsViewを呼び出すときの引数をこちらに代入
+    @EnvironmentObject var externalStore: ExternalBridge
     var body: some View {
         Section(header: Text("general")){
             Toggle(isOn: $configStore.isHapticsOn){
@@ -116,6 +117,7 @@ struct SettingsList: View{
             }.onChange(of: configStore.configBgColor) { _ in
                 withAnimation(){
                     configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                    externalStore.externalGradient = configStore.gradientPicker
                 }
             }
             Button("Reset setting", action:{
