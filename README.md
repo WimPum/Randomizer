@@ -12,5 +12,8 @@ Randomizer is written in SwiftUI and has iOS native design.
 ## CSV Loading
 Supports loading CSV name list. Winner's name will be shown below the number.
 
+## External display
+Only shows the number to external displays and hides controls.
+
 ## Future plans
-I might add external monitor support later. Connected monitor will only show the number and the name.
+More readable, cleaner code
