@@ -58,7 +58,7 @@ struct ContentView: View {
             LinearGradient(gradient: Gradient(colors: returnColorCombo(index: configStore.gradientPicker)),
                            startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
                 .edgesIgnoringSafeArea(.all)
-                .transition(.opacity)
+                .animation(.easeInOut, value: returnColorCombo(index: configStore.gradientPicker))
             TabView(selection: $viewSelection){
                 VStack(){//１ページ目
                     Spacer().frame(height: 5)
@@ -498,13 +498,11 @@ struct ContentView: View {
             if rollListCounter + 1 >= configStore.rollingCountLimit {
                 rollListCounter += 1
                 externalStore.externalRollCount = rollListCounter
-                stopTimer()
-                //withAnimation(){
-                    configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
+                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
                 externalStore.externalGradient = configStore.gradientPicker
                     //iOS 17 ではボタンの文字までアニメーションされる
                     //iOS 15,16ではそもそも発生しない
-                //}
+                stopTimer()
                 historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
                 giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
                 isButtonPressed = false

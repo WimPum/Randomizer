@@ -28,6 +28,9 @@ final class SettingsBridge: ObservableObject{
     @AppStorage("configBackgroundColor") var configBgColor = 0 //0はデフォルト、この番号が大きかったらランダムで色を
 }
 
+// 外部ディスプレイ対応
+// 参考：https://useyourloaf.com/blog/swiftui-supporting-external-screens/
+
 final class ExternalBridge: ObservableObject{ // ContentViewで使える？
     @Published var externalRollSeq: [Int]? = [0]
     @Published var externalRollCount: Int = 1

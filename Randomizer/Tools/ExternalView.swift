@@ -14,6 +14,7 @@ struct ExternalView: View {
             LinearGradient(gradient: Gradient(colors: returnColorCombo(index: externalStore.externalGradient)),
                            startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
                 .edgesIgnoringSafeArea(.all)
+                .animation(.easeInOut, value: returnColorCombo(index: externalStore.externalGradient))
             VStack(){
 //                Text(verbatim: String(externalStore.externalNumber)).fontSemiBoldRound(size: 2000, rolling: false) // rollingも変えられるようにする
                 Text(verbatim: "\(externalStore.externalRollSeq![externalStore.externalRollCount-1])")
