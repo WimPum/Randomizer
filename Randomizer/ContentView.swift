@@ -6,10 +6,10 @@ import UniformTypeIdentifiers //fileImporter
 
 struct ContentView: View {
     //main
-    @AppStorage("minValue") private var minBoxValue: String = "1"
-    @AppStorage("maxValue") private var maxBoxValue: String = "50"
-    @State private var minBoxValueLock: Int = 1 // min->maxの順
-    @State private var maxBoxValueLock: Int = 50//Start Overを押すまでここにkeep
+    @State private var minBoxValue: String = "1"
+    @State private var maxBoxValue: String = "50"
+    @AppStorage("minValue") private var minBoxValueLock: Int = 1 // min->maxの順
+    @AppStorage("maxValue") private var maxBoxValueLock: Int = 50//Start Overを押すまでここにkeep
     @State private var drawCount: Int = 0       //今何回目か
     @State private var drawLimit: Int = 0       //何回まで引けるか
     @State private var realAnswer: Int = 0      //本当の答え
@@ -336,8 +336,8 @@ struct ContentView: View {
     
     func initReset() {//起動時に実行 No.0/表示: 0
         isButtonPressed = false // 操作できない状態にしない
-        minBoxValueLock = Int(minBoxValue)!//保存から復元
-        maxBoxValueLock = Int(maxBoxValue)!
+        minBoxValue = String(minBoxValueLock)//保存から復元
+        maxBoxValue = String(maxBoxValueLock)
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
         showMessage = setMessageReset(language: firstLang())
         configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
@@ -349,34 +349,37 @@ struct ContentView: View {
 //        }//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
     }
     
+    
     func buttonReset() {
         showCSVButtonAndName = true
+        if isFileSelected == true{ //ファイルが選ばれたら自動入力
+            minBoxValue = "1"
+            maxBoxValue = String(csvNameStore[0].count)
+            showMessageOpacity = 0.6
+        }else{
+            withAnimation{//まず非表示？
+                showMessageOpacity = 0.0
+            }
+            showMessage = setMessageReset(language: firstLang())//違ったら戻す
+        }
+        //Reset固有
+        historySeq = []//リセットだから?????????????
+        if (minBoxValue == "") { // 入力値が空だったら現在の値で復元
+            minBoxValue = String(minBoxValueLock)
+        }
+        if (maxBoxValue == "") {
+            maxBoxValue = String(maxBoxValueLock)
+        }
         if Int(minBoxValue)! >= Int(maxBoxValue)!{ // チェック
             self.showingAlert2.toggle()
             isButtonPressed = false
             return
         }
+        minBoxValueLock = Int(minBoxValue)!
+        maxBoxValueLock = Int(maxBoxValue)!
+        print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
         
-        else{
-            if isFileSelected == true{ //ファイルが選ばれたら自動入力
-                maxBoxValue = String(csvNameStore[0].count)
-                minBoxValue = "1"
-                showMessageOpacity = 0.6
-            }else{
-                withAnimation{//まず非表示？
-                    showMessageOpacity = 0.0
-                }
-                showMessage = setMessageReset(language: firstLang())//違ったら戻す
-            }
-            //Reset固有
-            historySeq = []//リセットだから?????????????
-            //configStore.rollingCountLimit = 25//上でリセット
-            maxBoxValueLock = Int(maxBoxValue)!//保存
-            minBoxValueLock = Int(minBoxValue)!
-            print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
-            
-            randomNumberPicker(mode: 2)//まとめた
-        }
+        randomNumberPicker(mode: 2)//まとめた
     }
     
     func buttonNext() {
@@ -385,7 +388,6 @@ struct ContentView: View {
             self.showingAlert.toggle()
             isButtonPressed = false
         }
-        
         else{
             if isFileSelected == false{ //ファイルが選ばれてなかったら
                 if maxBoxValue == String(maxBoxValueLock) && minBoxValue == String(minBoxValueLock){
