@@ -172,6 +172,18 @@ struct ContentView: View {
                         }
                     }.toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
+                            Button(action: {
+                                print("keyboard min! pressed")
+                                isInputMinFocused = true
+                            }){
+                                Text("Min")
+                            }
+                            Button(action: {
+                                print("keyboard max! pressed")
+                                isInputMaxFocused = true
+                            }){
+                                Text("Max")
+                            }
                             Spacer()
                             Button(action: {
                                 print("keyboard done! pressed")
