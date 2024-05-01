@@ -28,4 +28,5 @@ struct ExternalView: View {
 
 #Preview {
     ExternalView()
+        .environmentObject(ExternalBridge.shared)
 }

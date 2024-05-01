@@ -280,7 +280,7 @@ struct ContentView: View {
                   Text("History") }
                 .tag(2)
             }
-            .tabViewStyle(PageTabViewStyle())
+            .tabViewStyle(.page(indexDisplayMode: .never))
             .onChange(of: viewSelection, perform: { _ in // 入力中にページが切り替わっても隠れた物は元に戻る
                 if viewSelection == 2{ // 1以外ないけど
                     showCSVButtonAndName = true
@@ -550,8 +550,7 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
+        .environmentObject(ExternalBridge.shared)
 }
