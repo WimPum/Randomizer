@@ -16,4 +16,5 @@ Supports loading CSV name list. Winner's name will be shown below the number.
 Only shows the number to external displays and hides controls.
 
 ## Future plans
+Switch external display, landscape screen<br>
 More readable, cleaner code

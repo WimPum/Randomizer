@@ -408,6 +408,18 @@ struct ContentView: View {
                     }
                 }
                 showMessage = setMessageReset(language: firstLang())//違ったら戻す
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { // Nextを押すと変更されたことを通知できなかった
+                    if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
+                        showMessage = setMessageReset(language: firstLang())//絶対にStartOverと表示
+                        withAnimation{
+                            showMessageOpacity = 0.6
+                        }
+                    }else{
+                        withAnimation{
+                            showMessageOpacity = 0.0
+                        }
+                    }
+                }
             }
             randomNumberPicker(mode: 1)//まとめました
         }
@@ -422,8 +434,6 @@ struct ContentView: View {
         showCSVButtonAndName = true
         isInputMaxFocused = false
         isInputMinFocused = false
-        minBoxValue = String(minBoxValue.prefix(inputMaxLength))
-        maxBoxValue = String(maxBoxValue.prefix(inputMaxLength)) // 文字数制限を適用
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
                 showMessage = setMessageReset(language: firstLang())//絶対にStartOverと表示
