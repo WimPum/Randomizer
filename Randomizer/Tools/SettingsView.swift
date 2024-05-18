@@ -107,13 +107,24 @@ struct SettingsList: View{
                 }
             }
             Picker("Background color", selection: $configStore.configBgColor){
-                Text("Default").tag(0)
-                Text("Twilight").tag(1)
-                Text("Mountain").tag(2)
-                Text("Ocean").tag(3)
-                Text("Sky").tag(4)//dummy
-                Text("Exp1").tag(5)//dummy2
-                Text("Random").tag(6)
+                Text("Default").tag(0) // 色の組み合わせはFunctions.swiftにて定義
+                Text("Dawn").tag(1)
+                Text("Twilight").tag(2)
+                Text("Fire").tag(3)
+                Text("Miracle").tag(4)
+                Text("Summer").tag(5)
+                Text("Winter").tag(6)
+                Text("Sky").tag(7)
+                Text("Ocean").tag(8)
+                Text("Mountain").tag(9)
+                Text("Mint").tag(10)
+                Text("Grape").tag(11)
+                Text("Strawberry").tag(12)
+                Text("Green Tea").tag(13)
+                Text("Champagne").tag(14)
+                Text("Spring Onion").tag(15)
+                Text("Shuffle").tag(16)
+                Text("Random").tag(17) // for use of testing only
             }.onChange(of: configStore.configBgColor) { _ in
                 withAnimation(){
                     configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)

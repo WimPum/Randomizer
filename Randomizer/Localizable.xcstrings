@@ -61,12 +61,32 @@
         }
       }
     },
+    "Champagne" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "シャンパン"
+          }
+        }
+      }
+    },
     "clear names" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "名前クリア"
+          }
+        }
+      }
+    },
+    "Dawn" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "夜明け"
           }
         }
       }
@@ -101,12 +121,12 @@
         }
       }
     },
-    "Exp1" : {
+    "Fire" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "実験体1"
+            "value" : "炎"
           }
         }
       }
@@ -117,6 +137,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一般"
+          }
+        }
+      }
+    },
+    "Grape" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ブドウ"
+          }
+        }
+      }
+    },
+    "Green Tea" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "抹茶"
           }
         }
       }
@@ -199,6 +239,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最小"
+          }
+        }
+      }
+    },
+    "Mint" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ミント"
+          }
+        }
+      }
+    },
+    "Miracle" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ミラクル"
           }
         }
       }
@@ -323,6 +383,16 @@
         }
       }
     },
+    "Shuffle" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "シャッフル"
+          }
+        }
+      }
+    },
     "Sky" : {
       "localizations" : {
         "ja" : {
@@ -333,12 +403,42 @@
         }
       }
     },
+    "Spring Onion" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ねぎ"
+          }
+        }
+      }
+    },
     "Start over" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "やり直し"
+          }
+        }
+      }
+    },
+    "Strawberry" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いちご"
+          }
+        }
+      }
+    },
+    "Summer" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "夏"
           }
         }
       }
@@ -359,6 +459,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GitHubのリポジトリ"
+          }
+        }
+      }
+    },
+    "Winter" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "冬"
           }
         }
       }

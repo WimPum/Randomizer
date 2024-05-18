@@ -137,12 +137,12 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
 }
 
 func giveRandomBackground(conf: Int, current: Int) -> Int{
-    if 0...5 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
+    if 0...15 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
         return conf//currentを直接編集しない
     }else{
         var randomNumber: Int
         repeat{
-            randomNumber = Int.random(in: 0...5)//0...3は自分で色と対応させる
+            randomNumber = Int.random(in: 0...15)//0...3は自分で色と対応させる
         }while current == randomNumber
         return randomNumber
     }
@@ -150,12 +150,32 @@ func giveRandomBackground(conf: Int, current: Int) -> Int{
 
 func returnColorCombo(index: Int) -> [Color] {
     let colorList: [[Color]] = [
-        [Color.blue, Color.purple], // Default
-        [Color.blue, Color.red], // Twilight
-        [Color.red, Color.green], // Mountain
-        [Color.green, Color.blue], // Ocean
-        [Color.mint, Color.indigo], // Sky
-        [Color.black, Color.green] // 実験体
+        [Color.blue, Color.purple],                     // Default
+        [Color(hex: "5d77b9")!, Color(hex: "fadb92")!], // dawn
+        [Color(hex: "4161b8")!, Color(hex: "e56f5e")!], // Twilight
+        [Color.red, Color.yellow],                      // Fire
+        [Color(hex: "eb426f")!, Color(hex: "4ce7d2")!], // miracle
+        [Color(hex: "ccdf83")!, Color(hex: "2cde83")!], // summer
+        [Color(hex: "dedfe3")!, Color(hex: "4a8a8b")!], // winter
+        [Color(hex: "0645fc")!, Color(hex: "d2fafe")!], // Sky
+        [Color(hex: "60e5ca")!, Color(hex: "374ebf")!], // Ocean
+        [Color(hex: "f59067")!, Color(hex: "63d115")!], // Mountain
+        [Color(hex: "70efda")!, Color(hex: "0d6967")!], // mint
+        [Color.purple, Color.indigo],                   // grape
+        [Color(hex: "de3c87")!, Color(hex: "fbe7ee")!], // strawberry
+        [Color(hex: "48de38")!, Color(hex: "276d10")!], // green tea
+        [Color(hex: "e5bd62")!, Color(hex: "4b3457")!], // champagne
+        [Color(hex: "158e0a")!, Color(hex: "f3f2ea")!]  // spring onion
     ]
     return colorList[index]
+}
+
+func returnRandomColors() -> [Color] { // 色を適当に選んでくれる
+    let colorList = [Color(red: Double.random(in: 0...1),
+                           green: Double.random(in: 0...1),
+                           blue: Double.random(in: 0...1)),
+                     Color(red: Double.random(in: 0...1),
+                           green: Double.random(in: 0...1),
+                           blue: Double.random(in: 0...1))]
+    return colorList
 }

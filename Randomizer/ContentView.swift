@@ -55,8 +55,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
-            LinearGradient(gradient: Gradient(colors: returnColorCombo(index: configStore.gradientPicker)),
-                           startPoint: .top, endPoint: .bottom)//このcolorsだけ変えればいいはず
+            LinearGradient(gradient: Gradient(colors: (configStore.configBgColor == 17 ? returnRandomColors() : returnColorCombo(index: configStore.gradientPicker))),
+                           startPoint: .top, endPoint: .bottom) // testing only()
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut, value: returnColorCombo(index: configStore.gradientPicker))
             TabView(selection: $viewSelection){
