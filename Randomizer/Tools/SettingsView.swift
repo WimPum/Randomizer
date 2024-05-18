@@ -48,12 +48,12 @@ struct SettingsView: View { // will be called from ContentView
                         HStack{
                             Text("App Version")
                             Spacer()
-                            Text(appVersion).opacity(0.45)
+                            Text(appVersion).foregroundStyle(.secondary)
                         }
                         HStack{
                             Text("iOS Version")
                             Spacer()
-                            Text(UIDevice.current.systemVersion).opacity(0.45)
+                            Text(UIDevice.current.systemVersion).foregroundStyle(.secondary)
                         }
                         Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!)
                     }
