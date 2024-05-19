@@ -111,6 +111,16 @@
         }
       }
     },
+    "Dream" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "夢"
+          }
+        }
+      }
+    },
     "Error" : {
       "localizations" : {
         "ja" : {
@@ -399,16 +409,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "空"
-          }
-        }
-      }
-    },
-    "Spring Onion" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ねぎ"
           }
         }
       }

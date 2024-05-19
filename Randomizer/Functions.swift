@@ -155,6 +155,7 @@ func returnColorCombo(index: Int) -> [Color] {
         [Color(hex: "4161b8")!, Color(hex: "e56f5e")!], // Twilight
         [Color.red, Color.yellow],                      // Fire
         [Color(hex: "eb426f")!, Color(hex: "4ce7d2")!], // miracle
+        [Color(hex: "41c78e")!, Color(hex: "c670f7")!], // Dream
         [Color(hex: "ccdf83")!, Color(hex: "2cde83")!], // summer
         [Color(hex: "dedfe3")!, Color(hex: "4a8a8b")!], // winter
         [Color(hex: "0645fc")!, Color(hex: "d2fafe")!], // Sky
@@ -163,9 +164,8 @@ func returnColorCombo(index: Int) -> [Color] {
         [Color(hex: "70efda")!, Color(hex: "0d6967")!], // mint
         [Color.purple, Color.indigo],                   // grape
         [Color(hex: "de3c87")!, Color(hex: "fbe7ee")!], // strawberry
-        [Color(hex: "48de38")!, Color(hex: "276d10")!], // green tea
-        [Color(hex: "e5bd62")!, Color(hex: "4b3457")!], // champagne
-        [Color(hex: "158e0a")!, Color(hex: "f3f2ea")!]  // spring onion
+        [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!], // green tea
+        [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]  // champagne
     ]
     return colorList[index]
 }

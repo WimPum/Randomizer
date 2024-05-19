@@ -39,7 +39,7 @@ struct SettingsView: View { // will be called from ContentView
                 }
             }
             // AccentColorを変更するようにする
-        } 
+        }
         else {
             NavigationView{//iOS 15用
                 Form{
@@ -112,17 +112,17 @@ struct SettingsList: View{
                 Text("Twilight").tag(2)
                 Text("Fire").tag(3)
                 Text("Miracle").tag(4)
-                Text("Summer").tag(5)
-                Text("Winter").tag(6)
-                Text("Sky").tag(7)
-                Text("Ocean").tag(8)
-                Text("Mountain").tag(9)
-                Text("Mint").tag(10)
-                Text("Grape").tag(11)
-                Text("Strawberry").tag(12)
-                Text("Green Tea").tag(13)
-                Text("Champagne").tag(14)
-                Text("Spring Onion").tag(15)
+                Text("Dream").tag(5)
+                Text("Summer").tag(6)
+                Text("Winter").tag(7)
+                Text("Sky").tag(8)
+                Text("Ocean").tag(9)
+                Text("Mountain").tag(10)
+                Text("Mint").tag(11)
+                Text("Grape").tag(12)
+                Text("Strawberry").tag(13)
+                Text("Green Tea").tag(14)
+                Text("Champagne").tag(15)
                 Text("Shuffle").tag(16)
                 Text("Random").tag(17) // for use of testing only
             }.onChange(of: configStore.configBgColor) { _ in

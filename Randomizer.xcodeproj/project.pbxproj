@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B12E7C4B2BB3FE1600889BF3 /* NumberList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12E7C4A2BB3FE1600889BF3 /* NumberList.swift */; };
 		B14E4FD42BBBF3CD007E946D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */; };
 		B14E50012BBF13E8007E946D /* ExternalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50002BBF13E8007E946D /* ExternalView.swift */; };
 		B14E50032BBF3157007E946D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50022BBF3157007E946D /* SceneDelegate.swift */; };
@@ -23,7 +22,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B12E7C4A2BB3FE1600889BF3 /* NumberList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberList.swift; sourceTree = "<group>"; };
 		B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B14E50002BBF13E8007E946D /* ExternalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalView.swift; sourceTree = "<group>"; };
 		B14E50022BBF3157007E946D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -57,7 +55,6 @@
 				B14E50002BBF13E8007E946D /* ExternalView.swift */,
 				B1F431F62BAC13EB004A92D0 /* IntSlider.swift */,
 				B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */,
-				B12E7C4A2BB3FE1600889BF3 /* NumberList.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -178,7 +175,6 @@
 				B14E50012BBF13E8007E946D /* ExternalView.swift in Sources */,
 				B1F431F72BAC13EB004A92D0 /* IntSlider.swift in Sources */,
 				B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */,
-				B12E7C4B2BB3FE1600889BF3 /* NumberList.swift in Sources */,
 				B14E50072BBF3DE1007E946D /* Extensions.swift in Sources */,
 				B1F431F92BAE18C3004A92D0 /* limitedTextField.swift in Sources */,
 				B1FD99272B07881D00781D1D /* ContentView.swift in Sources */,
