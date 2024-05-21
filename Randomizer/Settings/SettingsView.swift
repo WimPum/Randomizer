@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct SettingsView: View { // will be called from ContentView
+    @EnvironmentObject var configStore: SettingsBridge // 設定 アクセスできるはず
     @Binding var isPresentedLocal: Bool
-    @ObservedObject var configStore: SettingsBridge     //設定を連れてくる
-//    @State private var selectedColorCombo: Int
+    
+    // アプリバージョン
     private let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
     
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
                 Form{
-                    SettingsList(configStore: configStore)
+                    SettingsList()
                     Section(header: Text("info")){
                         LabeledContent("App Version", value: appVersion)
                         LabeledContent("iOS Version", value: UIDevice.current.systemVersion)
@@ -38,12 +39,11 @@ struct SettingsView: View { // will be called from ContentView
                     }
                 }
             }
-            // AccentColorを変更するようにする
         }
         else {
             NavigationView{//iOS 15用
                 Form{
-                    SettingsList(configStore: configStore)
+                    SettingsList()
                     Section(header: Text("info")){
                         HStack{
                             Text("App Version")
@@ -77,8 +77,9 @@ struct SettingsView: View { // will be called from ContentView
 }
 
 struct SettingsList: View{
-    @ObservedObject var configStore: SettingsBridge // SettingsViewを呼び出すときの引数をこちらに代入
-    @EnvironmentObject var externalStore: ExternalBridge
+    @EnvironmentObject var configStore: SettingsBridge // EnvironmentObjectだから引数なしでいいよね。。。？
+    @EnvironmentObject var externalStore: ExternalBridge // ContentViewにEnvironmentで設定したからできること
+    
     var body: some View {
         Section(header: Text("general")){
             Toggle(isOn: $configStore.isHapticsOn){
@@ -106,25 +107,10 @@ struct SettingsList: View{
                     IntSlider(value: $configStore.rollingCountLimit, in: 2...100, step: 1)
                 }
             }
-            Picker("Background color", selection: $configStore.configBgColor){
-                Text("Default").tag(0) // 色の組み合わせはFunctions.swiftにて定義
-                Text("Dawn").tag(1)
-                Text("Twilight").tag(2)
-                Text("Fire").tag(3)
-                Text("Miracle").tag(4)
-                Text("Dream").tag(5)
-                Text("Summer").tag(6)
-                Text("Winter").tag(7)
-                Text("Sky").tag(8)
-                Text("Ocean").tag(9)
-                Text("Mountain").tag(10)
-                Text("Mint").tag(11)
-                Text("Grape").tag(12)
-                Text("Strawberry").tag(13)
-                Text("Green Tea").tag(14)
-                Text("Champagne").tag(15)
-                Text("Shuffle").tag(16)
-                Text("Random").tag(17) // for use of testing only
+            Picker("Background color", selection: $configStore.configBgColor){ // selectionにはid(string)が含まれる。
+                ForEach(configStore.colorList) { colorCombo in
+                    Text("\(colorCombo.name)")
+                }
             }.onChange(of: configStore.configBgColor) { _ in
                 withAnimation(){
                     configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
@@ -143,4 +129,7 @@ struct SettingsList: View{
     }
 }
 
-
+struct ColorCombo {
+    var name: String
+    var color: [Color]?
+}

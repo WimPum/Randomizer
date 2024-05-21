@@ -8,31 +8,21 @@
 import SwiftUI
 import UIKit
 
-func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {//履歴保持なし
-    guard let historyList = historyList, !historyList.isEmpty else{ //guard文を覚える
-        //print("give1rnd direct output")
+// 最大最小と履歴をもとに数字を選ぶ
+func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {
+    guard let historyList = historyList, !historyList.isEmpty else{
         return Int.random(in: min...max)
     }
-    //var randomNum: Int = Int.random(in: min...max) //ロール用に使うときにはまずhistoryを作る?
-    //print("今の届いたリストforRoll: \(String(describing: historyList))")//ログが多いと遅くなる
-    //print("min: \(min), max: \(max)")
     var randomNum: Int
-    var attempts = 0
     repeat{
         randomNum = Int.random(in: min...max)
-        attempts += 1
-//        if attempts > (max - min + 1){
-//            // Break the loop if all numbers are in remainedList
-//            // This prevents potential infinite loop
-//            assertionFailure("All numbers are in remainedList")
-//            return -1 // Or handle this case differently based on your requirements
-//        }
     }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
-    //print("picked \(randomNum)")
     return randomNum
 }
 
-func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//ロールの数列生成
+// ロールエフェクト用の数列生成 returnArrayの最後にrealAnswerを追加する
+// contentsはまだ選んでいない数(remainderSeq)
+func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{
     var assignedValue: Int = 0
     var returnArray: [Int]? = [Int]()
     let listLength: Int = contents.count//リストの長さ
@@ -51,16 +41,20 @@ func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{//�
     return returnArray!
 }
 
-func interpolateQuadratic(t: Double, minValue: Double, maxValue: Double) -> Double { // 二次関数
+// 二次関数 最大値から最小値までを移動する
+func interpolateQuadratic(t: Double, minValue: Double, maxValue: Double) -> Double {
     let clampedT = max(0, min(1, t))//0から1の範囲で制限
     return (1 - clampedT) * maxValue + clampedT * minValue
 }
 
+// 今の設定言語を調べる
 func firstLang() -> String {
     let prefLang = Locale.preferredLanguages.first
     return prefLang!
 }
 
+// 最大最小の設定変更されたら表示するメッセージ
+// 日本語かそれ以外かで分けている
 func setMessageReset(language: String) -> String {
     if language.hasPrefix("ja"){
         return "やり直しを押して変更を適用"
@@ -70,6 +64,8 @@ func setMessageReset(language: String) -> String {
     }
 }
 
+// 外部のCSVファイルを読み込むとき、
+// OneDriveやGoogle Driveからは読み取れないからこのエラーを表示させる
 func setMessageErrorLoad(language: String) -> String {
     if language.hasPrefix("ja"){
         return "ファイルを読み込めませんでした。\n「このiPhone内」から選択してください。"
@@ -79,6 +75,7 @@ func setMessageErrorLoad(language: String) -> String {
     }
 }
 
+// 触覚を発生させます
 func giveHaptics(impactType: String, ifActivate: Bool){
     if ifActivate == false{
         return
@@ -92,6 +89,7 @@ func giveHaptics(impactType: String, ifActivate: Bool){
     }
 }
 
+// CSVを読み込んで二次元配列に代入する 縦に長いリストにしてください
 func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
     do {
         // CSVファイルの内容を文字列として読み込む
@@ -104,7 +102,8 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
         var rows = csvString.components(separatedBy: "\n").filter { !$0.isEmpty }
         var columns = rows[0].components(separatedBy: ",")
         
-        // 転置が必要な場合は行と列を入れ替える
+        // 横に長い時は転置する
+        // 縦に1つとか何も書かれていない時は多分落ちる
         if rows.count < columns.count {
             (rows, columns) = (columns, rows)
         }
@@ -112,7 +111,7 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
         // 転置した結果を格納する配列
         var transposedCSV = [[String]]()
         
-        // 各列ごとに行を作成して転置
+        // 各列ごとに行を作成
         for columnIndex in 0..<columns.count {
             var transposedRow = [String]()
             for rowIndex in 0..<rows.count {
@@ -127,7 +126,6 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
             }
             transposedCSV.append(transposedRow)
         }
-        
         return transposedCSV
     } catch {
         // エラーが発生した場合はnilを返す
@@ -148,6 +146,8 @@ func giveRandomBackground(conf: Int, current: Int) -> Int{
     }
 }
 
+// グラデーションの定義
+// 別ファイルにしたい(Settings系にするとか)
 func returnColorCombo(index: Int) -> [Color] {
     let colorList: [[Color]] = [
         [Color.blue, Color.purple],                     // Default
@@ -168,14 +168,4 @@ func returnColorCombo(index: Int) -> [Color] {
         [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]  // champagne
     ]
     return colorList[index]
-}
-
-func returnRandomColors() -> [Color] { // 色を適当に選んでくれる
-    let colorList = [Color(red: Double.random(in: 0...1),
-                           green: Double.random(in: 0...1),
-                           blue: Double.random(in: 0...1)),
-                     Color(red: Double.random(in: 0...1),
-                           green: Double.random(in: 0...1),
-                           blue: Double.random(in: 0...1))]
-    return colorList
 }
