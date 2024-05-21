@@ -19,7 +19,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       return
     }
 
-      let content = ExternalView().environmentObject(ExternalBridge.shared)   // Where does store come from?
+      let content = ExternalView().environmentObject(SettingsStore())
+                        .environmentObject(ExternalBridge.shared)   // Where does store come from?
     window = UIWindow(windowScene: scene)
     window?.rootViewController = UIHostingController(rootView: content)
     window?.isHidden = false

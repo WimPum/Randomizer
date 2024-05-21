@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View { // will be called from ContentView
-    @EnvironmentObject var configStore: SettingsBridge // 設定 アクセスできるはず
+    @EnvironmentObject var configStore: SettingsStore // 設定 アクセスできるはず
     @Binding var isPresentedLocal: Bool
     
     // アプリバージョン
@@ -77,7 +77,7 @@ struct SettingsView: View { // will be called from ContentView
 }
 
 struct SettingsList: View{
-    @EnvironmentObject var configStore: SettingsBridge // EnvironmentObjectだから引数なしでいいよね。。。？
+    @EnvironmentObject var configStore: SettingsStore // EnvironmentObjectだから引数なしでいいよね。。。？
     @EnvironmentObject var externalStore: ExternalBridge // ContentViewにEnvironmentで設定したからできること
     
     var body: some View {
@@ -107,29 +107,19 @@ struct SettingsList: View{
                     IntSlider(value: $configStore.rollingCountLimit, in: 2...100, step: 1)
                 }
             }
-            Picker("Background color", selection: $configStore.configBgColor){ // selectionにはid(string)が含まれる。
-                ForEach(configStore.colorList) { colorCombo in
-                    Text("\(colorCombo.name)")
+            Picker("Background color", selection: $configStore.configBgNumber){ // selectionにはid(string)が含まれる。
+                ForEach(0..<configStore.colorList.count, id: \.self) { index in
+                    Text(LocalizedStringKey(configStore.colorList[index].name))
                 }
-            }.onChange(of: configStore.configBgColor) { _ in
+            }
+            .onChange(of: configStore.configBgNumber) { _ in
                 withAnimation(){
-                    configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
-                    externalStore.externalGradient = configStore.gradientPicker
+                    configStore.giveRandomBgNumber()
                 }
             }
             Button("Reset setting", action:{
-                configStore.isHapticsOn = true
-                configStore.isRollingOn = true
-                configStore.rollingCountLimit = 20
-                configStore.rollingSpeed = 4
-                configStore.configBgColor = 0
-                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)
+                configStore.resetSettings()
             })
         }
     }
-}
-
-struct ColorCombo {
-    var name: String
-    var color: [Color]?
 }

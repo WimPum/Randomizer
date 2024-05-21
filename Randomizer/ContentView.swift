@@ -44,7 +44,7 @@ struct ContentView: View {
     private let inputMaxLength: Int = 10                      //最大桁数
     
     //設定画面用
-    @ObservedObject var configStore = SettingsBridge()//設定をここに置いていく
+    @EnvironmentObject var configStore: SettingsStore // EnvironmentObjになった設定
     
     //外部ディスプレイ用
     @EnvironmentObject var externalStore: ExternalBridge
@@ -55,10 +55,10 @@ struct ContentView: View {
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
-            LinearGradient(gradient: Gradient(colors: returnColorCombo(index: configStore.gradientPicker)),
+            LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
                            startPoint: .top, endPoint: .bottom) // testing only()
                 .edgesIgnoringSafeArea(.all)
-                .animation(.easeInOut, value: returnColorCombo(index: configStore.gradientPicker))
+                .animation(.easeInOut, value: configStore.giveBackground()) // Will this even work??
             TabView(selection: $viewSelection){
                 VStack(){//１ページ目
                     Spacer().frame(height: 5)
@@ -352,8 +352,9 @@ struct ContentView: View {
         maxBoxValue = String(maxBoxValueLock)
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
         showMessage = setMessageReset(language: firstLang())
-        configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
-        externalStore.externalGradient = configStore.gradientPicker
+//        configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
+//        externalStore.externalGradient = configStore.gradientPicker
+        configStore.giveRandomBgNumber()
         print("HistorySequence \(historySeq as Any)\ntotal would be No.\(drawLimit)")
 //        for i in 1...99990{
 //            historySeq!.append(i)
@@ -504,8 +505,9 @@ struct ContentView: View {
             externalStore.externalRollSeq = rollDisplaySeq
             startTimer()//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
-            configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
-            externalStore.externalGradient = configStore.gradientPicker
+//            configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
+//            externalStore.externalGradient = configStore.gradientPicker
+            configStore.giveRandomBgNumber()
             historySeq?.append(realAnswer)//履歴追加
             rollDisplaySeq = [realAnswer]//答えだけ追加
             externalStore.externalRollSeq = rollDisplaySeq // もっといい実装あるでしょう (もう一つenvironmentObj作るとか)
@@ -522,8 +524,9 @@ struct ContentView: View {
             if rollListCounter + 1 >= configStore.rollingCountLimit {
                 rollListCounter += 1
                 externalStore.externalRollCount = rollListCounter
-                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
-                externalStore.externalGradient = configStore.gradientPicker
+//                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
+                configStore.giveRandomBgNumber()
+                externalStore.externalGradient = configStore.backgroundPicker
                     //iOS 17 ではボタンの文字までアニメーションされる
                     //iOS 15,16ではそもそも発生しない
                 stopTimer()
@@ -562,5 +565,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(SettingsStore()) // environmentObjかけてるとプレビューできない
         .environmentObject(ExternalBridge.shared)
 }

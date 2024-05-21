@@ -14,13 +14,10 @@ final class SettingsStore: ObservableObject{
     @AppStorage("rollingCountLimit") var rollingCountLimit: Int = 20  //数字は25個だけど最後の数字が答え
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 4  //1から7まで
     
-    // この二つなんとかしたい
-    @AppStorage("currentGradient") var gradientPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
-    @AppStorage("configBackgroundColor") var configBgColor = 0 //0はデフォルト、この番号が大きかったらランダムで色を
+    @AppStorage("backgroundPicker") var backgroundPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
+    @AppStorage("configBgNumber") var configBgNumber: Int = 0 //0はデフォルト、この番号が大きかったらランダムで色を
     
-    @AppStorage("backgroundName") var backgroundName: String = "Default" // 日本語化でDefaultを認識できなくなったら💀
-    
-    // 色リスト 翻訳できるだろうか
+    // 色リスト
     let colorList: [ColorCombo] = [ // AAAAAARRRGGGG!!!! idはstringになります
         ColorCombo(name: "Default",
                    color: [Color.blue, Color.purple]),
@@ -56,15 +53,33 @@ final class SettingsStore: ObservableObject{
                    color: [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]),
         ColorCombo(name: "Shuffle", color: [])
     ]
-    func giveRandomBackground(conf: Int, current: Int) -> Int{
-        if 0...colorList.count-1 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
-            return conf//currentを直接編集しない
+    func giveRandomBgNumber(){ // 呼ばれた時 configBgをもとに背景を選ぶ
+        if 0...colorList.count-2 ~= configBgNumber{ // 「ランダム」を選んでない時
+            backgroundPicker = configBgNumber
         }else{
-            var randomNumber: Int
+            var randomBgNumber: Int
             repeat{
-                randomNumber = Int.random(in: 0...colorList.count-1)//0...3は自分で色と対応させる
-            }while current == randomNumber
-            return randomNumber
+                randomBgNumber = Int.random(in: 0...colorList.count-2)//0...3は自分で色と対応させる
+            }while backgroundPicker == randomBgNumber // 同じ背景だった時にやり直し
+            backgroundPicker = randomBgNumber
         }
     }
+    
+    func giveBackground() -> [Color]{ // 今の背景セットを返す
+        return colorList[backgroundPicker].color!
+    }
+    
+    func resetSettings() {
+        isHapticsOn = true
+        isRollingOn = true
+        rollingCountLimit = 20
+        rollingSpeed = 4
+        backgroundPicker = 0
+        configBgNumber = 0
+    }
+}
+
+struct ColorCombo: Hashable{
+    var name: String
+    var color: [Color]?
 }

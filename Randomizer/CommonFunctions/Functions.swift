@@ -134,38 +134,38 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
     }
 }
 
-func giveRandomBackground(conf: Int, current: Int) -> Int{
-    if 0...15 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
-        return conf//currentを直接編集しない
-    }else{
-        var randomNumber: Int
-        repeat{
-            randomNumber = Int.random(in: 0...15)//0...3は自分で色と対応させる
-        }while current == randomNumber
-        return randomNumber
-    }
-}
+//func giveRandomBackground(conf: Int, current: Int) -> Int{
+//    if 0...15 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
+//        return conf//currentを直接編集しない
+//    }else{
+//        var randomNumber: Int
+//        repeat{
+//            randomNumber = Int.random(in: 0...15)//0...3は自分で色と対応させる
+//        }while current == randomNumber
+//        return randomNumber
+//    }
+//}
 
 // グラデーションの定義
-// 別ファイルにしたい(Settings系にするとか)
-func returnColorCombo(index: Int) -> [Color] {
-    let colorList: [[Color]] = [
-        [Color.blue, Color.purple],                     // Default
-        [Color(hex: "5d77b9")!, Color(hex: "fadb92")!], // dawn
-        [Color(hex: "4161b8")!, Color(hex: "e56f5e")!], // Twilight
-        [Color.red, Color.yellow],                      // Fire
-        [Color(hex: "eb426f")!, Color(hex: "4ce7d2")!], // miracle
-        [Color(hex: "41c78e")!, Color(hex: "c670f7")!], // Dream
-        [Color(hex: "ccdf83")!, Color(hex: "2cde83")!], // summer
-        [Color(hex: "dedfe3")!, Color(hex: "4a8a8b")!], // winter
-        [Color(hex: "0645fc")!, Color(hex: "d2fafe")!], // Sky
-        [Color(hex: "60e5ca")!, Color(hex: "374ebf")!], // Ocean
-        [Color(hex: "f59067")!, Color(hex: "63d115")!], // Mountain
-        [Color(hex: "70efda")!, Color(hex: "0d6967")!], // mint
-        [Color.purple, Color.indigo],                   // grape
-        [Color(hex: "de3c87")!, Color(hex: "fbe7ee")!], // strawberry
-        [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!], // green tea
-        [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]  // champagne
-    ]
-    return colorList[index]
-}
+//// 別ファイルにしたい(Settings系にするとか)
+//func returnColorCombo(index: Int) -> [Color] {
+//    let colorList: [[Color]] = [
+//        [Color.blue, Color.purple],                     // Default
+//        [Color(hex: "5d77b9")!, Color(hex: "fadb92")!], // dawn
+//        [Color(hex: "4161b8")!, Color(hex: "e56f5e")!], // Twilight
+//        [Color.red, Color.yellow],                      // Fire
+//        [Color(hex: "eb426f")!, Color(hex: "4ce7d2")!], // miracle
+//        [Color(hex: "41c78e")!, Color(hex: "c670f7")!], // Dream
+//        [Color(hex: "ccdf83")!, Color(hex: "2cde83")!], // summer
+//        [Color(hex: "dedfe3")!, Color(hex: "4a8a8b")!], // winter
+//        [Color(hex: "0645fc")!, Color(hex: "d2fafe")!], // Sky
+//        [Color(hex: "60e5ca")!, Color(hex: "374ebf")!], // Ocean
+//        [Color(hex: "f59067")!, Color(hex: "63d115")!], // Mountain
+//        [Color(hex: "70efda")!, Color(hex: "0d6967")!], // mint
+//        [Color.purple, Color.indigo],                   // grape
+//        [Color(hex: "de3c87")!, Color(hex: "fbe7ee")!], // strawberry
+//        [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!], // green tea
+//        [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]  // champagne
+//    ]
+//    return colorList[index]
+//}

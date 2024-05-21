@@ -14,6 +14,7 @@ struct RandomizerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(SettingsStore())
                 .environmentObject(store)
         }
     }
@@ -31,5 +32,3 @@ final class ExternalBridge: ObservableObject{ // ContentViewで使える？
     @Published var externalGradient: Int = 0
     static let shared = ExternalBridge()
 }
-
-
