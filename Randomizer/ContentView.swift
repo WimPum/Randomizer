@@ -55,7 +55,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
-            LinearGradient(gradient: Gradient(colors: (configStore.configBgColor == 17 ? returnRandomColors() : returnColorCombo(index: configStore.gradientPicker))),
+            LinearGradient(gradient: Gradient(colors: returnColorCombo(index: configStore.gradientPicker)),
                            startPoint: .top, endPoint: .bottom) // testing only()
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut, value: returnColorCombo(index: configStore.gradientPicker))
@@ -294,7 +294,7 @@ struct ContentView: View {
             initReset()
         }
         .sheet(isPresented: self.$isSettingsView){
-            SettingsView(isPresentedLocal: self.$isSettingsView, configStore: self.configStore)
+            SettingsView(isPresentedLocal: self.$isSettingsView)
         }//設定画面
         .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false
         ){ result in

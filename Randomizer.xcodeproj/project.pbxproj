@@ -13,6 +13,8 @@
 		B14E50052BBF3D37007E946D /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50042BBF3D37007E946D /* Functions.swift */; };
 		B14E50072BBF3DE1007E946D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50062BBF3DE1007E946D /* Extensions.swift */; };
 		B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1519AE02B36BC5900D84B6D /* SettingsView.swift */; };
+		B1A4FA5F2BFA3CC900BD1E54 /* RandomizerLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A4FA5E2BFA3CC900BD1E54 /* RandomizerLogic.swift */; };
+		B1A4FA622BFCD69900BD1E54 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A4FA612BFCD69900BD1E54 /* SettingsStore.swift */; };
 		B1BF25132B0D282700F3E6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1FD99282B07882000781D1D /* Assets.xcassets */; };
 		B1F431F72BAC13EB004A92D0 /* IntSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F431F62BAC13EB004A92D0 /* IntSlider.swift */; };
 		B1F431F92BAE18C3004A92D0 /* limitedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */; };
@@ -28,6 +30,8 @@
 		B14E50042BBF3D37007E946D /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		B14E50062BBF3DE1007E946D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B1519AE02B36BC5900D84B6D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B1A4FA5E2BFA3CC900BD1E54 /* RandomizerLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizerLogic.swift; sourceTree = "<group>"; };
+		B1A4FA612BFCD69900BD1E54 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		B1F431F62BAC13EB004A92D0 /* IntSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntSlider.swift; sourceTree = "<group>"; };
 		B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = limitedTextField.swift; sourceTree = "<group>"; };
 		B1FD99212B07881D00781D1D /* Randomizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Randomizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,15 +52,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B14E4FD52BBBF511007E946D /* Tools */ = {
+		B1A4FA602BFCD68000BD1E54 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				B1519AE02B36BC5900D84B6D /* SettingsView.swift */,
+				B1A4FA612BFCD69900BD1E54 /* SettingsStore.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		B1A4FA632BFCD6DE00BD1E54 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B1A4FA652BFCD71300BD1E54 /* CustomElement */,
 				B14E50002BBF13E8007E946D /* ExternalView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B1A4FA642BFCD6F500BD1E54 /* CommonFunctions */ = {
+			isa = PBXGroup;
+			children = (
+				B14E50042BBF3D37007E946D /* Functions.swift */,
+				B14E50062BBF3DE1007E946D /* Extensions.swift */,
+			);
+			path = CommonFunctions;
+			sourceTree = "<group>";
+		};
+		B1A4FA652BFCD71300BD1E54 /* CustomElement */ = {
+			isa = PBXGroup;
+			children = (
 				B1F431F62BAC13EB004A92D0 /* IntSlider.swift */,
 				B1F431F82BAE18C2004A92D0 /* limitedTextField.swift */,
 			);
-			path = Tools;
+			path = CustomElement;
+			sourceTree = "<group>";
+		};
+		B1A4FA662BFCD78300BD1E54 /* MainLogic */ = {
+			isa = PBXGroup;
+			children = (
+				B1A4FA5E2BFA3CC900BD1E54 /* RandomizerLogic.swift */,
+			);
+			path = MainLogic;
 			sourceTree = "<group>";
 		};
 		B1FD99182B07881D00781D1D = {
@@ -78,14 +115,15 @@
 		B1FD99232B07881D00781D1D /* Randomizer */ = {
 			isa = PBXGroup;
 			children = (
-				B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */,
-				B14E50022BBF3157007E946D /* SceneDelegate.swift */,
+				B1A4FA642BFCD6F500BD1E54 /* CommonFunctions */,
+				B1A4FA602BFCD68000BD1E54 /* Settings */,
+				B1A4FA662BFCD78300BD1E54 /* MainLogic */,
+				B1A4FA632BFCD6DE00BD1E54 /* View */,
 				B1FD99242B07881D00781D1D /* RandomizerApp.swift */,
 				B1FD99262B07881D00781D1D /* ContentView.swift */,
-				B14E50042BBF3D37007E946D /* Functions.swift */,
-				B14E50062BBF3DE1007E946D /* Extensions.swift */,
+				B14E50022BBF3157007E946D /* SceneDelegate.swift */,
+				B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */,
 				B1FD99282B07882000781D1D /* Assets.xcassets */,
-				B14E4FD52BBBF511007E946D /* Tools */,
 				B1FD992A2B07882000781D1D /* Preview Content */,
 			);
 			path = Randomizer;
@@ -178,8 +216,10 @@
 				B14E50072BBF3DE1007E946D /* Extensions.swift in Sources */,
 				B1F431F92BAE18C3004A92D0 /* limitedTextField.swift in Sources */,
 				B1FD99272B07881D00781D1D /* ContentView.swift in Sources */,
+				B1A4FA5F2BFA3CC900BD1E54 /* RandomizerLogic.swift in Sources */,
 				B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */,
 				B14E50032BBF3157007E946D /* SceneDelegate.swift in Sources */,
+				B1A4FA622BFCD69900BD1E54 /* SettingsStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

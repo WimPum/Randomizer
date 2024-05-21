@@ -344,6 +344,7 @@
       }
     },
     "Random" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
