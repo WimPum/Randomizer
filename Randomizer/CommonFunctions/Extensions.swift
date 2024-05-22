@@ -51,6 +51,17 @@ extension View {
                 .opacity(1)
             }
     }
+    
+    func fontMessage(opacity: CGFloat) -> some View{
+        self
+            .fontSemiBold(size: 26)
+            .multilineTextAlignment(.center)
+            .opacity(opacity)
+            .frame(height: 60)
+            .padding(.horizontal, 20)
+            .minimumScaleFactor(0.2)
+    }
+    
     func glassMaterial(cornerRadius: Int) -> some View {
         self.background(
             RoundedRectangle(cornerRadius: CGFloat(cornerRadius))

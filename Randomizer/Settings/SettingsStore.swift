@@ -13,10 +13,10 @@ final class SettingsStore: ObservableObject{
     @AppStorage("isRollingOn") var isRollingOn: Bool = true
     @AppStorage("rollingCountLimit") var rollingCountLimit: Int = 20  //数字は25個だけど最後の数字が答え
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 4  //1から7まで
-    
     @AppStorage("backgroundPicker") var backgroundPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
     @AppStorage("configBgNumber") var configBgNumber: Int = 0 //0はデフォルト、この番号が大きかったらランダムで色を
     
+    @Published var randomColorCombo: [Color] = [Color.blue, Color.purple]
     // 色リスト
     let colorList: [ColorCombo] = [ // AAAAAARRRGGGG!!!! idはstringになります
         ColorCombo(name: "Default",
@@ -51,22 +51,40 @@ final class SettingsStore: ObservableObject{
                    color: [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!]),
         ColorCombo(name: "Champagne",
                    color: [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]),
-        ColorCombo(name: "Shuffle", color: [])
+        ColorCombo(name: "Shuffle", color: []),
+        ColorCombo(name: "Random", color: [])
     ]
+    
     func giveRandomBgNumber(){ // 呼ばれた時 configBgをもとに背景を選ぶ
-        if 0...colorList.count-2 ~= configBgNumber{ // 「ランダム」を選んでない時
+        if 0...colorList.count-3 ~= configBgNumber{ // 色を選んだ時
             backgroundPicker = configBgNumber
-        }else{
+        }else if configBgNumber == colorList.count-2{  // シャッフル
             var randomBgNumber: Int
             repeat{
-                randomBgNumber = Int.random(in: 0...colorList.count-2)//0...3は自分で色と対応させる
+                randomBgNumber = Int.random(in: 0...colorList.count-3)//0...3は自分で色と対応させる
             }while backgroundPicker == randomBgNumber // 同じ背景だった時にやり直し
             backgroundPicker = randomBgNumber
+        }else{ // ランダム
+            randomColorCombo = giveRandomBackground()
+            backgroundPicker = configBgNumber
         }
     }
     
+    func giveRandomBackground() -> [Color]{
+        return [
+            Color(hue: Double.random(in: 0...1), saturation: Double.random(in: 0...1),
+                  brightness: Double.random(in: 0.5...0.9)),
+            Color(hue: Double.random(in: 0...1), saturation: Double.random(in: 0...1),
+                  brightness: Double.random(in: 0.7...0.95))
+        ]
+    }
+    
     func giveBackground() -> [Color]{ // 今の背景セットを返す
-        return colorList[backgroundPicker].color!
+        if configBgNumber != colorList.count-1{
+            return colorList[backgroundPicker].color!
+        } else {
+            return randomColorCombo
+        }
     }
     
     func resetSettings() {
@@ -79,7 +97,7 @@ final class SettingsStore: ObservableObject{
     }
 }
 
-struct ColorCombo: Hashable{
+struct ColorCombo{
     var name: String
     var color: [Color]?
 }

@@ -47,34 +47,6 @@ func interpolateQuadratic(t: Double, minValue: Double, maxValue: Double) -> Doub
     return (1 - clampedT) * maxValue + clampedT * minValue
 }
 
-// 今の設定言語を調べる
-func firstLang() -> String {
-    let prefLang = Locale.preferredLanguages.first
-    return prefLang!
-}
-
-// 最大最小の設定変更されたら表示するメッセージ
-// 日本語かそれ以外かで分けている
-func setMessageReset(language: String) -> String {
-    if language.hasPrefix("ja"){
-        return "やり直しを押して変更を適用"
-    }
-    else {
-        return "press Start Over to apply changes"
-    }
-}
-
-// 外部のCSVファイルを読み込むとき、
-// OneDriveやGoogle Driveからは読み取れないからこのエラーを表示させる
-func setMessageErrorLoad(language: String) -> String {
-    if language.hasPrefix("ja"){
-        return "ファイルを読み込めませんでした。\n「このiPhone内」から選択してください。"
-    }
-    else {
-        return "Error loading files. \nPlease load files from local storage."
-    }
-}
-
 // 触覚を発生させます
 func giveHaptics(impactType: String, ifActivate: Bool){
     if ifActivate == false{
@@ -134,38 +106,3 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
     }
 }
 
-//func giveRandomBackground(conf: Int, current: Int) -> Int{
-//    if 0...15 ~= conf{//confが0以上3以下なら　つまりconfをそのままgradPickerに
-//        return conf//currentを直接編集しない
-//    }else{
-//        var randomNumber: Int
-//        repeat{
-//            randomNumber = Int.random(in: 0...15)//0...3は自分で色と対応させる
-//        }while current == randomNumber
-//        return randomNumber
-//    }
-//}
-
-// グラデーションの定義
-//// 別ファイルにしたい(Settings系にするとか)
-//func returnColorCombo(index: Int) -> [Color] {
-//    let colorList: [[Color]] = [
-//        [Color.blue, Color.purple],                     // Default
-//        [Color(hex: "5d77b9")!, Color(hex: "fadb92")!], // dawn
-//        [Color(hex: "4161b8")!, Color(hex: "e56f5e")!], // Twilight
-//        [Color.red, Color.yellow],                      // Fire
-//        [Color(hex: "eb426f")!, Color(hex: "4ce7d2")!], // miracle
-//        [Color(hex: "41c78e")!, Color(hex: "c670f7")!], // Dream
-//        [Color(hex: "ccdf83")!, Color(hex: "2cde83")!], // summer
-//        [Color(hex: "dedfe3")!, Color(hex: "4a8a8b")!], // winter
-//        [Color(hex: "0645fc")!, Color(hex: "d2fafe")!], // Sky
-//        [Color(hex: "60e5ca")!, Color(hex: "374ebf")!], // Ocean
-//        [Color(hex: "f59067")!, Color(hex: "63d115")!], // Mountain
-//        [Color(hex: "70efda")!, Color(hex: "0d6967")!], // mint
-//        [Color.purple, Color.indigo],                   // grape
-//        [Color(hex: "de3c87")!, Color(hex: "fbe7ee")!], // strawberry
-//        [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!], // green tea
-//        [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]  // champagne
-//    ]
-//    return colorList[index]
-//}

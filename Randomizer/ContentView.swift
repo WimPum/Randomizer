@@ -56,7 +56,7 @@ struct ContentView: View {
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
             LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
-                           startPoint: .top, endPoint: .bottom) // testing only()
+                           startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut, value: configStore.giveBackground()) // Will this even work??
             TabView(selection: $viewSelection){
@@ -100,13 +100,13 @@ struct ContentView: View {
                                 }
                             }
                         if showCSVButtonAndName == true{ //キーボード出す時は隠してます
-                            Text(isFileSelected ? csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1]: showMessage)//ファイルあれば
-                                .fontSemiBold(size: 26)
-                                .multilineTextAlignment(.center)
-                                .opacity(showMessageOpacity)
-                                .frame(height: 60)
-                                .padding(.horizontal, 10)
-                                .minimumScaleFactor(0.2)
+                            if isFileSelected == true{
+                                Text(csvNameStore[0][rollDisplaySeq![rollListCounter-1]-1])//ファイルあれば
+                                    .fontMessage(opacity: showMessageOpacity)
+                            } else {
+                                Text(LocalizedStringKey(showMessage))//ファイルないとき
+                                    .fontMessage(opacity: showMessageOpacity)
+                            }
                         }
                         
                     }
@@ -318,7 +318,7 @@ struct ContentView: View {
                             print("no files")
                             openedFileName = ""//リセット
                             csvNameStore = [[String]]()//空
-                            showMessage = setMessageErrorLoad(language: firstLang())//この時だけこれ
+                            showMessage = "Error loading files. Please load files from local storage." // 改行できない😭
                             withAnimation{
                                 showMessageOpacity = 0.6
                             }
@@ -341,7 +341,7 @@ struct ContentView: View {
         withAnimation{
             showMessageOpacity = 0.0
         }
-        showMessage = setMessageReset(language: firstLang())//変更するけど見えない
+        showMessage = "press Start Over to apply changes"//変更するけど見えない
         isFileSelected = false
         csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
     }
@@ -351,9 +351,7 @@ struct ContentView: View {
         minBoxValue = String(minBoxValueLock)//保存から復元
         maxBoxValue = String(maxBoxValueLock)
         drawLimit = maxBoxValueLock - minBoxValueLock + 1
-        showMessage = setMessageReset(language: firstLang())
-//        configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//背景初期化
-//        externalStore.externalGradient = configStore.gradientPicker
+        showMessage = "press Start Over to apply changes"
         configStore.giveRandomBgNumber()
         print("HistorySequence \(historySeq as Any)\ntotal would be No.\(drawLimit)")
 //        for i in 1...99990{
@@ -373,7 +371,7 @@ struct ContentView: View {
             withAnimation{//まず非表示？
                 showMessageOpacity = 0.0
             }
-            showMessage = setMessageReset(language: firstLang())//違ったら戻す
+            showMessage = "press Start Over to apply changes" //違ったら戻す
         }
         //Reset固有
         historySeq = []//リセットだから?????????????
@@ -408,10 +406,10 @@ struct ContentView: View {
                         showMessageOpacity = 0.0
                     }
                 }
-                showMessage = setMessageReset(language: firstLang())//違ったら戻す
+                showMessage = "press Start Over to apply changes" //違ったら戻す
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { // Nextを押すと変更されたことを通知できなかった
                     if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
-                        showMessage = setMessageReset(language: firstLang())//絶対にStartOverと表示
+                        showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
                         withAnimation{
                             showMessageOpacity = 0.6
                         }
@@ -437,7 +435,7 @@ struct ContentView: View {
         isInputMinFocused = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
-                showMessage = setMessageReset(language: firstLang())//絶対にStartOverと表示
+                showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
                 withAnimation{
                     showMessageOpacity = 0.6
                 }
@@ -505,8 +503,6 @@ struct ContentView: View {
             externalStore.externalRollSeq = rollDisplaySeq
             startTimer()//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
-//            configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//最後に背景色変える
-//            externalStore.externalGradient = configStore.gradientPicker
             configStore.giveRandomBgNumber()
             historySeq?.append(realAnswer)//履歴追加
             rollDisplaySeq = [realAnswer]//答えだけ追加
@@ -524,7 +520,6 @@ struct ContentView: View {
             if rollListCounter + 1 >= configStore.rollingCountLimit {
                 rollListCounter += 1
                 externalStore.externalRollCount = rollListCounter
-//                configStore.gradientPicker = giveRandomBackground(conf: configStore.configBgColor, current: configStore.gradientPicker)//アニメーションしたい
                 configStore.giveRandomBgNumber()
                 externalStore.externalGradient = configStore.backgroundPicker
                     //iOS 17 ではボタンの文字までアニメーションされる

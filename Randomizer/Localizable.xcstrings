@@ -146,6 +146,17 @@
         }
       }
     },
+    "Error loading files. Please load files from local storage." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを読み込めませんでした。「このiPhone内」から選択してください。"
+          }
+        }
+      }
+    },
     "Fire" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -341,6 +352,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CSV選択"
+          }
+        }
+      }
+    },
+    "press Start Over to apply changes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "やり直しを押して変更を適用"
           }
         }
       }

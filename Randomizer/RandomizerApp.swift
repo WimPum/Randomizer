@@ -11,10 +11,11 @@ import UIKit
 @main
 struct RandomizerApp: App {
     @StateObject var store = ExternalBridge.shared // 外部画面用
+    @StateObject var config = SettingsStore()
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(SettingsStore())
+                .environmentObject(config) // inject it! https://stackoverflow.com/questions/72505839/
                 .environmentObject(store)
         }
     }
