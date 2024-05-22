@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ExternalView: View {
     @EnvironmentObject var configStore: SettingsStore // EnvironmentObjになった設定
-    @EnvironmentObject var externalStore: ExternalBridge
+    @EnvironmentObject var randomStore: RandomizerState
     var body: some View {
         ZStack(){
             LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
@@ -18,8 +18,8 @@ struct ExternalView: View {
                 .animation(.easeInOut, value: configStore.giveBackground())
             VStack(){
 //                Text(verbatim: String(externalStore.externalNumber)).fontSemiBoldRound(size: 2000, rolling: false) // rollingも変えられるようにする
-                Text(verbatim: "\(externalStore.externalRollSeq![externalStore.externalRollCount-1])")
-                    .fontSemiBoldRound(size: 2000, rolling: externalStore.isExternalRolling)
+                Text(verbatim: "\(randomStore.externalRollSeq![randomStore.externalRollCount-1])")
+                    .fontSemiBoldRound(size: 2000, rolling: randomStore.isExternalRolling)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .minimumScaleFactor(0.2)
             }.padding()
@@ -30,5 +30,5 @@ struct ExternalView: View {
 #Preview {
     ExternalView()
         .environmentObject(SettingsStore())
-        .environmentObject(ExternalBridge.shared)
+        .environmentObject(RandomizerState.shared)
 }
