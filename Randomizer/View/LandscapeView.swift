@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExternalView: View {
+struct LandscapeView: View {
     @EnvironmentObject var configStore: SettingsStore // EnvironmentObjになった設定
     @EnvironmentObject var randomStore: RandomizerState
     var body: some View {
@@ -18,8 +18,8 @@ struct ExternalView: View {
                 .animation(.easeInOut, value: configStore.giveBackground())
             VStack(){
 //                Text(verbatim: String(externalStore.externalNumber)).fontSemiBoldRound(size: 2000, rolling: false) // rollingも変えられるようにする
-                Text(verbatim: "\(randomStore.externalRollSeq![randomStore.externalRollCount-1])")
-                    .fontSemiBoldRound(size: 2000, rolling: randomStore.isExternalRolling)
+                Text(verbatim: "\(randomStore.rollDisplaySeq![randomStore.rollListCounter-1])")
+                    .fontSemiBoldRound(size: 2000, rolling: randomStore.isTimerRunning)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .minimumScaleFactor(0.2)
             }.padding()
@@ -28,7 +28,7 @@ struct ExternalView: View {
 }
 
 #Preview {
-    ExternalView()
+    LandscapeView()
         .environmentObject(SettingsStore())
         .environmentObject(RandomizerState.shared)
 }

@@ -22,6 +22,9 @@
         }
       }
     },
+    "A" : {
+
+    },
     "All drawn" : {
       "localizations" : {
         "ja" : {
@@ -61,6 +64,9 @@
           }
         }
       }
+    },
+    "B" : {
+
     },
     "Background color" : {
       "localizations" : {

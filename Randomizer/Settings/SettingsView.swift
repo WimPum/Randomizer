@@ -78,7 +78,7 @@ struct SettingsView: View { // will be called from ContentView
 
 struct SettingsList: View{
     @EnvironmentObject var configStore: SettingsStore // EnvironmentObjectだから引数なしでいいよね。。。？
-    @EnvironmentObject var externalStore: ExternalBridge // ContentViewにEnvironmentで設定したからできること
+    @EnvironmentObject var externalStore: RandomizerState // ContentViewにEnvironmentで設定したからできること
     
     var body: some View {
         Section(header: Text("general")){
