@@ -11,7 +11,6 @@
 		B129DCA62BFE0A75006C2E78 /* PortraitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B129DCA52BFE0A75006C2E78 /* PortraitView.swift */; };
 		B14E4FD42BBBF3CD007E946D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */; };
 		B14E50012BBF13E8007E946D /* LandscapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50002BBF13E8007E946D /* LandscapeView.swift */; };
-		B14E50032BBF3157007E946D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50022BBF3157007E946D /* SceneDelegate.swift */; };
 		B14E50052BBF3D37007E946D /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50042BBF3D37007E946D /* Functions.swift */; };
 		B14E50072BBF3DE1007E946D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E50062BBF3DE1007E946D /* Extensions.swift */; };
 		B1519AE12B36BC5900D84B6D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1519AE02B36BC5900D84B6D /* SettingsView.swift */; };
@@ -29,7 +28,6 @@
 		B129DCA52BFE0A75006C2E78 /* PortraitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitView.swift; sourceTree = "<group>"; };
 		B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B14E50002BBF13E8007E946D /* LandscapeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeView.swift; sourceTree = "<group>"; };
-		B14E50022BBF3157007E946D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B14E50042BBF3D37007E946D /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		B14E50062BBF3DE1007E946D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B1519AE02B36BC5900D84B6D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 				B1A4FA632BFCD6DE00BD1E54 /* View */,
 				B1FD99242B07881D00781D1D /* RandomizerApp.swift */,
 				B1FD99262B07881D00781D1D /* ContentView.swift */,
-				B14E50022BBF3157007E946D /* SceneDelegate.swift */,
 				B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */,
 				B1FD99282B07882000781D1D /* Assets.xcassets */,
 				B1FD992A2B07882000781D1D /* Preview Content */,
@@ -212,7 +209,6 @@
 				B1F431F92BAE18C3004A92D0 /* limitedTextField.swift in Sources */,
 				B1FD99272B07881D00781D1D /* ContentView.swift in Sources */,
 				B1FD99252B07881D00781D1D /* RandomizerApp.swift in Sources */,
-				B14E50032BBF3157007E946D /* SceneDelegate.swift in Sources */,
 				B129DCA62BFE0A75006C2E78 /* PortraitView.swift in Sources */,
 				B1A4FA622BFCD69900BD1E54 /* SettingsStore.swift in Sources */,
 				B129DCA42BFE0346006C2E78 /* RandomizerState.swift in Sources */,
@@ -357,6 +353,7 @@
 				INFOPLIST_FILE = Randomizer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Randomizer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -396,6 +393,7 @@
 				INFOPLIST_FILE = Randomizer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Randomizer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;

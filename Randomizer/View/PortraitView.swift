@@ -13,23 +13,6 @@ struct PortraitView: View {
     //main
     @State private var minBoxValue: String = "1"
     @State private var maxBoxValue: String = "50"
-    @AppStorage("minValue") private var minBoxValueLock: Int = 1 // min->maxの順
-    @AppStorage("maxValue") private var maxBoxValueLock: Int = 50//Start Overを押すまでここにkeep
-    @State private var drawCount: Int = 0       //今何回目か
-    @State private var drawLimit: Int = 0       //何回まで引けるか
-    @State private var realAnswer: Int = 0      //本当の答え
-    
-    //history&Shuffler
-    @State private var historySeq: [Int]? = []     //履歴 ない時は0じゃなくてEmpty
-    @State private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
-//    @State private var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
-//    @State private var rollListCounter: Int = 1     //ロールのリスト上を移動
-//    @State private var isTimerRunning: Bool = false
-    @State private var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
-    @State private var rollTimer: Timer?
-    @State private var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
-    private let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
-    private let rollMaxSpeed: Double = 6
 
     //fileImporter
     @State private var openedFileName = ""//ファイル名表示用
@@ -78,16 +61,16 @@ struct PortraitView: View {
                             }
                         }
                         .fontSemiBold(size: 24)//フォントとあるがSF Symbolsだから
-                        .disabled(isButtonPressed)
+                        .disabled(randomStore.isButtonPressed)
                     }
                     Spacer()
                     VStack(){                                                               //上半分
-                        Text("No.\(drawCount)")
+                        Text("No.\(randomStore.drawCount)")
                             .fontMedium(size: 32)
                             .frame(height: 40)
                         Button(action: {
-                            if isButtonPressed == false{
-                                isButtonPressed = true
+                            if randomStore.isButtonPressed == false{
+                                randomStore.isButtonPressed = true
                                 print("big number pressed")
                                 buttonNext()
                             }
@@ -96,10 +79,10 @@ struct PortraitView: View {
                                 .fontSemiBoldRound(size: 160, rolling: randomStore.isTimerRunning)
                                 .frame(width: UIScreen.current?.bounds.width, height: 170)
                                 .minimumScaleFactor(0.2)
-                        }.disabled(isButtonPressed)
+                        }.disabled(randomStore.isButtonPressed)
                             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
-                                if isButtonPressed == false{
-                                    isButtonPressed = true
+                                if randomStore.isButtonPressed == false{
+                                    randomStore.isButtonPressed = true
                                     print("device shaken!")
                                     buttonNext()
                                 }
@@ -136,7 +119,7 @@ struct PortraitView: View {
                                         .setUnderline()
                                         .frame(width: 120)
                                         .focused($isInputMinFocused)
-                                        .disabled(isButtonPressed)
+                                        .disabled(randomStore.isButtonPressed)
                                 }
                                 Spacer()
                                 VStack{
@@ -154,7 +137,7 @@ struct PortraitView: View {
                                         .setUnderline()
                                         .frame(width: 120)
                                         .focused($isInputMaxFocused)
-                                        .disabled(isButtonPressed)
+                                        .disabled(randomStore.isButtonPressed)
                                 }
                                 Spacer()
                             }
@@ -173,7 +156,7 @@ struct PortraitView: View {
                                     .padding()
                                     .frame(width:140, height: 36)
                                     .glassMaterial(cornerRadius: 24)
-                            }.disabled(isButtonPressed)
+                            }.disabled(randomStore.isButtonPressed)
                         }
                     }.toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
@@ -204,15 +187,15 @@ struct PortraitView: View {
                     HStack(){ // lower buttons.
                         Spacer()
                         Button(action: {
-                            if isButtonPressed == false{
-                                isButtonPressed = true
+                            if randomStore.isButtonPressed == false{
+                                randomStore.isButtonPressed = true
                                 print("next button pressed")
                                 buttonNext()
                             }
                         }){
                             Text("Next draw")
                                 .glassButton()
-                        }.disabled(isButtonPressed)
+                        }.disabled(randomStore.isButtonPressed)
                         .alert("All drawn", isPresented: $showingAlert) {
                             // アクションボタンリスト
                         } message: {
@@ -220,15 +203,15 @@ struct PortraitView: View {
                         }
                         Spacer()
                         Button(action: {
-                            if isButtonPressed == false{
-                                isButtonPressed = true
+                            if randomStore.isButtonPressed == false{
+                                randomStore.isButtonPressed = true
                                 print("reset button pressed")
                                 buttonReset()
                             }
                         }) {
                             Text("Start over")
                                 .glassButton()
-                        }.disabled(isButtonPressed)
+                        }.disabled(randomStore.isButtonPressed)
                         .alert("Error", isPresented: $showingAlert2) {
                             // アクションボタンリスト
                         } message: {
@@ -248,7 +231,7 @@ struct PortraitView: View {
                     Text("History")//リストを表示
                         .fontSemiBold(size: 20)
                         .padding()//should be here
-                    if let screenWidth = UIScreen.current?.bounds.width, let historySeq = historySeq{//historySeqに値入ってたら
+                    if let screenWidth = UIScreen.current?.bounds.width, let historySeq = randomStore.historySeq{//historySeqに値入ってたら
                         if historySeq.count > 0{
                             List {
                                 ForEach(0..<historySeq.count, id: \.self){ index in
@@ -285,7 +268,7 @@ struct PortraitView: View {
                   Text("History") }
                 .tag(2)
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
+            .tabViewStyle(.page(indexDisplayMode: .never)) // https://stackoverflow.com/questions/68310455/
             .onChange(of: viewSelection, perform: { _ in // 入力中にページが切り替わっても隠れた物は元に戻る
                 if viewSelection == 2{ // 1以外ないけど
                     showCSVButtonAndName = true
@@ -313,7 +296,7 @@ struct PortraitView: View {
                     if openedFileLocation.startAccessingSecurityScopedResource() {
                         print("loading files")
                         if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
-                            isButtonPressed = true //ボタンを押せないようにする
+                            randomStore.isButtonPressed = true //ボタンを押せないようにする
                             csvNameStore = csvNames
                             print(csvNameStore)
                             isFileSelected = true
@@ -352,13 +335,13 @@ struct PortraitView: View {
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0
-        isButtonPressed = false // 操作できない状態にしない
-        minBoxValue = String(minBoxValueLock)//保存から復元
-        maxBoxValue = String(maxBoxValueLock)
-        drawLimit = maxBoxValueLock - minBoxValueLock + 1
+        randomStore.isButtonPressed = false // 操作できない状態にしない
+        minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
+        maxBoxValue = String(randomStore.maxBoxValueLock)
+        randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
         showMessage = "press Start Over to apply changes"
         
-        print("HistorySequence \(historySeq as Any)\ntotal would be No.\(drawLimit)")
+        print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
 //        for i in 1...99990{
 //            historySeq!.append(i)
 //            print(i)
@@ -379,41 +362,43 @@ struct PortraitView: View {
             showMessage = "press Start Over to apply changes" //違ったら戻す
         }
         //Reset固有
-        historySeq = []//リセットだから?????????????
+        randomStore.historySeq = []//リセットだから?????????????
         if (minBoxValue == "") { // 入力値が空だったら現在の値で復元
-            minBoxValue = String(minBoxValueLock)
+            minBoxValue = String(randomStore.minBoxValueLock)
         }
         if (maxBoxValue == "") {
-            maxBoxValue = String(maxBoxValueLock)
+            maxBoxValue = String(randomStore.maxBoxValueLock)
         }
         if Int(minBoxValue)! >= Int(maxBoxValue)!{ // チェック
             self.showingAlert2.toggle()
-            isButtonPressed = false
+            randomStore.isButtonPressed = false
             return
         }
-        minBoxValueLock = Int(minBoxValue)!
-        maxBoxValueLock = Int(maxBoxValue)!
+        randomStore.minBoxValueLock = Int(minBoxValue)!
+        randomStore.maxBoxValueLock = Int(maxBoxValue)!
         print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
         
-        randomNumberPicker(mode: 2)//まとめた
+        isInputMinFocused = false //
+        isInputMaxFocused = false
+        randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめた
     }
     
     func buttonNext() {
         showCSVButtonAndName = true
-        if drawCount >= drawLimit{ // チェック
+        if randomStore.drawCount >= randomStore.drawLimit{ // チェック
             self.showingAlert.toggle()
-            isButtonPressed = false
+            randomStore.isButtonPressed = false
         }
         else{
             if isFileSelected == false{ //ファイルが選ばれてなかったら
-                if maxBoxValue == String(maxBoxValueLock) && minBoxValue == String(minBoxValueLock){
+                if maxBoxValue == String(randomStore.maxBoxValueLock) && minBoxValue == String(randomStore.minBoxValueLock){
                     withAnimation{//まず非表示？
                         showMessageOpacity = 0.0
                     }
                 }
                 showMessage = "press Start Over to apply changes" //違ったら戻す
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { // Nextを押すと変更されたことを通知できなかった
-                    if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
+                    if maxBoxValue != String(randomStore.maxBoxValueLock) || minBoxValue != String(randomStore.minBoxValueLock){
                         showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
                         withAnimation{
                             showMessageOpacity = 0.6
@@ -425,7 +410,9 @@ struct PortraitView: View {
                     }
                 }
             }
-            randomNumberPicker(mode: 1)//まとめました
+            isInputMinFocused = false // 
+            isInputMaxFocused = false
+            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
         }
     }
     
@@ -439,7 +426,7 @@ struct PortraitView: View {
         isInputMaxFocused = false
         isInputMinFocused = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            if maxBoxValue != String(maxBoxValueLock) || minBoxValue != String(minBoxValueLock){
+            if maxBoxValue != String(randomStore.maxBoxValueLock) || minBoxValue != String(randomStore.minBoxValueLock){
                 showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
                 withAnimation{
                     showMessageOpacity = 0.6
@@ -451,107 +438,6 @@ struct PortraitView: View {
             }
         }
 
-    }
-    
-    func logging(realAnswer: Int) {
-        print("///////////////DEBUG SECTION")
-        print("roll count limit: \(configStore.rollingCountLimit)")
-        print("Randomly picked remain: \(remainderSeq)")
-        print("displaySeq: \(randomStore.rollDisplaySeq as Any)")//ロール中は押せない
-        print("displaySeqLength: \(configStore.rollingCountLimit)")
-        print("displaySeqSpeedo: \(configStore.rollingSpeed)")
-        print("HistorySequence is \(historySeq as Any)")
-        print("current draw is \(realAnswer) and No.\(drawCount)")
-        print("total is \(drawLimit)")
-        print("///////////////END OF DEBUG SECTION")
-    }
-    
-    func randomNumberPicker(mode: Int){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
-        isInputMinFocused = false
-        isInputMaxFocused = false
-        drawLimit = maxBoxValueLock - minBoxValueLock + 1 // ここで異常を起こしている可能性あり?
-        
-        if mode == 1{ // mode 1はnext
-            drawCount += 1 // draw next number
-        }
-        else if mode == 2{
-            drawCount = 1
-        }
-        remainderSeq = [Int]()
-        
-        //rollSpeed = 25 // 特に理由はなし speedはこれに係数をかけている
-        rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
-        
-        randomStore.rollListCounter = 1
-        
-        let remaining = drawLimit - drawCount + 1 // 残り
-        print("\(remaining) numbers remaining")
-        realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-        logging(realAnswer: realAnswer) // ログ　releaseでは消す
-        if configStore.isRollingOn && remaining > 1{
-            let ifRemainedMore = remaining > configStore.rollingCountLimit // ロール用に選ぶ数字の量を決定 少ない時は残りの数 多ければrollingCountLimitの数選ぶ
-            var historySeqforRoll = [Int]()     //履歴
-            var pickedNumber: Int//上のhistorySeqforRollとともに下のforループでのみ使用
-            for _ in (1...Int(ifRemainedMore ? configStore.rollingCountLimit : remaining)){ // trueなら前
-                if ifRemainedMore{
-                    remainderSeq.append(give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq))//ここ変えます
-                }else{
-                    repeat{
-                        pickedNumber = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
-                    }while(historySeqforRoll.contains(pickedNumber))
-                    historySeqforRoll.append(pickedNumber)
-                    remainderSeq.append(pickedNumber)
-                }
-            }
-            randomStore.rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
-            startTimer()//ロール開始, これで履歴にも追加
-        }else{//1番最後と、ロールを無効にした場合こっちになります
-            configStore.giveRandomBgNumber()
-            historySeq?.append(realAnswer)//履歴追加
-            randomStore.rollDisplaySeq = [realAnswer]//答えだけ追加
-            giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
-            isButtonPressed = false
-        }
-    }
-    
-    //タイマーに使用される関数
-    func startTimer() {
-        randomStore.isTimerRunning = true
-        rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
-            if randomStore.rollListCounter + 1 >= configStore.rollingCountLimit {
-                randomStore.rollListCounter += 1
-                configStore.giveRandomBgNumber()
-                    //iOS 17 ではボタンの文字までアニメーションされる
-                    //iOS 15,16ではそもそも発生しない
-                stopTimer()
-                historySeq?.append(realAnswer)//"?"//現時点でのrealAnswer
-                giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
-                isButtonPressed = false
-                return
-            }
-            else{
-                giveHaptics(impactType: "soft", ifActivate: configStore.isHapticsOn)
-                
-                let t: Double = Double(randomStore.rollListCounter) / Double(configStore.rollingCountLimit)//カウントの進捗
-                rollSpeed = interpolateQuadratic(t: t, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算
-                // print("Now rolling aty \(rollSpeed), t is \(t)")
-                updateTimerSpeed()
-                randomStore.rollListCounter += 1
-            }
-        }
-    }
-
-    func stopTimer() {
-        randomStore.isTimerRunning = false
-        rollTimer?.invalidate()//タイマーを止める。
-        rollTimer = nil // 大丈夫か？止まらない説
-    }
-
-    func updateTimerSpeed() {
-        if randomStore.isTimerRunning {
-            stopTimer()
-            startTimer()
-        }
     }
 }
 

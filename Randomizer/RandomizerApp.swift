@@ -10,7 +10,7 @@ import UIKit
 
 @main
 struct RandomizerApp: App {
-    @StateObject var store = RandomizerState.shared // 外部画面用
+    @StateObject var store = RandomizerState.shared // 横画面用
     @StateObject var config = SettingsStore()
     var body: some Scene {
         WindowGroup {
