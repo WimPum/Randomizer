@@ -15,11 +15,11 @@ struct PortraitView: View {
     @State private var maxBoxValue: String = "50"
 
     //fileImporter
-    @State private var openedFileName = ""//ファイル名表示用
+//    @State private var openedFileName = ""//ファイル名表示用
     @State private var openedFileLocation = URL(string: "file://")!//defalut値確認
     @State private var isOpeningFile = false                                            //ファイルダイアログを開く変数
-    @State private var isFileSelected: Bool = false//isFileLoadedは起動時にファイルを読み込もうとしていた時の遺産
-    @State private var csvNameStore = [[String]]()                              //名前を格納する
+//    @State private var isFileSelected: Bool = false
+//    @State private var csvNameStore = [[String]]()                              //名前を格納する
     @State private var showMessage: String = ""
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
     
@@ -43,10 +43,6 @@ struct PortraitView: View {
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
-            LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
-                           startPoint: .top, endPoint: .bottom)
-                .edgesIgnoringSafeArea(.all)
-                .animation(.easeInOut, value: configStore.giveBackground()) // Will this even work??
             TabView(selection: $viewSelection){
                 VStack(){//１ページ目
                     Spacer().frame(height: 5)
@@ -88,8 +84,8 @@ struct PortraitView: View {
                                 }
                             }
                         if showCSVButtonAndName == true{ //キーボード出す時は隠してます
-                            if isFileSelected == true{
-                                Text(csvNameStore[0][randomStore.rollDisplaySeq![randomStore.rollListCounter-1]-1])//ファイルあれば
+                            if randomStore.isFileSelected == true{
+                                Text(randomStore.csvNameStore[0][randomStore.rollDisplaySeq![randomStore.rollListCounter-1]-1])//ファイルあれば
                                     .fontMessage(opacity: showMessageOpacity)
                             } else {
                                 Text(LocalizedStringKey(showMessage))//ファイルないとき
@@ -100,7 +96,7 @@ struct PortraitView: View {
                     }
                     Spacer()//何とか
                     VStack(){                                                               //下半分
-                        if isFileSelected == false {
+                        if randomStore.isFileSelected == false {
                             Spacer(minLength: 10)
                             HStack(){
                                 Spacer()
@@ -144,7 +140,7 @@ struct PortraitView: View {
                         }
                         else{
                             HStack(){
-                                Text(self.openedFileName)// select csv file
+                                Text(randomStore.openedFileName)// select csv file
                                     .fontMedium(size: 20)
                             }
                             Button(action: {
@@ -284,28 +280,28 @@ struct PortraitView: View {
         .sheet(isPresented: self.$isSettingsView){
             SettingsView(isPresentedLocal: self.$isSettingsView)
         }//設定画面
-        .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false
+        .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false // テキストでも受け付けましょうか。。？
         ){ result in
             if case .success = result {
                 do{
                     let fileURL: URL = try result.get().first!
                     //self.fileName = fileURL.first?.lastPathComponent ?? "file not available"
                     self.openedFileLocation = fileURL//これでFullパス
-                    self.openedFileName = openedFileLocation.lastPathComponent //名前だけ
+                    randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
                     print(openedFileLocation)
                     if openedFileLocation.startAccessingSecurityScopedResource() {
                         print("loading files")
                         if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
                             randomStore.isButtonPressed = true //ボタンを押せないようにする
-                            csvNameStore = csvNames
-                            print(csvNameStore)
-                            isFileSelected = true
+                            randomStore.csvNameStore = csvNames
+                            print(randomStore.csvNameStore)
+                            randomStore.isFileSelected = true
                             buttonReset()
                         }else{
-                            isFileSelected = false
+                            randomStore.isFileSelected = false
                             print("no files")
-                            openedFileName = ""//リセット
-                            csvNameStore = [[String]]()//空
+                            randomStore.openedFileName = ""//リセット
+                            randomStore.csvNameStore = [[String]]()//空
                             showMessage = "Error loading files. Please load files from local storage." // 改行できない😭
                             withAnimation{
                                 showMessageOpacity = 0.6
@@ -325,13 +321,13 @@ struct PortraitView: View {
     
     func fileReset() {
         print("cleared files")
-        openedFileName = ""//リセット
-        withAnimation{
+        randomStore.openedFileName = ""//リセット
+        withAnimation(.linear(duration: 0.5)){
+            randomStore.isFileSelected = false
             showMessageOpacity = 0.0
         }
         showMessage = "press Start Over to apply changes"//変更するけど見えない
-        isFileSelected = false
-        csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
+        randomStore.csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0
@@ -339,21 +335,23 @@ struct PortraitView: View {
         minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
         maxBoxValue = String(randomStore.maxBoxValueLock)
         randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
-        showMessage = "press Start Over to apply changes"
-        
+        if randomStore.isFileSelected == false{
+            showMessage = "press Start Over to apply changes"
+        } else {
+            showMessageOpacity = 0.6
+        }
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
 //        for i in 1...99990{
-//            historySeq!.append(i)
+//            randomStore.historySeq!.append(i)
 //            print(i)
 //        }//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
     }
     
-    
     func buttonReset() {
         showCSVButtonAndName = true
-        if isFileSelected == true{ //ファイルが選ばれたら自動入力
+        if randomStore.isFileSelected == true{ //ファイルが選ばれたら自動入力
             minBoxValue = "1"
-            maxBoxValue = String(csvNameStore[0].count)
+            maxBoxValue = String(randomStore.csvNameStore[0].count)
             showMessageOpacity = 0.6
         }else{
             withAnimation{//まず非表示？
@@ -390,7 +388,7 @@ struct PortraitView: View {
             randomStore.isButtonPressed = false
         }
         else{
-            if isFileSelected == false{ //ファイルが選ばれてなかったら
+            if randomStore.isFileSelected == false{ //ファイルが選ばれてなかったら
                 if maxBoxValue == String(randomStore.maxBoxValueLock) && minBoxValue == String(randomStore.minBoxValueLock){
                     withAnimation{//まず非表示？
                         showMessageOpacity = 0.0

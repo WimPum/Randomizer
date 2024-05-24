@@ -14,7 +14,11 @@ struct ContentView: View {
     @Environment(\.verticalSizeClass) private var vSizeClass
     
     var body: some View {
-        HStack{
+        ZStack{
+            LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
+                           startPoint: .top, endPoint: .bottom)
+                .edgesIgnoringSafeArea(.all)
+                .animation(.easeInOut, value: configStore.giveBackground()) // Will this even work??
             if vSizeClass == .regular { // なんで動かないの？？
                 PortraitView()
             } else {

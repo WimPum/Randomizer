@@ -11,15 +11,15 @@ import SwiftUI
 // 参考：https://useyourloaf.com/blog/swiftui-supporting-external-screens/
 
 final class RandomizerState: ObservableObject{
-    //main
+    // main
     @AppStorage("minValue") var minBoxValueLock: Int = 1 // min->maxの順
     @AppStorage("maxValue") var maxBoxValueLock: Int = 50//Start Overを押すまでここにkeep
     @Published var drawCount: Int = 0       //今何回目か
     @Published var drawLimit: Int = 0       //何回まで引けるか
     @Published var realAnswer: Int = 0      //本当の答え
     
-    //history&Shuffler
-    @Published var historySeq: [Int]? = []     //履歴 ない時は0じゃなくてEmpty
+    // history&Shuffler
+    @Published var historySeq: [Int]? = []      //履歴 ない時は0じゃなくてEmpty
     @Published var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
     @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
     @Published var rollListCounter: Int = 1     //ロールのリスト上を移動
@@ -29,6 +29,11 @@ final class RandomizerState: ObservableObject{
     @Published var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
     let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
     let rollMaxSpeed: Double = 6
+    
+    // fileImporter
+    @Published var openedFileName = ""          //ファイル名表示用
+    @Published var isFileSelected: Bool = false
+    @Published var csvNameStore = [[String]]()  //名前を格納する
     
     static let shared = RandomizerState() // 参考
     
