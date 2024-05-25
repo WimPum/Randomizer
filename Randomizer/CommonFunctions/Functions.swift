@@ -5,7 +5,6 @@
 //  Created by 虎澤謙 on 2024/04/05.
 //
 
-import SwiftUI
 import UIKit
 
 // 最大最小と履歴をもとに数字を選ぶ

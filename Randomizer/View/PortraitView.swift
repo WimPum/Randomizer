@@ -15,11 +15,8 @@ struct PortraitView: View {
     @State private var maxBoxValue: String = "50"
 
     //fileImporter
-//    @State private var openedFileName = ""//ファイル名表示用
     @State private var openedFileLocation = URL(string: "file://")!//defalut値確認
-    @State private var isOpeningFile = false                                            //ファイルダイアログを開く変数
-//    @State private var isFileSelected: Bool = false
-//    @State private var csvNameStore = [[String]]()                              //名前を格納する
+    @State private var isOpeningFile = false                       //ファイルダイアログを開く変数
     @State private var showMessage: String = ""
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
     
@@ -223,10 +220,9 @@ struct PortraitView: View {
 
                 VStack(){
                     Spacer(minLength: 5)
-                    //Spacer().frame(height: 20)//これは知らなかった
                     Text("History")//リストを表示
                         .fontSemiBold(size: 20)
-                        .padding()//should be here
+                        .padding()
                     if let screenWidth = UIScreen.current?.bounds.width, let historySeq = randomStore.historySeq{//historySeqに値入ってたら
                         if historySeq.count > 0{
                             List {
@@ -240,7 +236,6 @@ struct PortraitView: View {
                                             .frame(width: screenWidth - 140,
                                                    height: 40,
                                                    alignment: .trailing)
-                                            //.border(.red)
                                             .minimumScaleFactor(0.2)
                                     }.listRowBackground(Color.clear)//リストの項目の背景を無効化
                                 }
@@ -248,17 +243,14 @@ struct PortraitView: View {
                             .scrollCBIfPossible()//リストの背景を無効化
                             .listStyle(.plain)
                             .frame(width: screenWidth,
-                                   //height: (UIScreen.current?.bounds.height)!-120,//CRASHED
                                    alignment: .center)
-                            //.border(.red, width: 3)
                         }else{
                             Color.clear // 何もない時
                                 .frame(width: screenWidth,
-                                       //height: (UIScreen.current?.bounds.height)!-120,//CRASHED
                                        alignment: .center)
                         }
                     }
-                    Spacer(minLength: 20)/*.frame(height: 10)*/
+                    Spacer(minLength: 20)
                 }
                 .tabItem {
                   Text("History") }
@@ -274,13 +266,13 @@ struct PortraitView: View {
             })
             .ignoresSafeArea(edges: .top)
         }
-        .onAppear{//起動時に実行となる　このContentViewしかないから
+        .onAppear{//画面切り替わり時に実行となる
             initReset()
         }
         .sheet(isPresented: self.$isSettingsView){
             SettingsView(isPresentedLocal: self.$isSettingsView)
         }//設定画面
-        .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false // テキストでも受け付けましょうか。。？
+        .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false
         ){ result in
             if case .success = result {
                 do{
@@ -341,10 +333,8 @@ struct PortraitView: View {
             showMessageOpacity = 0.6
         }
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
-//        for i in 1...99990{
-//            randomStore.historySeq!.append(i)
-//            print(i)
-//        }//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
+//        randomStore.historySeq! = Array(1...9999999920)//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
+//        randomStore.drawCount = 9999999921
     }
     
     func buttonReset() {

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 final class SettingsStore: ObservableObject{
     @AppStorage("isHapticsOn") var isHapticsOn: Bool = true
     @AppStorage("isRollingOn") var isRollingOn: Bool = true

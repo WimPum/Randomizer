@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// 外部ディスプレイ対応
+// 横画面対応
 // 参考：https://useyourloaf.com/blog/swiftui-supporting-external-screens/
 
 final class RandomizerState: ObservableObject{
@@ -20,13 +20,13 @@ final class RandomizerState: ObservableObject{
     
     // history&Shuffler
     @Published var historySeq: [Int]? = []      //履歴 ない時は0じゃなくてEmpty
-    @Published var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
+    private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
     @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
     @Published var rollListCounter: Int = 1     //ロールのリスト上を移動
     @Published var isTimerRunning: Bool = false
     @Published var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
-    @Published var rollTimer: Timer?
-    @Published var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
+    var rollTimer: Timer?
+    var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
     let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
     let rollMaxSpeed: Double = 6
     
@@ -112,7 +112,7 @@ final class RandomizerState: ObservableObject{
     func stopTimer() {
         isTimerRunning = false
         rollTimer?.invalidate()//タイマーを止める。
-        rollTimer = nil // 大丈夫か？止まらない説
+        rollTimer = nil
     }
 
     func updateTimerSpeed(configStore: SettingsStore) {
