@@ -22,6 +22,26 @@
         }
       }
     },
+    "52" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "52"
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このアプリについて"
+          }
+        }
+      }
+    },
     "All drawn" : {
       "localizations" : {
         "ja" : {
@@ -315,6 +335,16 @@
         }
       }
     },
+    "Next" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
+    },
     "Next draw" : {
       "localizations" : {
         "ja" : {
@@ -331,6 +361,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No.%lld"
+          }
+        }
+      }
+    },
+    "No.2" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No.2"
           }
         }
       }
@@ -398,12 +438,32 @@
         }
       }
     },
+    "Randomizer" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randomizer"
+          }
+        }
+      }
+    },
     "Refresh rate" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "更新頻度"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
           }
         }
       }

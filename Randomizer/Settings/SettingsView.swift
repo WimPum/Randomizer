@@ -20,6 +20,9 @@ struct SettingsView: View { // will be called from ContentView
                 Form{
                     SettingsList()
                     Section(header: Text("info")){
+                        NavigationLink(destination: AboutView()){
+                            Text("About")
+                        }
                         LabeledContent("App Version", value: appVersion)
                         LabeledContent("iOS Version", value: UIDevice.current.systemVersion)
                         Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!)

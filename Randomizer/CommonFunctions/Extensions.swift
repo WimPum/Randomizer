@@ -68,6 +68,15 @@ extension View {
                 .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
         )
     }
+    
+    func glassIconMaterial(cornerRadius: Int) -> some View {
+        self.background(
+            RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
+                .foregroundStyle(.thinMaterial)
+                .shadow(color: .init(white: 0.4, opacity: 0.6), radius: 5, x: 0, y: 0)
+        )
+    }
+    
     func glassButton() -> some View {
         self
             .fontSemiBold(size: 22)
