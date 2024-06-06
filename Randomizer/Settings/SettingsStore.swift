@@ -13,7 +13,7 @@ final class SettingsStore: ObservableObject{
     @AppStorage("rollingCountLimit") var rollingCountLimit: Int = 20  //数字は25個だけど最後の数字が答え
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 4  //1から7まで
     @AppStorage("backgroundPicker") var backgroundPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
-    @AppStorage("configBgNumber") var configBgNumber: Int = 0 //0はデフォルト、この番号が大きかったらランダムで色を
+    @AppStorage("configBgNumber") var configBgNumber: Int = 16 //0はデフォルト、この番号が大きかったらランダムで色を
     
     @Published var randomColorCombo: [Color] = [Color.blue, Color.purple]
     // 色リスト
@@ -91,8 +91,8 @@ final class SettingsStore: ObservableObject{
         isRollingOn = true
         rollingCountLimit = 20
         rollingSpeed = 4
-        backgroundPicker = 0
-        configBgNumber = 0
+        configBgNumber = colorList.count-2
+        giveRandomBgNumber()
     }
 }
 

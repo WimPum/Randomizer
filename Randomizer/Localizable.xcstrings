@@ -72,16 +72,6 @@
         }
       }
     },
-    "App Version" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バージョン"
-          }
-        }
-      }
-    },
     "Background color" : {
       "localizations" : {
         "ja" : {
@@ -250,24 +240,12 @@
         }
       }
     },
-    "iOS Version" : {
+    "iOS %@" : {
       "localizations" : {
         "ja" : {
-          "variations" : {
-            "device" : {
-              "ipad" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "iPadOSバージョン"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "iOSバージョン"
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS %@"
           }
         }
       }
@@ -559,6 +537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "夕焼け"
+          }
+        }
+      }
+    },
+    "v%@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@"
           }
         }
       }

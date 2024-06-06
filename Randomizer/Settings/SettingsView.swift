@@ -11,9 +11,6 @@ struct SettingsView: View { // will be called from ContentView
     @EnvironmentObject var configStore: SettingsStore // 設定 アクセスできるはず
     @Binding var isPresentedLocal: Bool
     
-    // アプリバージョン
-    private let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-    
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
@@ -23,13 +20,10 @@ struct SettingsView: View { // will be called from ContentView
                         NavigationLink(destination: AboutView()){
                             Text("About")
                         }
-                        LabeledContent("App Version", value: appVersion)
-                        LabeledContent("iOS Version", value: UIDevice.current.systemVersion)
-                        Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!)
                     }
                 }
                 .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing){
                         Button(action: {
@@ -48,21 +42,13 @@ struct SettingsView: View { // will be called from ContentView
                 Form{
                     SettingsList()
                     Section(header: Text("info")){
-                        HStack{
-                            Text("App Version")
-                            Spacer()
-                            Text(appVersion).foregroundStyle(.secondary)
+                        NavigationLink(destination: AboutView()){
+                            Text("About")
                         }
-                        HStack{
-                            Text("iOS Version")
-                            Spacer()
-                            Text(UIDevice.current.systemVersion).foregroundStyle(.secondary)
-                        }
-                        Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!)
                     }
                 }
                 .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing){
                         Button(action: {

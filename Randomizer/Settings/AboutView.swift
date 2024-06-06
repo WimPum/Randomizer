@@ -9,10 +9,20 @@ import SwiftUI
 
 struct AboutView: View {
     @EnvironmentObject var configStore: SettingsStore
+    
+    // アプリバージョン
+    private let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+    
     var body: some View {
         VStack(){
+            Spacer(minLength: 30)
             Icon()
-            Text("Randomizer").fontSemiBold(size: 40)
+            Text("Randomizer").font(.system(size: CGFloat(40), weight: .semibold, design: .default))
+            //Spacer().frame(height: 100)
+            Text("v\(appVersion)").padding(1)
+            Text("iOS \(UIDevice.current.systemVersion)").padding(1)
+            Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!).padding(1)
+            Spacer()
         }
     }
 }
@@ -41,7 +51,7 @@ struct Icon: View {
                         .padding(2)
                         .frame(width: 55, height: 30)
                         .glassIconMaterial(cornerRadius: 8)
-                    Spacer().frame(width: 13)
+                    Spacer().frame(width: 18)
                     Text("Reset")
                         .fontSemiBold(size: 18)
                         .padding(2)
