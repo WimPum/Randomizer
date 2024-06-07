@@ -19,11 +19,18 @@ struct LandscapeView: View {
                     print("big number pressed")
                     buttonNext()
                 }
-            }){
-                Text(verbatim: "\(randomStore.rollDisplaySeq![randomStore.rollListCounter-1])")
-                    .fontSemiBoldRound(size: 320, rolling: randomStore.isTimerRunning)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .minimumScaleFactor(0.2)
+            }){ 
+                if randomStore.isFileSelected == true && configStore.allowLandscapeNames == true { // CSVあり
+                    Text(randomStore.csvNameStore[0][randomStore.rollDisplaySeq![randomStore.rollListCounter-1]-1])
+                        .fontSemiBoldRound(size: 320, rolling: randomStore.isTimerRunning)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .minimumScaleFactor(0.2)
+                } else { // CSVなし（通常）
+                    Text(verbatim: "\(randomStore.rollDisplaySeq![randomStore.rollListCounter-1])")
+                        .fontSemiBoldRound(size: 320, rolling: randomStore.isTimerRunning)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .minimumScaleFactor(0.2)
+                }
             }.disabled(randomStore.isButtonPressed)
                 .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
                     if randomStore.isButtonPressed == false{
@@ -59,7 +66,9 @@ struct LandscapeView: View {
             randomStore.isButtonPressed = false
         }
         else{
-            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+            Task{
+                await randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+            }
         }
     }
 }

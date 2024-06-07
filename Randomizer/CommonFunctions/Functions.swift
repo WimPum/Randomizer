@@ -37,7 +37,7 @@ func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{
         }
         returnArray!.append(realAnswer)
     }
-    return returnArray!
+    return returnArray! // 長さは答え含めlengthと一致するはず
 }
 
 // 二次関数 最大値から最小値までを移動する

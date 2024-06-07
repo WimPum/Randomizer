@@ -476,6 +476,16 @@
         }
       }
     },
+    "Show names when landscape mode" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "横画面に名前を表示"
+          }
+        }
+      }
+    },
     "Shuffle" : {
       "extractionState" : "stale",
       "localizations" : {

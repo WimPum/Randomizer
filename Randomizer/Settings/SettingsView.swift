@@ -101,6 +101,9 @@ struct SettingsList: View{
                     Text(LocalizedStringKey(configStore.colorList[index].name))
                 }
             }
+            Toggle(isOn: $configStore.allowLandscapeNames){ // 横画面で名前を表示
+                Text("Show names when landscape mode")
+            }
             .onChange(of: configStore.configBgNumber) { _ in
                 withAnimation(){
                     configStore.giveRandomBgNumber()

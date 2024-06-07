@@ -70,7 +70,7 @@ struct PortraitView: View {
                         }){
                             Text(verbatim: "\(randomStore.rollDisplaySeq![randomStore.rollListCounter-1])")
                                 .fontSemiBoldRound(size: 160, rolling: randomStore.isTimerRunning)
-                                .frame(width: UIScreen.current?.bounds.width, height: 170)
+                                .frame(height: 170)
                                 .minimumScaleFactor(0.2)
                         }.disabled(randomStore.isButtonPressed)
                             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
@@ -89,7 +89,6 @@ struct PortraitView: View {
                                     .fontMessage(opacity: showMessageOpacity)
                             }
                         }
-                        
                     }
                     Spacer()//何とか
                     VStack(){                                                               //下半分
@@ -223,7 +222,7 @@ struct PortraitView: View {
                     Text("History")//リストを表示
                         .fontSemiBold(size: 20)
                         .padding()
-                    if let screenWidth = UIScreen.current?.bounds.width, let historySeq = randomStore.historySeq{//historySeqに値入ってたら
+                    if let historySeq = randomStore.historySeq{//historySeqに値入ってたら
                         if historySeq.count > 0{
                             List {
                                 ForEach(0..<historySeq.count, id: \.self){ index in
@@ -233,7 +232,7 @@ struct PortraitView: View {
                                         Spacer()
                                         Text("\(historySeq[index])")
                                             .fontSemiBold(size: 40)
-                                            .frame(width: screenWidth - 140,
+                                            .frame(//width: screenWidth - 140, // when will this be a problem??
                                                    height: 40,
                                                    alignment: .trailing)
                                             .minimumScaleFactor(0.2)
@@ -242,12 +241,10 @@ struct PortraitView: View {
                             }
                             .scrollCBIfPossible()//リストの背景を無効化
                             .listStyle(.plain)
-                            .frame(width: screenWidth,
-                                   alignment: .center)
+                            .frame(alignment: .center)
                         }else{
                             Color.clear // 何もない時
-                                .frame(width: screenWidth,
-                                       alignment: .center)
+                                .frame(alignment: .center)
                         }
                     }
                     Spacer(minLength: 20)
@@ -368,7 +365,9 @@ struct PortraitView: View {
         
         isInputMinFocused = false //
         isInputMaxFocused = false
-        randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめた
+        Task{
+            await randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめた
+        }
     }
     
     func buttonNext() {
@@ -400,13 +399,13 @@ struct PortraitView: View {
             }
             isInputMinFocused = false // 
             isInputMaxFocused = false
-            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+//            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+            Task{
+                //await randomStore.autoDrawMode(configStore: configStore) // ロールなしなら使えます！！！！！もっとintelligentにする
+                await randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+            }
         }
     }
-    
-//    func autoGenMode() {
-//        buttonNext()
-//    }
     
     func buttonKeyDone(){
         showMessageOpacity = 0.0 // 名前欄の透明度リセットします

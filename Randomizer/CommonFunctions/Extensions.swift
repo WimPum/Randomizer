@@ -116,18 +116,6 @@ extension Color { // from https://blog.ottijp.com/2023/12/17/swift-hex-color/
 }
 
 extension UIWindow {
-    
-    // 画面サイズの取得
-    static var current: UIWindow? {
-        for scene in UIApplication.shared.connectedScenes {
-            guard let windowScene = scene as? UIWindowScene else { continue }
-            for window in windowScene.windows {
-                if window.isKeyWindow { return window }
-            }
-        }
-        return nil
-    }
-    
     // シェイクを検知
     open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         super.motionEnded(motion, with: event)
@@ -135,16 +123,7 @@ extension UIWindow {
     }
 }
 
-extension UIScreen {
-    
-    // 例: UIScreen.current?.bounds.widthで画面幅を取得できます
-    static var current: UIScreen? {
-        UIWindow.current?.screen
-    }
-}
-
 extension NSNotification.Name {
-    
     // シェイクの時の通知の名前
     public static let deviceDidShakeNotification = NSNotification.Name("DeviceDidShakeNotification")
 }

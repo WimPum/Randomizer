@@ -37,14 +37,18 @@ final class RandomizerState: ObservableObject{
     
     static let shared = RandomizerState() // 参考
     
-    func randomNumberPicker(mode: Int, configStore: SettingsStore){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
-        drawLimit = maxBoxValueLock - minBoxValueLock + 1 // ここで異常を起こしている可能性あり?
+    func randomNumberPicker(mode: Int, configStore: SettingsStore) async {//アクションを一つにまとめた mode 1はNext, mode 2はリセット
+        drawLimit = maxBoxValueLock - minBoxValueLock + 1
         
         if mode == 1{ // mode 1はnext
-            drawCount += 1 // draw next number
+            await MainActor.run{
+                drawCount += 1 // draw next number
+            }
         }
         else if mode == 2{
-            drawCount = 1
+            await MainActor.run{
+                drawCount = 1
+            }
         }
         remainderSeq = [Int]()
         
@@ -74,30 +78,43 @@ final class RandomizerState: ObservableObject{
             rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
             startTimer(configStore: configStore)//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
-            configStore.giveRandomBgNumber()
-            historySeq?.append(realAnswer)//履歴追加
-            rollDisplaySeq = [realAnswer]//答えだけ追加
-            giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
-            isButtonPressed = false
+            await MainActor.run{
+                configStore.giveRandomBgNumber()
+                historySeq?.append(realAnswer)//履歴追加
+                rollDisplaySeq = [realAnswer]//答えだけ追加
+                giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
+                isButtonPressed = false
+            }
         }
     }
     
     //タイマーに使用される関数
+    // startTimerからupdateを呼び、stopしてまたstartTimerを呼ぶというのは廃止されます
     func startTimer(configStore: SettingsStore) {
-        isTimerRunning = true
-        rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
-            if self.rollListCounter + 1 >= configStore.rollingCountLimit {
+        Task { @MainActor in
+            isTimerRunning = true
+            rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
+                Task{
+                    await self.timerCountHandler(configStore: configStore)
+                }
+            }
+        }
+    }
+
+    func timerCountHandler(configStore: SettingsStore) async {
+        if self.rollListCounter + 1 >= configStore.rollingCountLimit {
+            await MainActor.run{
+                self.stopTimer()
                 self.rollListCounter += 1
                 configStore.giveRandomBgNumber()
-                    //iOS 17 ではボタンの文字までアニメーションされる
-                    //iOS 15,16ではそもそも発生しない
-                self.stopTimer()
                 self.historySeq?.append(self.realAnswer)//"?"//現時点でのrealAnswer
                 giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
                 self.isButtonPressed = false
-                return
             }
-            else{
+            return
+        }
+        else{
+            await MainActor.run{
                 giveHaptics(impactType: "soft", ifActivate: configStore.isHapticsOn)
                 
                 let t: Double = Double(self.rollListCounter) / Double(configStore.rollingCountLimit)//カウントの進捗
@@ -108,17 +125,35 @@ final class RandomizerState: ObservableObject{
             }
         }
     }
-
+    
     func stopTimer() {
-        isTimerRunning = false
-        rollTimer?.invalidate()//タイマーを止める。
-        rollTimer = nil
+        Task{ @MainActor in{
+                self.isTimerRunning = false
+                self.rollTimer?.invalidate()//タイマーを止める。
+                self.rollTimer = nil
+            }
+        }
     }
 
     func updateTimerSpeed(configStore: SettingsStore) {
-        if isTimerRunning {
-            stopTimer()
-            startTimer(configStore: configStore)
+        Task{ @MainActor in{
+                if self.isTimerRunning {
+                    self.rollTimer?.invalidate()
+                    self.rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / self.rollSpeed, repeats: true) { timer in
+                        Task{
+                            await self.timerCountHandler(configStore: configStore)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func autoDrawMode(configStore: SettingsStore) async {
+        print("No.\(drawCount), Limmit is \(drawLimit)")
+        for _ in 1...5{
+            await self.randomNumberPicker(mode: 1, configStore: configStore) // 関数終わるまで待ってくれる
+            try? await Task.sleep(nanoseconds: 2 * 1_000_000_000) // うわああああ
         }
     }
     
