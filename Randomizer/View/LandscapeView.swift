@@ -67,7 +67,11 @@ struct LandscapeView: View {
         }
         else{
             Task{
-                await randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+                if configStore.isAutoDrawOn == true{ // AutoDrawMode on
+                    await randomStore.autoDrawMode(mode: 1, configStore: configStore)
+                } else { // off
+                    await randomStore.randomNumberPicker(mode: 1, configStore: configStore) //まとめました
+                }
             }
         }
     }

@@ -58,7 +58,7 @@ struct PortraitView: View {
                     }
                     Spacer()
                     VStack(){                                                               //上半分
-                        Text("No.\(randomStore.drawCount)")
+                        Text(configStore.isAutoDrawOn ? "No.\(randomStore.drawCount) (Auto)" : "No.\(randomStore.drawCount)")
                             .fontMedium(size: 32)
                             .frame(height: 40)
                         Button(action: {
@@ -278,12 +278,15 @@ struct PortraitView: View {
                     self.openedFileLocation = fileURL//これでFullパス
                     randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
                     print(openedFileLocation)
-                    if openedFileLocation.startAccessingSecurityScopedResource() {
+                    if fileURL.startAccessingSecurityScopedResource() {
                         print("loading files")
                         if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
+                            defer {
+                                fileURL.stopAccessingSecurityScopedResource()
+                            }
                             randomStore.isButtonPressed = true //ボタンを押せないようにする
                             randomStore.csvNameStore = csvNames
-                            print(randomStore.csvNameStore)
+                            print("Success \(randomStore.csvNameStore)")
                             randomStore.isFileSelected = true
                             buttonReset()
                         }else{
@@ -363,10 +366,14 @@ struct PortraitView: View {
         randomStore.maxBoxValueLock = Int(maxBoxValue)!
         print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")
         
-        isInputMinFocused = false //
+        isInputMinFocused = false
         isInputMaxFocused = false
         Task{
-            await randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめた
+            if configStore.isAutoDrawOn == true{ // AutoDrawMode on
+                await randomStore.autoDrawMode(mode: 2, configStore: configStore)
+            } else { // off
+                await randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめました
+            }
         }
     }
     
@@ -397,12 +404,14 @@ struct PortraitView: View {
                     }
                 }
             }
-            isInputMinFocused = false // 
+            isInputMinFocused = false
             isInputMaxFocused = false
-//            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
             Task{
-                //await randomStore.autoDrawMode(configStore: configStore) // ロールなしなら使えます！！！！！もっとintelligentにする
-                await randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+                if configStore.isAutoDrawOn == true{ // AutoDrawMode on
+                    await randomStore.autoDrawMode(mode: 1, configStore: configStore)
+                } else { // off
+                    await randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
+                }
             }
         }
     }

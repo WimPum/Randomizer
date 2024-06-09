@@ -37,27 +37,25 @@ final class RandomizerState: ObservableObject{
     
     static let shared = RandomizerState() // 参考
     
-    func randomNumberPicker(mode: Int, configStore: SettingsStore) async {//アクションを一つにまとめた mode 1はNext, mode 2はリセット
-        drawLimit = maxBoxValueLock - minBoxValueLock + 1
-        
-        if mode == 1{ // mode 1はnext
-            await MainActor.run{
+    func randomNumberPicker(mode: Int, configStore: SettingsStore) async {//アクションを一つにまとめた
+        //mode 1はNext, mode 2はリセット
+        await MainActor.run{
+            isButtonPressed = true // おさせるものか
+            drawLimit = maxBoxValueLock - minBoxValueLock + 1
+            if mode == 1{ // mode 1はnext
                 drawCount += 1 // draw next number
             }
-        }
-        else if mode == 2{
-            await MainActor.run{
+            else if mode == 2{
                 drawCount = 1
             }
+            remainderSeq = [Int]()
+            rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
+            rollListCounter = 1
         }
-        remainderSeq = [Int]()
-        
-        rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
-        
-        rollListCounter = 1
         
         let remaining = drawLimit - drawCount + 1 // 残り
         print("\(remaining) numbers remaining")
+        
         realAnswer = give1RndNumber(min: minBoxValueLock, max: maxBoxValueLock, historyList: historySeq)
         logging(realAnswer: realAnswer) // ログ　releaseでは消す
         if configStore.isRollingOn && remaining > 1{
@@ -93,7 +91,8 @@ final class RandomizerState: ObservableObject{
     func startTimer(configStore: SettingsStore) {
         Task { @MainActor in
             isTimerRunning = true
-            rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
+            rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { [weak self] _ in
+                guard let self = self else { return }
                 Task{
                     await self.timerCountHandler(configStore: configStore)
                 }
@@ -102,58 +101,58 @@ final class RandomizerState: ObservableObject{
     }
 
     func timerCountHandler(configStore: SettingsStore) async {
-        if self.rollListCounter + 1 >= configStore.rollingCountLimit {
-            await MainActor.run{
-                self.stopTimer()
+        await MainActor.run{
+            if self.rollListCounter + 1 >= configStore.rollingCountLimit {
+                // rollListCounterが無茶苦茶な増え方をしている
+                // あとスピードもおかしい
                 self.rollListCounter += 1
                 configStore.giveRandomBgNumber()
+                self.stopTimer()
                 self.historySeq?.append(self.realAnswer)//"?"//現時点でのrealAnswer
                 giveHaptics(impactType: "medium", ifActivate: configStore.isHapticsOn)
-                self.isButtonPressed = false
+                if configStore.isAutoDrawOn != true{
+                    self.isButtonPressed = false // AutoDrawモードでないならそのまま終了
+                }
             }
-            return
-        }
-        else{
-            await MainActor.run{
+            else{
                 giveHaptics(impactType: "soft", ifActivate: configStore.isHapticsOn)
-                
                 let t: Double = Double(self.rollListCounter) / Double(configStore.rollingCountLimit)//カウントの進捗
                 self.rollSpeed = interpolateQuadratic(t: t, minValue: self.rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: self.rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算
                 // print("Now rolling aty \(rollSpeed), t is \(t)")
-                self.updateTimerSpeed(configStore: configStore)
                 self.rollListCounter += 1
+                self.updateTimerSpeed(configStore: configStore)
             }
         }
     }
     
     func stopTimer() {
-        Task{ @MainActor in{
-                self.isTimerRunning = false
-                self.rollTimer?.invalidate()//タイマーを止める。
-                self.rollTimer = nil
-            }
-        }
+        self.rollTimer?.invalidate()//タイマーを止める。
+        self.rollTimer = nil
+        self.isTimerRunning = false
     }
 
     func updateTimerSpeed(configStore: SettingsStore) {
-        Task{ @MainActor in{
-                if self.isTimerRunning {
-                    self.rollTimer?.invalidate()
-                    self.rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / self.rollSpeed, repeats: true) { timer in
-                        Task{
-                            await self.timerCountHandler(configStore: configStore)
-                        }
-                    }
+        guard isTimerRunning else { return } // 動いてなかったらupdateしなーい！
+        if self.isTimerRunning {
+            self.rollTimer?.invalidate()
+            self.rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / self.rollSpeed, repeats: true) { [weak self] _ in
+                guard let self = self else { return } // ?
+                Task{
+                    await self.timerCountHandler(configStore: configStore)
                 }
             }
         }
     }
     
-    func autoDrawMode(configStore: SettingsStore) async {
-        print("No.\(drawCount), Limmit is \(drawLimit)")
-        for _ in 1...5{
-            await self.randomNumberPicker(mode: 1, configStore: configStore) // 関数終わるまで待ってくれる
-            try? await Task.sleep(nanoseconds: 2 * 1_000_000_000) // うわああああ
+    func autoDrawMode(mode: Int, configStore: SettingsStore) async {
+        if configStore.isAutoDrawOn == true{
+            print("No.\(drawCount), Limmit is \(drawLimit)")
+            await self.randomNumberPicker(mode: mode, configStore: configStore) // 1回目実行 リセットか続行かはmodeで指定される
+            while drawLimit > drawCount{
+                try? await Task.sleep(nanoseconds: UInt64(configStore.AutoDrawInterval * 1_000_000_000)) // うわああああ
+                await self.randomNumberPicker(mode: 1, configStore: configStore) // 関数終わるまで待ってくれる
+            }
+            isButtonPressed = false // 最後に実行
         }
     }
     

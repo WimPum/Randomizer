@@ -71,6 +71,9 @@ struct SettingsList: View{
     
     var body: some View {
         Section(header: Text("general")){
+            Toggle(isOn: $configStore.allowLandscapeNames){ // 横画面で名前を表示
+                Text("Show names when landscape mode")
+            }
             Toggle(isOn: $configStore.isHapticsOn){
                 Text("Haptics for rolling")
             }
@@ -101,9 +104,6 @@ struct SettingsList: View{
                     Text(LocalizedStringKey(configStore.colorList[index].name))
                 }
             }
-            Toggle(isOn: $configStore.allowLandscapeNames){ // 横画面で名前を表示
-                Text("Show names when landscape mode")
-            }
             .onChange(of: configStore.configBgNumber) { _ in
                 withAnimation(){
                     configStore.giveRandomBgNumber()
@@ -112,6 +112,18 @@ struct SettingsList: View{
             Button("Reset setting", action:{
                 configStore.resetSettings()
             })
+        }
+        Section(header: Text("AutoDrawMode")){
+            Toggle(isOn: $configStore.isAutoDrawOn.animation()){
+                Text("Enable AutoDrawMode")
+            }
+            if configStore.isAutoDrawOn == true{
+                HStack{
+                    Text("Interval: \(configStore.AutoDrawInterval)")
+                    Spacer()
+                }
+                IntSlider(value: $configStore.AutoDrawInterval, in: 2...10, step: 1)
+            }
         }
     }
 }
