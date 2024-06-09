@@ -24,7 +24,7 @@ final class RandomizerState: ObservableObject{
     @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//名前をセーブするなら変更
     @Published var rollListCounter: Int = 1     //ロールのリスト上を移動
     @Published var isTimerRunning: Bool = false
-    @Published var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
+    @Published var isButtonPressed: Bool = false//同時押しを無効にする
     var rollTimer: Timer?
     var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
     let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
@@ -49,7 +49,7 @@ final class RandomizerState: ObservableObject{
                 drawCount = 1
             }
             remainderSeq = [Int]()
-            rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 0?????
+            rollSpeed = interpolateQuadratic(t: 0, minValue: rollMinSpeed * Double(configStore.rollingSpeed + 3), maxValue: rollMaxSpeed * Double(configStore.rollingSpeed)) //速度計算 初期状態
             rollListCounter = 1
         }
         
@@ -74,6 +74,14 @@ final class RandomizerState: ObservableObject{
                 }
             }
             rollDisplaySeq = giveRandomSeq(contents: remainderSeq, length: configStore.rollingCountLimit, realAnswer: realAnswer)
+            print("Updating rollDisplaySeq with: \(String(describing: rollDisplaySeq))")
+            withAnimation{
+                if openedFileName != ""{
+                    isFileSelected = true
+                }else{
+                    isFileSelected = false
+                }
+            }
             startTimer(configStore: configStore)//ロール開始, これで履歴にも追加
         }else{//1番最後と、ロールを無効にした場合こっちになります
             await MainActor.run{
@@ -102,10 +110,11 @@ final class RandomizerState: ObservableObject{
 
     func timerCountHandler(configStore: SettingsStore) async {
         await MainActor.run{
-            if self.rollListCounter + 1 >= configStore.rollingCountLimit {
+            print("\(rollListCounter), \(configStore.rollingCountLimit)")
+            if self.rollListCounter == configStore.rollingCountLimit {
                 // rollListCounterが無茶苦茶な増え方をしている
                 // あとスピードもおかしい
-                self.rollListCounter += 1
+                //self.rollListCounter += 1
                 configStore.giveRandomBgNumber()
                 self.stopTimer()
                 self.historySeq?.append(self.realAnswer)//"?"//現時点でのrealAnswer

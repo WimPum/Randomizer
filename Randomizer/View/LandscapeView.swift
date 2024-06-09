@@ -14,12 +14,9 @@ struct LandscapeView: View {
     var body: some View {
         ZStack(){
             Button(action: {
-                if randomStore.isButtonPressed == false{
-                    randomStore.isButtonPressed = true
-                    print("big number pressed")
-                    buttonNext()
-                }
-            }){ 
+                print("big number pressed")
+                buttonNext()
+            }){
                 if randomStore.isFileSelected == true && configStore.allowLandscapeNames == true { // CSVあり
                     Text(randomStore.csvNameStore[0][randomStore.rollDisplaySeq![randomStore.rollListCounter-1]-1])
                         .fontSemiBoldRound(size: 320, rolling: randomStore.isTimerRunning)
@@ -61,6 +58,9 @@ struct LandscapeView: View {
     }
     
     func buttonNext() {
+        guard !randomStore.isButtonPressed else { return } // isButtonPressed == trueなら帰る
+        randomStore.isButtonPressed = true // 同時押しブロッカー
+        
         if randomStore.drawCount >= randomStore.drawLimit{ // チェック
             self.showingAlert.toggle()
             randomStore.isButtonPressed = false
