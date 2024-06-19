@@ -72,16 +72,6 @@
         }
       }
     },
-    "AutoDrawMode" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自動抽出モード"
-          }
-        }
-      }
-    },
     "Background color" : {
       "localizations" : {
         "ja" : {
@@ -152,16 +142,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "夢"
-          }
-        }
-      }
-    },
-    "Enable AutoDrawMode" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自動抽出モードを有効にする"
           }
         }
       }
@@ -256,16 +236,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "情報"
-          }
-        }
-      }
-    },
-    "Interval: %lld" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "間隔: %lld"
           }
         }
       }
@@ -373,16 +343,6 @@
         }
       }
     },
-    "No.%lld (Auto)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No.%lld (自動)"
-          }
-        }
-      }
-    },
     "No.2" : {
       "localizations" : {
         "ja" : {
@@ -467,6 +427,7 @@
       }
     },
     "Refresh rate" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {

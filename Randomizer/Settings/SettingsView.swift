@@ -113,17 +113,5 @@ struct SettingsList: View{
                 configStore.resetSettings()
             })
         }
-        Section(header: Text("AutoDrawMode")){
-            Toggle(isOn: $configStore.isAutoDrawOn.animation()){
-                Text("Enable AutoDrawMode")
-            }
-            if configStore.isAutoDrawOn == true{
-                HStack{
-                    Text("Interval: \(configStore.AutoDrawInterval)")
-                    Spacer()
-                }
-                IntSlider(value: $configStore.AutoDrawInterval, in: 2...10, step: 1)
-            }
-        }
     }
 }

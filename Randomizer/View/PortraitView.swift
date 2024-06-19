@@ -10,27 +10,29 @@ import Foundation //Random
 import UniformTypeIdentifiers //fileImporter
 
 struct PortraitView: View {
-    //PortraitView Values
+    //main
     @State private var minBoxValue: String = "1"
     @State private var maxBoxValue: String = "50"
     @State private var showCSVButtonAndName: Bool = true // キーボード入力する時に1番上と名前表示する部分を隠す
     @FocusState private var isInputMinFocused: Bool//キーボードOn/Off
     @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
-    @State private var viewSelection = 1    //ページを切り替える用
-    @State private var isSettingsView: Bool = false//設定画面を開く用
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
     private let inputMaxLength: Int = 10                      //最大桁数
-    
+
     //fileImporter
     @State private var openedFileLocation = URL(string: "file://")!//defalut値確認
     @State private var isOpeningFile = false                       //ファイルダイアログを開く変数
     @State private var showMessage: String = ""
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
-    
-    // ENVS
+
+    //ENVS
     @EnvironmentObject var configStore: SettingsStore // EnvironmentObjになった設定
     @EnvironmentObject var randomStore: RandomizerState
+    
+    //misc
+    @State private var viewSelection = 1    //ページを切り替える用
+    @State private var isSettingsView: Bool = false//設定画面を開く用
 
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
@@ -52,7 +54,7 @@ struct PortraitView: View {
                     }
                     Spacer()
                     VStack(){                                                               //上半分
-                        Text(configStore.isAutoDrawOn ? "No.\(randomStore.drawCount) (Auto)" : "No.\(randomStore.drawCount)")
+                        Text("No.\(randomStore.drawCount)")
                             .fontMedium(size: 32)
                             .frame(height: 40)
                         Button(action: {
@@ -65,8 +67,11 @@ struct PortraitView: View {
                                 .minimumScaleFactor(0.2)
                         }.disabled(randomStore.isButtonPressed)
                             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
-                                print("device shaken!")
-                                buttonNext()
+                                if randomStore.isButtonPressed == false{
+                                    randomStore.isButtonPressed = true
+                                    print("device shaken!")
+                                    buttonNext()
+                                }
                             }
                         if showCSVButtonAndName == true{ //キーボード出す時は隠してます
                             if randomStore.isFileSelected == true{
@@ -129,9 +134,7 @@ struct PortraitView: View {
                             }
                             Button(action: {
                                 print("button csvClear! pressed")
-                                withAnimation(){
-                                    fileReset()
-                                }
+                                fileReset()
                             }){
                                 Text("clear names")
                                     .fontSemiBold(size: 18)
@@ -259,23 +262,16 @@ struct PortraitView: View {
                 do{
                     let fileURL: URL = try result.get().first!
                     self.openedFileLocation = fileURL//これでFullパス
-                    randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
-                    print(openedFileLocation)
-                    if fileURL.startAccessingSecurityScopedResource() {
-                        print("loading files")
+                    if openedFileLocation.startAccessingSecurityScopedResource() {
+                        print("loading files:\(openedFileLocation)")
                         if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
-                            defer {
-                                fileURL.stopAccessingSecurityScopedResource()
-                            }
-                            withAnimation(){
-                                randomStore.isFileSelected = false // 読み込みできる前に隠しておこう
-                            }
-                            randomStore.csvNameStore = csvNames
-                            print("Success \(randomStore.csvNameStore)")
-                            // randomStore.isFileSelected = true // あとで
-                            minBoxValue = "1"
-                            maxBoxValue = String(randomStore.csvNameStore[0].count)
-                            showMessageOpacity = 0.6
+                            //MARK: 改善の余地大いにあり
+//                            withAnimation(){
+                                randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
+                                randomStore.csvNameStore = csvNames
+                                print(randomStore.csvNameStore)
+                                randomStore.isFileSelected = true
+//                            }
                             buttonReset()
                         }else{
                             randomStore.isFileSelected = false
@@ -300,16 +296,17 @@ struct PortraitView: View {
     }
     
     func fileReset() {
-        print("cleared files")
-        randomStore.openedFileName = ""//リセット
-        randomStore.isFileSelected = false
-        showMessageOpacity = 0.0
-        showMessage = "press Start Over to apply changes"//変更するけど見えない
-        randomStore.csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
+        withAnimation(){
+            print("cleared files")
+            randomStore.openedFileName = ""//リセット
+            randomStore.isFileSelected = false
+            showMessageOpacity = 0.0
+            showMessage = "press Start Over to apply changes"//変更するけど見えない
+            randomStore.csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
+        }
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0
-        randomStore.isButtonPressed = false // 操作できない状態にしない
         minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
         maxBoxValue = String(randomStore.maxBoxValueLock)
         randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
@@ -319,19 +316,20 @@ struct PortraitView: View {
             showMessageOpacity = 0.6
         }
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
-//        randomStore.historySeq! = Array(1...9999999920)//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
-//        randomStore.drawCount = 9999999921
+//        randomStore.historySeq! = Array(1...9978)//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
+//        randomStore.drawCount = 9978
     }
     
     func buttonReset() {
-        guard !randomStore.isButtonPressed else {
-            print("OHNO")
-            return
-        } // isButtonPressed == trueなら帰る
+        guard !randomStore.isButtonPressed else { return } // isButtonPressed == trueなら帰る
         randomStore.isButtonPressed = true // 同時押しブロッカー
+        
         showCSVButtonAndName = true
-        //let hasFile = (randomStore.openedFileName != "")
-        if randomStore.openedFileName == ""{ //ファイルが選ばれたら自動入力
+        if randomStore.isFileSelected == true{ //ファイルが選ばれたら自動入力
+            minBoxValue = "1"
+            maxBoxValue = String(randomStore.csvNameStore[0].count)
+            showMessageOpacity = 0.6
+        }else{
             withAnimation{//まず非表示？
                 showMessageOpacity = 0.0
             }
@@ -356,13 +354,7 @@ struct PortraitView: View {
         
         isInputMinFocused = false
         isInputMaxFocused = false
-        Task{
-            if configStore.isAutoDrawOn == true{ // AutoDrawMode on
-                await randomStore.autoDrawMode(mode: 2, configStore: configStore)
-            } else { // off
-                await randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめました
-            }
-        }
+        randomStore.randomNumberPicker(mode: 2, configStore: configStore)//まとめた
     }
     
     func buttonNext() {
@@ -397,13 +389,7 @@ struct PortraitView: View {
             }
             isInputMinFocused = false
             isInputMaxFocused = false
-            Task{
-                if configStore.isAutoDrawOn == true{ // AutoDrawMode on
-                    await randomStore.autoDrawMode(mode: 1, configStore: configStore)
-                } else { // off
-                    await randomStore.randomNumberPicker(mode: 1, configStore: configStore)//buttonNextの時点でfileは読まないから
-                }
-            }
+            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
         }
     }
     

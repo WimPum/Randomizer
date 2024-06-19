@@ -16,7 +16,7 @@ struct LandscapeView: View {
             Button(action: {
                 print("big number pressed")
                 buttonNext()
-            }){
+            }){ 
                 if randomStore.isFileSelected == true && configStore.allowLandscapeNames == true { // CSVあり
                     Text(randomStore.csvNameStore[0][randomStore.rollDisplaySeq![randomStore.rollListCounter-1]-1])
                         .fontSemiBoldRound(size: 320, rolling: randomStore.isTimerRunning)
@@ -51,28 +51,17 @@ struct LandscapeView: View {
         randomStore.isButtonPressed = false // 操作できない状態にしない
         randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
-//        for i in 1...99990{
-//            randomStore.historySeq!.append(i)
-//            print(i)
-//        }//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
     }
     
     func buttonNext() {
         guard !randomStore.isButtonPressed else { return } // isButtonPressed == trueなら帰る
         randomStore.isButtonPressed = true // 同時押しブロッカー
-        
         if randomStore.drawCount >= randomStore.drawLimit{ // チェック
             self.showingAlert.toggle()
             randomStore.isButtonPressed = false
         }
         else{
-            Task{
-                if configStore.isAutoDrawOn == true{ // AutoDrawMode on
-                    await randomStore.autoDrawMode(mode: 1, configStore: configStore)
-                } else { // off
-                    await randomStore.randomNumberPicker(mode: 1, configStore: configStore) //まとめました
-                }
-            }
+            randomStore.randomNumberPicker(mode: 1, configStore: configStore)//まとめました
         }
     }
 }

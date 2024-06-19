@@ -8,36 +8,34 @@
 import UIKit
 
 // 最大最小と履歴をもとに数字を選ぶ
+// Setで高速化なるか？
 func give1RndNumber(min: Int, max: Int, historyList: [Int]?) -> Int {
-    guard let historyList = historyList, !historyList.isEmpty else{
+    guard let historySet = historyList.map(Set.init), !historySet.isEmpty else{
         return Int.random(in: min...max)
     }
     var randomNum: Int
     repeat{
         randomNum = Int.random(in: min...max)
-    }while historyList.contains(randomNum)//guardのおかげでforceUnwrapもいらない
+    }while historySet.contains(randomNum)//guardのおかげでforceUnwrapもいらない
     return randomNum
 }
 
 // ロールエフェクト用の数列生成 returnArrayの最後にrealAnswerを追加する
 // contentsはまだ選んでいない数(remainderSeq)
 func giveRandomSeq(contents: [Int]!, length: Int, realAnswer: Int) -> [Int]{
-    var assignedValue: Int = 0
-    var returnArray: [Int]? = [Int]()
-    let listLength: Int = contents.count//リストの長さ
+    var returnArray = [Int]()
+    let listLength = contents.count//リストの長さ
     if listLength > 1{
-        for i in 1...length-1{
-            assignedValue = contents.randomElement()!//ランダムに1つ抽出
-            if i > 1{//1回目以降は
-                while assignedValue == returnArray![i-2]{//0換算で-1, その一個前だから-2
-                    assignedValue = contents.randomElement()!
-                }
-            }
-            returnArray!.append(assignedValue)
+        for _ in 0..<length-1{
+            var assignedValue = contents.randomElement()!//ランダムに1つ抽出
+            repeat{//1回目以降は
+                assignedValue = contents.randomElement()!   
+            } while returnArray.last == assignedValue
+            returnArray.append(assignedValue)
         }
-        returnArray!.append(realAnswer)
+        returnArray.append(realAnswer)
     }
-    return returnArray! // 長さは答え含めlengthと一致するはず
+    return returnArray // 長さは答え含めlengthと一致するはず
 }
 
 // 二次関数 最大値から最小値までを移動する
