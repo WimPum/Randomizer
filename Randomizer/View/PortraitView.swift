@@ -68,7 +68,6 @@ struct PortraitView: View {
                         }.disabled(randomStore.isButtonPressed)
                             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
                                 if randomStore.isButtonPressed == false{
-                                    randomStore.isButtonPressed = true
                                     print("device shaken!")
                                     buttonNext()
                                 }
@@ -316,7 +315,8 @@ struct PortraitView: View {
             showMessageOpacity = 0.6
         }
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
-//        randomStore.historySeq! = Array(1...9978)//履歴に数字をたくさん追加してパフォーマンス計測 O(N) は重い。。。
+//        randomStore.historySeq! = Array(1...9978)//履歴に数字をたくさん追加してパフォーマンス計測
+        // O(N) は重い。。。今ではだいぶ軽くなった
 //        randomStore.drawCount = 9978
     }
     
