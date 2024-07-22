@@ -17,8 +17,11 @@ struct SettingsView: View { // will be called from ContentView
                 Form{
                     SettingsList()
                     Section(header: Text("info")){
-                        NavigationLink(destination: AboutView()){
+                        NavigationLink(destination: AboutView(isPresented: $isPresentedLocal)){
                             Text("About")
+                        }
+                        NavigationLink(destination: HelpView()){//isPresented: $isPresentedLocal)){
+                            Text("About CSV")
                         }
                     }
                 }
@@ -42,8 +45,11 @@ struct SettingsView: View { // will be called from ContentView
                 Form{
                     SettingsList()
                     Section(header: Text("info")){
-                        NavigationLink(destination: AboutView()){
+                        NavigationLink(destination: AboutView(isPresented: $isPresentedLocal)){
                             Text("About")
+                        }
+                        NavigationLink(destination: HelpView()){//isPresented: $isPresentedLocal)){
+                            Text("About CSV")
                         }
                     }
                 }

@@ -50,7 +50,7 @@ final class SettingsStore: ObservableObject{
         ColorCombo(name: "Green Tea",
                    color: [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!]),
         ColorCombo(name: "Champagne",
-                   color: [Color(hex: "e5bd62")!, Color(hex: "4b3457")!]),
+                   color: [Color(hex: "fcefc9")!, Color(hex: "cea453")!]),
         ColorCombo(name: "Shuffle", color: []),
         ColorCombo(name: "Random", color: [])
     ]

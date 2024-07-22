@@ -265,13 +265,25 @@ struct PortraitView: View {
                         print("loading files:\(openedFileLocation)")
                         if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
                             //MARK: 改善の余地大いにあり
-//                            withAnimation(){
+                            print(csvNames)
+                            print(csvNames[0].count)
+                            print(csvNames.count)
+                            if csvNames[0].count <= 1{
+                                randomStore.isFileSelected = false
+                                print("ERROR list too SHORT!!")
+                                randomStore.openedFileName = ""//リセット
+                                randomStore.csvNameStore = [[String]]()//空
+                                showMessage = "Error: List needs to have at least two items."
+                                withAnimation{
+                                    showMessageOpacity = 0.6
+                                }
+                            }else{
                                 randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
                                 randomStore.csvNameStore = csvNames
                                 print(randomStore.csvNameStore)
                                 randomStore.isFileSelected = true
-//                            }
-                            buttonReset()
+                                buttonReset()
+                            }
                         }else{
                             randomStore.isFileSelected = false
                             print("no files")
@@ -325,16 +337,6 @@ struct PortraitView: View {
         randomStore.isButtonPressed = true // 同時押しブロッカー
         
         showCSVButtonAndName = true
-        if randomStore.isFileSelected == true{ //ファイルが選ばれたら自動入力
-            minBoxValue = "1"
-            maxBoxValue = String(randomStore.csvNameStore[0].count)
-            showMessageOpacity = 0.6
-        }else{
-            withAnimation{//まず非表示？
-                showMessageOpacity = 0.0
-            }
-            showMessage = "press Start Over to apply changes" //違ったら戻す
-        }
         //Reset固有
         randomStore.historySeq = []//リセットだから?????????????
         if (minBoxValue == "") { // 入力値が空だったら現在の値で復元
@@ -347,6 +349,16 @@ struct PortraitView: View {
             self.showingAlert2.toggle()
             randomStore.isButtonPressed = false
             return
+        }
+        if randomStore.isFileSelected == true{ //ファイルが選ばれたら自動入力
+            minBoxValue = "1"
+            maxBoxValue = String(randomStore.csvNameStore[0].count)
+            showMessageOpacity = 0.6
+        }else{
+            withAnimation{//まず非表示？
+                showMessageOpacity = 0.0
+            }
+            showMessage = "press Start Over to apply changes" //違ったら戻す
         }
         randomStore.minBoxValueLock = Int(minBoxValue)!
         randomStore.maxBoxValueLock = Int(maxBoxValue)!

@@ -69,6 +69,12 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
         
         // 改行とカンマでCSVを分割し、行と列を取得
         var rows = csvString.components(separatedBy: "\n").filter { !$0.isEmpty }
+        
+        // 変更  ファイルが空の場合は空の配列を返す
+        if rows.isEmpty {
+            return [[]]
+        }
+        
         var columns = rows[0].components(separatedBy: ",")
         
         // 横に長い時は転置する

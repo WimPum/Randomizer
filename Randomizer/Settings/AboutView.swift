@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AboutView: View {
     @EnvironmentObject var configStore: SettingsStore
+    @Binding var isPresented: Bool
     
     // アプリバージョン
     private let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -21,8 +22,19 @@ struct AboutView: View {
             //Spacer().frame(height: 100)
             Text("v\(appVersion)").padding(1)
             Text("iOS \(UIDevice.current.systemVersion)").padding(1)
+            Link("Website", destination: URL(string: "https://wimpum.github.io/Rndsite/")!).padding(1)
             Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!).padding(1)
             Spacer()
+        }.toolbar {
+            ToolbarItem(placement: .topBarTrailing){
+                Button(action: {
+                    isPresented = false
+                }){//どうしよう？
+                    Text("Done")
+                        .bold()
+                        .padding(5)
+                }
+            }
         }
     }
 }
@@ -64,7 +76,7 @@ struct Icon: View {
     }
 }
 
-#Preview {
-    AboutView()
-        .environmentObject(SettingsStore())
-}
+//#Preview {
+//    AboutView()
+//        .environmentObject(SettingsStore())
+//}

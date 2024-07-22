@@ -42,6 +42,16 @@
         }
       }
     },
+    "About CSV" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVについて"
+          }
+        }
+      }
+    },
     "All drawn" : {
       "localizations" : {
         "ja" : {
@@ -163,6 +173,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイルを読み込めませんでした。「このiPhone内」から選択してください。"
+          }
+        }
+      }
+    },
+    "Error: List needs to have at least two items." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リストの項目は2つ以上にしてください"
           }
         }
       }
@@ -541,6 +562,15 @@
         }
       }
     },
+    "Switch between apps" : {
+
+    },
+    "Tell us what you think" : {
+
+    },
+    "To get back to an app you recently used, swipe up and pause, then tap an app to open it." : {
+
+    },
     "Twilight" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -551,6 +581,9 @@
           }
         }
       }
+    },
+    "Use the Feedback Assistant app to report any issues you experience with iOS 18 beta." : {
+
     },
     "v%@" : {
       "localizations" : {
@@ -568,6 +601,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GitHubのリポジトリ"
+          }
+        }
+      }
+    },
+    "Website" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウェブサイト"
           }
         }
       }
