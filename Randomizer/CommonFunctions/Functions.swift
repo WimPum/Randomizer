@@ -50,11 +50,19 @@ func giveHaptics(impactType: String, ifActivate: Bool){
         return
     }
     else if impactType == "soft"{
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()//Haptic Feedback
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.75)//Haptic Feedback
+        //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
+    }
+    else if impactType == "select"{
+        UISelectionFeedbackGenerator().selectionChanged()//Haptic Feedback
+        //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
+    }
+    else if impactType == "complete"{
+        UINotificationFeedbackGenerator().notificationOccurred(.success)//Haptic Feedback
         //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
     }
     else if impactType == "medium"{
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()//Haptic Feedback
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred(intensity: 1.0)//Haptic Feedback
     }
 }
 

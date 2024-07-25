@@ -92,6 +92,7 @@ final class SettingsStore: ObservableObject{
         isRollingOn = true
         rollingCountLimit = 20
         rollingSpeed = 4
+        allowLandscapeNames = true
         configBgNumber = colorList.count-2
         giveRandomBgNumber()
     }

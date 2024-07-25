@@ -22,12 +22,12 @@
         }
       }
     },
-    "52" : {
+    "© 2024 Ulyssa" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "52"
+            "value" : "© 2024 Ulyssa"
           }
         }
       }
@@ -109,6 +109,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名前クリア"
+          }
+        }
+      }
+    },
+    "Creating CSV files" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVを作る"
           }
         }
       }
@@ -323,6 +333,16 @@
         }
       }
     },
+    "MIT License" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MIT ライセンス"
+          }
+        }
+      }
+    },
     "Mountain" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -360,16 +380,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No.%lld"
-          }
-        }
-      }
-    },
-    "No.2" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No.2"
           }
         }
       }
@@ -562,15 +572,6 @@
         }
       }
     },
-    "Switch between apps" : {
-
-    },
-    "Tell us what you think" : {
-
-    },
-    "To get back to an app you recently used, swipe up and pause, then tap an app to open it." : {
-
-    },
     "Twilight" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -581,9 +582,6 @@
           }
         }
       }
-    },
-    "Use the Feedback Assistant app to report any issues you experience with iOS 18 beta." : {
-
     },
     "v%@" : {
       "localizations" : {
@@ -622,6 +620,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "冬"
+          }
+        }
+      }
+    },
+    "You can create CSV files in Excel or Numbers. Lists can be vertical or horizontal. Only the first column of the longer dimension will be used for display." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVファイルはExcelやNumbersで作れます。リストの向きは縦横どちらでも読めます。長い方の一列目だけ表示に使われます。"
+          }
+        }
+      }
+    },
+    "You can load a csv file that contains a list of names and drawn names will be shown under the number." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名簿などをCSVファイルにして読み込むと、数字の下に対応する名前が表示されます。"
           }
         }
       }

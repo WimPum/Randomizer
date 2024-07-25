@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View { // will be called from ContentView
     @EnvironmentObject var configStore: SettingsStore // 設定 アクセスできるはず
+    @EnvironmentObject var randomStore: RandomizerState // 実行中かどうか＋今の出目
     @Binding var isPresentedLocal: Bool
     
     var body: some View {
@@ -20,7 +21,7 @@ struct SettingsView: View { // will be called from ContentView
                         NavigationLink(destination: AboutView(isPresented: $isPresentedLocal)){
                             Text("About")
                         }
-                        NavigationLink(destination: HelpView()){//isPresented: $isPresentedLocal)){
+                        NavigationLink(destination: HelpView(isPresented: $isPresentedLocal)){
                             Text("About CSV")
                         }
                     }
@@ -48,7 +49,7 @@ struct SettingsView: View { // will be called from ContentView
                         NavigationLink(destination: AboutView(isPresented: $isPresentedLocal)){
                             Text("About")
                         }
-                        NavigationLink(destination: HelpView()){//isPresented: $isPresentedLocal)){
+                        NavigationLink(destination: HelpView(isPresented: $isPresentedLocal)){
                             Text("About CSV")
                         }
                     }
@@ -73,7 +74,7 @@ struct SettingsView: View { // will be called from ContentView
 
 struct SettingsList: View{
     @EnvironmentObject var configStore: SettingsStore // EnvironmentObjectだから引数なしでいいよね。。。？
-    @EnvironmentObject var externalStore: RandomizerState // ContentViewにEnvironmentで設定したからできること
+    @EnvironmentObject var randomStore: RandomizerState // ContentViewにEnvironmentで設定したからできること
     
     var body: some View {
         Section(header: Text("general")){
@@ -94,7 +95,7 @@ struct SettingsList: View{
                     }
                     IntSlider(value: $configStore.rollingSpeed, in: 1...7, step: 1)
                         .onChange(of: configStore.rollingSpeed){ _ in
-                            giveHaptics(impactType: "soft", ifActivate: configStore.isHapticsOn)
+                            giveHaptics(impactType: "select", ifActivate: configStore.isHapticsOn)
                         }
                 }
                 VStack{
@@ -103,6 +104,7 @@ struct SettingsList: View{
                         Spacer()
                     }
                     IntSlider(value: $configStore.rollingCountLimit, in: 2...100, step: 1)
+                        .disabled(randomStore.isButtonPressed)
                 }
             }
             Picker("Background color", selection: $configStore.configBgNumber){ // selectionにはid(string)が含まれる。
@@ -117,7 +119,7 @@ struct SettingsList: View{
             }
             Button("Reset setting", action:{
                 configStore.resetSettings()
-            })
+            }).disabled(randomStore.isButtonPressed)
         }
     }
 }

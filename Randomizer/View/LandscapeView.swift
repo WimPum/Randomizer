@@ -31,7 +31,6 @@ struct LandscapeView: View {
             }.disabled(randomStore.isButtonPressed)
                 .onReceive(NotificationCenter.default.publisher(for: .deviceDidShakeNotification)) { _ in//振ったら
                     if randomStore.isButtonPressed == false{
-                        randomStore.isButtonPressed = true
                         print("device shaken!")
                         buttonNext()
                     }

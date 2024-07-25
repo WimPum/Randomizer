@@ -50,7 +50,7 @@ struct PortraitView: View {
                             }
                         }
                         .fontSemiBold(size: 24)//フォントとあるがSF Symbolsだから
-                        .disabled(randomStore.isButtonPressed)
+                        //.disabled(randomStore.isButtonPressed)
                     }
                     Spacer()
                     VStack(){                                                               //上半分
@@ -327,9 +327,9 @@ struct PortraitView: View {
             showMessageOpacity = 0.6
         }
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
-//        randomStore.historySeq! = Array(1...9978)//履歴に数字をたくさん追加してパフォーマンス計測
-        // O(N) は重い。。。今ではだいぶ軽くなった
-//        randomStore.drawCount = 9978
+//        randomStore.historySeq! = Array(1...99978)//履歴に数字をたくさん追加してパフォーマンス計測
+////        // O(N) は重い。。。今ではだいぶ軽くなった
+//        randomStore.drawCount = 99978
     }
     
     func buttonReset() {

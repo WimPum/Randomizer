@@ -7,48 +7,56 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct HelpView: View {
-//    @Binding var isPresented: Bool
+    @Binding var isPresented: Bool
     
     var body: some View {
         TabView(){
-            VStack {
-                Image(systemName: "iphone")
+            VStack{
+                Image(.namesCrop)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: 500)
-                Text("Tell us what you think")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(Font.title2.weight(.bold))
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 7)
-                Text("Use the Feedback Assistant app to report any issues you experience with iOS 18 beta.")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.body)
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal, 40)
-                Spacer()
+                    .padding(.horizontal, 10)
+                VStack{ // TEXTS
+                    Text("About CSV")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(Font.title2.weight(.bold))
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 7)
+                    Text("You can load a csv file that contains a list of names and drawn names will be shown under the number.")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.body)
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal, 40)
+                    Spacer()
+                }
+                .frame(height:175)
+                //.border(.yellow)
+                Spacer(minLength: 35)
             }.tabItem {
                 Text("Main") }
             .tag(1)
-            VStack {
-                Image(systemName: "ipad")
+            VStack{
+                Image(.excele)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: 500)
-                Text("Switch between apps")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(Font.title2.weight(.bold))
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 7)
-                Text("To get back to an app you recently used, swipe up and pause, then tap an app to open it.")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.body)
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal, 40)
-                Spacer()
+                    .padding(.horizontal, 10)
+                VStack{
+                    Text("Creating CSV files")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(Font.title2.weight(.bold))
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 7)
+                    Text("You can create CSV files in Excel or Numbers. Lists can be vertical or horizontal. Only the first column of the longer dimension will be used for display.")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.body)
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal, 40)
+                    Spacer()
+                }
+                .frame(height:180)
+                //.border(.yellow)
+                Spacer(minLength: 35)
             }.tabItem {
                 Text("Next") }
             .tag(2)
@@ -58,19 +66,18 @@ struct HelpView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing){
                 Button(action: {
-                    print("velkommen")
-                    //isPresented = false
-                }){//どうしよう？
+//                    print("velkommen")
+                    isPresented = false
+                }){
                     Text("Done")
                         .bold()
                         .padding(5)
                 }
             }
         }
-        //.background(Color.black.edgesIgnoringSafeArea(.all))
     }
 }
 
-#Preview {
-    HelpView()
-}
+//#Preview {
+//    HelpView()
+//}
