@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,6 +44,21 @@
 		B1FD99282B07882000781D1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1FD992B2B07882000781D1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B14ED2BF2C52BD49005CAD48 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DataController.swift,
+				historyDatas.xcdatamodeld,
+			);
+			target = B1FD99202B07881D00781D1D /* Randomizer */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B14ED2BB2C52BD03005CAD48 /* Data */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (B14ED2BF2C52BD49005CAD48 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Data; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B1FD991E2B07881D00781D1D /* Frameworks */ = {
@@ -118,6 +133,7 @@
 				B1A4FA642BFCD6F500BD1E54 /* CommonFunctions */,
 				B1A4FA602BFCD68000BD1E54 /* Settings */,
 				B1A4FA632BFCD6DE00BD1E54 /* View */,
+				B14ED2BB2C52BD03005CAD48 /* Data */,
 				B1FD99242B07881D00781D1D /* RandomizerApp.swift */,
 				B1FD99262B07881D00781D1D /* ContentView.swift */,
 				B14E4FD32BBBF3CD007E946D /* Localizable.xcstrings */,

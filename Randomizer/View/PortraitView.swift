@@ -321,6 +321,13 @@ struct PortraitView: View {
         minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
         maxBoxValue = String(randomStore.maxBoxValueLock)
         randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
+        if let historySeq = randomStore.historySeq, !historySeq.isEmpty{
+            randomStore.drawCount = historySeq.count
+            print("current draw is \(randomStore.drawCount)")
+            randomStore.rollDisplaySeq?[0] = historySeq[randomStore.drawCount - 1]
+        } else {
+            randomStore.drawCount = 0
+        }
         if randomStore.isFileSelected == false{
             showMessage = "press Start Over to apply changes"
         } else {
@@ -338,7 +345,8 @@ struct PortraitView: View {
         
         showCSVButtonAndName = true
         //Reset固有
-        randomStore.historySeq = []//リセットだから?????????????
+        //randomStore.historySeq = []//リセットだから?????????????
+        randomStore.clearHistory()
         if (minBoxValue == "") { // 入力値が空だったら現在の値で復元
             minBoxValue = String(randomStore.minBoxValueLock)
         }
