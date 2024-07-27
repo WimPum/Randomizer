@@ -15,6 +15,7 @@ final class SettingsStore: ObservableObject{
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 4  //1から7まで
     @AppStorage("backgroundPicker") var backgroundPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
     @AppStorage("configBgNumber") var configBgNumber: Int = 16 // hardcodingを避けたかったが仕方なし　シャッフルがデフォ
+    @AppStorage("isFirstRunning") var isFirstRunning: Bool = true // 初回起動ですかt/f
     
     @Published var randomColorCombo: [Color] = [Color.blue, Color.purple]
     // 色リスト
@@ -95,6 +96,7 @@ final class SettingsStore: ObservableObject{
         allowLandscapeNames = true
         configBgNumber = colorList.count-2
         giveRandomBgNumber()
+        isFirstRunning = true
     }
 }
 

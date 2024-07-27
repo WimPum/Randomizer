@@ -11,6 +11,45 @@ struct HelpView: View {
     @Binding var isPresented: Bool
     
     var body: some View {
+        if #available(iOS 16.0, *) {
+            NavigationStack{
+                CSVHelp()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing){
+                            Button(action: {
+                                isPresented = false
+                            }){
+                                Text("Done")
+                                    .bold()
+                                    .padding(5)
+                            }
+                        }
+                    }
+            }.navigationTitle("About CSV")
+            .navigationBarTitleDisplayMode(.inline)
+
+        }else{
+            NavigationView{
+                CSVHelp()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing){
+                            Button(action: {
+                                isPresented = false
+                            }){
+                                Text("Done")
+                                    .bold()
+                                    .padding(5)
+                            }
+                        }
+                    }
+            }.navigationTitle("About CSV")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+
+struct CSVHelp: View {
+    var body: some View{
         TabView(){
             VStack{
                 Image(.namesCrop)
@@ -63,21 +102,5 @@ struct HelpView: View {
         }
         .tabViewStyle(.page)
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing){
-                Button(action: {
-//                    print("velkommen")
-                    isPresented = false
-                }){
-                    Text("Done")
-                        .bold()
-                        .padding(5)
-                }
-            }
-        }
     }
 }
-
-//#Preview {
-//    HelpView()
-//}

@@ -23,6 +23,7 @@ struct PortraitView: View {
     //fileImporter
     @State private var openedFileLocation = URL(string: "file://")!//defalut値確認
     @State private var isOpeningFile = false                       //ファイルダイアログを開く変数
+    @State private var isShowingCSVTutor = false                    // チュートリアル
     @State private var showMessage: String = ""
     @State private var showMessageOpacity: Double = 0.0 //0.0と0.6の間を行き来します
 
@@ -41,7 +42,14 @@ struct PortraitView: View {
                     Spacer().frame(height: 5)
                     if showCSVButtonAndName == true{ //キーボード出す時は隠してます
                         HStack(){
-                            Button(action: {self.isOpeningFile.toggle()}){
+                            Button(action: {
+                                if configStore.isFirstRunning == true{
+                                    self.isShowingCSVTutor.toggle()
+                                    configStore.isFirstRunning = false // permanent change :)
+                                } else {
+                                    self.isOpeningFile.toggle()
+                                }
+                            }){
                                 Text("open csv").padding(13)
                             }
                             Spacer()//左端に表示する
@@ -255,6 +263,9 @@ struct PortraitView: View {
         .sheet(isPresented: self.$isSettingsView){
             SettingsView(isPresentedLocal: self.$isSettingsView)
         }//設定画面
+        .sheet(isPresented: self.$isShowingCSVTutor){
+            HelpView(isPresented: self.$isShowingCSVTutor)
+        }
         .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false
         ){ result in
             if case .success = result {
@@ -317,17 +328,10 @@ struct PortraitView: View {
         }
     }
     
-    func initReset() {//起動時に実行 No.0/表示: 0
+    func initReset() {//起動時に実行 No.0/表示: 0 実行中にこんなんやったらまずすぎ
         minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
         maxBoxValue = String(randomStore.maxBoxValueLock)
         randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
-        if let historySeq = randomStore.historySeq, !historySeq.isEmpty{
-            randomStore.drawCount = historySeq.count
-            print("current draw is \(randomStore.drawCount)")
-            randomStore.rollDisplaySeq?[0] = historySeq[randomStore.drawCount - 1]
-        } else {
-            randomStore.drawCount = 0
-        }
         if randomStore.isFileSelected == false{
             showMessage = "press Start Over to apply changes"
         } else {

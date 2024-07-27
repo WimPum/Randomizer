@@ -48,7 +48,6 @@ struct LandscapeView: View {
     
     func initReset() {//起動時に実行 No.0/表示: 0
         // randomStore.isButtonPressed = false // 操作できない状態にしないのはまずい
-        
         randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
         print("HistorySequence \(randomStore.historySeq as Any)\ntotal would be No.\(randomStore.drawLimit)")
     }

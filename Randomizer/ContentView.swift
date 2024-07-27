@@ -25,7 +25,14 @@ struct ContentView: View {
                 LandscapeView()
             }
         }
-        .onAppear{//起動時に実行となる　このContentViewしかないから
+        .onAppear{//起動時に一回だけ実行となる このContentViewしかないから
+            if let historySeq = randomStore.historySeq, !historySeq.isEmpty{
+                randomStore.drawCount = historySeq.count
+                print("current draw is \(randomStore.drawCount)")
+                randomStore.rollDisplaySeq?[0] = historySeq[randomStore.drawCount - 1]
+            } else {
+                randomStore.drawCount = 0
+            }
             configStore.giveRandomBgNumber()
         }
     }
