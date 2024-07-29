@@ -264,7 +264,28 @@ struct PortraitView: View {
             SettingsView(isPresentedLocal: self.$isSettingsView)
         }//設定画面
         .sheet(isPresented: self.$isShowingCSVTutor){
-            HelpView(isPresented: self.$isShowingCSVTutor)
+            if #available(iOS 16, *){
+                HelpView(isPresented: self.$isShowingCSVTutor)
+            }else{
+                NavigationView{
+                    CSVHelp()
+                        .navigationTitle("About CSV")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing){
+                                Button(action: {
+                                    isShowingCSVTutor = false
+                                }){
+                                    Text("Done")
+                                        .bold()
+                                        .padding(5)
+                                }
+                            }
+                        }
+                }
+
+            }
+
         }
         .fileImporter( isPresented: $isOpeningFile, allowedContentTypes: [UTType.commaSeparatedText], allowsMultipleSelection: false
         ){ result in

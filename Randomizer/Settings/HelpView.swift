@@ -29,21 +29,20 @@ struct HelpView: View {
             .navigationBarTitleDisplayMode(.inline)
 
         }else{
-            NavigationView{
-                CSVHelp()
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing){
-                            Button(action: {
-                                isPresented = false
-                            }){
-                                Text("Done")
-                                    .bold()
-                                    .padding(5)
-                            }
+            CSVHelp()
+                .navigationTitle("About CSV")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing){
+                        Button(action: {
+                            isPresented = false
+                        }){
+                            Text("Done")
+                                .bold()
+                                .padding(5)
                         }
                     }
-            }.navigationTitle("About CSV")
-            .navigationBarTitleDisplayMode(.inline)
+                }
         }
     }
 }
