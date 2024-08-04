@@ -52,16 +52,23 @@ struct Icon: View {
     let rectSize: CGFloat = 160
     var body: some View{
         ZStack(){
-            RoundedRectangle(cornerRadius: CGFloat(rectSize/6.4*1.5))
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: configStore.giveBackground()),
-                        startPoint: .top,
-                        endPoint: .bottom
+            if #available(iOS 17, *){
+                RoundedRectangle(cornerRadius: CGFloat(rectSize/6.4*1.5))
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: configStore.giveBackground()),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
                     )
-                )
-                .animation(.easeInOut, value: configStore.giveBackground())
-                .frame(width: rectSize, height: rectSize)
+                    .frame(width: rectSize, height: rectSize)
+                    .animation(.easeInOut, value: configStore.giveBackground())
+            } else {
+                AnimGradient(gradient: Gradient(colors: configStore.giveBackground()))
+                    .frame(width: rectSize, height: rectSize)
+                    .clipShape(RoundedRectangle(cornerRadius: CGFloat(rectSize / 6.4 * 1.5)))
+                    .animation(.easeInOut, value: configStore.giveBackground())
+            }
             VStack(){
                 Text("No.\(randomStore.drawCount)")
                     .fontLight(size: 18)

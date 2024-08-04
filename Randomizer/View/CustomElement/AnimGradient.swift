@@ -68,7 +68,7 @@ struct AnimGradient: View, Animatable{
     }
     
     var body: some View {
-        return LinearGradient(
+        LinearGradient(
             gradient: Gradient(colors: [Color(gradStartColor), Color(gradEndColor)]),
             startPoint: .top,
             endPoint: .bottom
