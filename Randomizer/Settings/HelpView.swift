@@ -14,6 +14,8 @@ struct HelpView: View {
         if #available(iOS 16.0, *) {
             NavigationStack{
                 CSVHelp()
+                    .navigationTitle("About CSV")
+                    .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing){
                             Button(action: {
@@ -25,8 +27,7 @@ struct HelpView: View {
                             }
                         }
                     }
-            }.navigationTitle("About CSV")
-            .navigationBarTitleDisplayMode(.inline)
+            }
 
         }else{
             CSVHelp()

@@ -51,7 +51,7 @@ struct PortraitView: View {
                                 }
                             }){
                                 Text("open csv").padding(13)
-                            }
+                            }.disabled(randomStore.isButtonPressed)
                             Spacer()//左端に表示する
                             Button(action: {self.isSettingsView.toggle()}){
                                 Image(systemName: "gearshape.fill").padding(.trailing, 12.0)

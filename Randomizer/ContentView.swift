@@ -15,17 +15,27 @@ struct ContentView: View {
     
     var body: some View {
         ZStack{
-            LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
-                           startPoint: .top, endPoint: .bottom)
-                .edgesIgnoringSafeArea(.all)
-                .animation(.easeInOut, value: configStore.giveBackground()) // Will this even work??
-            if vSizeClass == .regular { // なんで動かないの？？
+            if #available(iOS 17, *){
+                // for iOS 17 and up LinearGradient supports color animation
+                LinearGradient(gradient: Gradient(colors: configStore.giveBackground()),
+                               startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+                    .animation(.easeInOut, value: configStore.giveBackground())
+            } else {
+                // My workaround
+                // Color animation works so "two color animation" == "gradient animation"
+                AnimGradient(gradient: Gradient(colors: configStore.giveBackground()))
+                    .edgesIgnoringSafeArea(.all)
+                    .animation(.easeInOut, value: configStore.giveBackground())
+            }
+            if vSizeClass == .regular {
                 PortraitView()
             } else {
                 LandscapeView()
             }
         }
         .onAppear{//起動時に一回だけ実行となる このContentViewしかないから
+            configStore.giveRandomBgNumber()
             if let historySeq = randomStore.historySeq, !historySeq.isEmpty{
                 randomStore.drawCount = historySeq.count
                 print("current draw is \(randomStore.drawCount)")
@@ -33,7 +43,6 @@ struct ContentView: View {
             } else {
                 randomStore.drawCount = 0
             }
-            configStore.giveRandomBgNumber()
         }
     }
 }

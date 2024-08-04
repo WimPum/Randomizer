@@ -82,6 +82,7 @@ final class SettingsStore: ObservableObject{
     
     func giveBackground() -> [Color]{ // 今の背景セットを返す
         if configBgNumber != colorList.count-1{
+            //print(colorList[backgroundPicker].color!)
             return colorList[backgroundPicker].color!
         } else {
             return randomColorCombo
