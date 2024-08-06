@@ -50,16 +50,14 @@ func giveHaptics(impactType: String, ifActivate: Bool){
         return
     }
     else if impactType == "soft"{
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.75)//Haptic Feedback
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.65)//Haptic Feedback
         //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
     }
     else if impactType == "select"{
         UISelectionFeedbackGenerator().selectionChanged()//Haptic Feedback
-        //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
     }
     else if impactType == "complete"{
         UINotificationFeedbackGenerator().notificationOccurred(.success)//Haptic Feedback
-        //AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {} // AudioToolbox
     }
     else if impactType == "medium"{
         UIImpactFeedbackGenerator(style: .medium).impactOccurred(intensity: 1.0)//Haptic Feedback
@@ -86,7 +84,7 @@ func loadCSV(fileURL: URL) -> [[String]]? { // AI written code
         var columns = rows[0].components(separatedBy: ",")
         
         // 横に長い時は転置する
-        // 縦に1つとか何も書かれていない時は多分落ちる
+        // 縦に1つとか何も書かれていない時は多分落ちる(fileImporterでエラーを出します)
         if rows.count < columns.count {
             (rows, columns) = (columns, rows)
         }

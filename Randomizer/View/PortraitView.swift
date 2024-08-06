@@ -58,7 +58,6 @@ struct PortraitView: View {
                             }
                         }
                         .fontSemiBold(size: 24)//フォントとあるがSF Symbolsだから
-                        //.disabled(randomStore.isButtonPressed)
                     }
                     Spacer()
                     VStack(){                                                               //上半分

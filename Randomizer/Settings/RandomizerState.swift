@@ -42,8 +42,11 @@ final class RandomizerState: ObservableObject{
     
     static let shared = RandomizerState() // 参考
     
-    init(){
-        loadHistory() // CoreDataのHistoryDataSeqからhistorySeqにロード(直接使わない)
+
+    init() {
+        //DispatchQueue.global(qos: .background).async { // 治らん
+            self.loadHistory()
+        //}
     }
     
     func randomNumberPicker(mode: Int, configStore: SettingsStore){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
@@ -140,7 +143,7 @@ final class RandomizerState: ObservableObject{
     }
 
     // 保存された履歴読み込み
-    private func loadHistory(){
+    func loadHistory(){
         let fetchRequest: NSFetchRequest<HistoryDataSeq> = HistoryDataSeq.fetchRequest()
         do {
             let items = try viewContext.fetch(fetchRequest)

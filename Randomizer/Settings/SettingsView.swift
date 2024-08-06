@@ -54,6 +54,7 @@ struct SettingsView: View { // will be called from ContentView
                         }
                     }
                 }
+                .background(Color(.systemGroupedBackground)) // なんでか真っ白になってた randomStore.init()のせい
                 .navigationTitle("Settings")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
