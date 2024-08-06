@@ -624,7 +624,7 @@
         }
       }
     },
-    "You can create CSV files in Excel or Numbers. Lists can be vertical or horizontal. Only the first column of the longer dimension will be used for display." : {
+    "You can create CSV files in Excel or Numbers. Lists can be vertical or horizontal. Only the 1st column of the longer dimension will be used for display." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {

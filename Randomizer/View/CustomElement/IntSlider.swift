@@ -47,12 +47,12 @@ struct IntSlider<Label>: View where Label: View {
     }
 }
 
-#Preview {
-    @State var refreshRate = 50
-    
-    return IntSlider(value: $refreshRate,
-                     in: 45...120,
-                     step: 5) {
-        Text("Refresh rate")
-    }.padding()
-}
+//#Preview {
+//    @State var refreshRate = 50
+//    
+//    return IntSlider(value: $refreshRate,
+//                     in: 45...120,
+//                     step: 5) {
+//        Text("Refresh rate")
+//    }.padding()
+//}
