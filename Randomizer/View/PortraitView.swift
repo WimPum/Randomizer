@@ -418,16 +418,16 @@ struct PortraitView: View {
                     }
                 }
                 showMessage = "press Start Over to apply changes" //違ったら戻す
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { // Nextを押すと変更されたことを通知できなかった
-                    if maxBoxValue != String(randomStore.maxBoxValueLock) || minBoxValue != String(randomStore.minBoxValueLock){
-                        showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
-                        withAnimation{
-                            showMessageOpacity = 0.6
-                        }
-                    }else{
-                        withAnimation{
-                            showMessageOpacity = 0.0
-                        }
+                
+                // Nextを押すと変更されたことを通知できなかった
+                if maxBoxValue != String(randomStore.maxBoxValueLock) || minBoxValue != String(randomStore.minBoxValueLock){
+                    showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
+                    withAnimation{
+                        showMessageOpacity = 0.6
+                    }
+                }else{
+                    withAnimation{
+                        showMessageOpacity = 0.0
                     }
                 }
             }
@@ -442,19 +442,16 @@ struct PortraitView: View {
         showCSVButtonAndName = true
         isInputMaxFocused = false
         isInputMinFocused = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            if maxBoxValue != String(randomStore.maxBoxValueLock) || minBoxValue != String(randomStore.minBoxValueLock){
-                showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
-                withAnimation{
-                    showMessageOpacity = 0.6
-                }
-            }else{
-                withAnimation{
-                    showMessageOpacity = 0.0
-                }
+        if maxBoxValue != String(randomStore.maxBoxValueLock) || minBoxValue != String(randomStore.minBoxValueLock){
+            showMessage = "press Start Over to apply changes" //絶対にStartOverと表示
+            withAnimation{
+                showMessageOpacity = 0.6
+            }
+        }else{
+            withAnimation{
+                showMessageOpacity = 0.0
             }
         }
-
     }
 }
 
