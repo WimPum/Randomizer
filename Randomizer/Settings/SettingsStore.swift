@@ -14,7 +14,7 @@ final class SettingsStore: ObservableObject{
     @AppStorage("rollingCountLimit") var rollingCountLimit: Int = 20  //数字は25個だけど最後の数字が答え
     @AppStorage("rollingSpeed") var rollingSpeed: Int = 4  //1から7まで
     @AppStorage("backgroundPicker") var backgroundPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
-    @AppStorage("configBgNumber") var configBgNumber: Int = 16 // hardcodingを避けたかったが仕方なし　シャッフルがデフォ
+    @AppStorage("configBgNumber") var configBgNumber: Int = 20 // hardcodingを避けたかったが仕方なし　シャッフルがデフォ
     @AppStorage("isFirstRunning") var isFirstRunning: Bool = true // 初回起動ですかt/f
     
     @Published var randomColorCombo: [Color] = [Color.blue, Color.purple]
@@ -26,12 +26,12 @@ final class SettingsStore: ObservableObject{
                    color: [Color(hex: "5d77b9")!, Color(hex: "fadb92")!]),
         ColorCombo(name: "Twilight",
                    color: [Color(hex: "4161b8")!, Color(hex: "e56f5e")!]),
+        ColorCombo(name: "Night",
+                   color: [Color(hex: "214c80")!, Color(hex: "b6a7ea")!]),
+        ColorCombo(name: "Aurora",
+                   color: [Color(hex: "7c1cbf")!, Color(hex: "5ecb92")!]),
         ColorCombo(name: "Fire",
                    color: [Color.red, Color.yellow]),
-        ColorCombo(name: "Miracle",
-                   color: [Color(hex: "eb426f")!, Color(hex: "4ce7d2")!]),
-        ColorCombo(name: "Dream",
-                   color: [Color(hex: "41c78e")!, Color(hex: "c670f7")!]),
         ColorCombo(name: "Summer",
                    color: [Color(hex: "ccdf83")!, Color(hex: "2cde83")!]),
         ColorCombo(name: "Winter",
@@ -40,14 +40,22 @@ final class SettingsStore: ObservableObject{
                    color: [Color(hex: "0645fc")!, Color(hex: "d2fafe")!]),
         ColorCombo(name: "Ocean",
                    color: [Color(hex: "60e5ca")!, Color(hex: "374ebf")!]),
+        ColorCombo(name: "Deep Ocean",
+                   color: [Color(hex: "1c6ac6")!, Color(hex: "171b5f")!]),
+        ColorCombo(name: "Beach",
+                   color: [Color(hex: "2ec29e")!, Color(hex: "f2d7a7")!]),
         ColorCombo(name: "Mountain",
                    color: [Color(hex: "f59067")!, Color(hex: "63d115")!]),
+        ColorCombo(name: "Teddy bear",
+                   color: [Color(hex: "b18f61")!, Color(hex: "f0ddb3")!]),
         ColorCombo(name: "Mint",
                    color: [Color(hex: "70efda")!, Color(hex: "0d6967")!]),
         ColorCombo(name: "Grape",
                    color: [Color.purple, Color.indigo]),
         ColorCombo(name: "Strawberry",
-                   color: [Color(hex: "de3c87")!, Color(hex: "fbe7ee")!]),
+                   color: [Color(hex: "ec2172")!, Color(hex: "fbd9e5")!]),
+        ColorCombo(name: "Nectar",
+                   color: [Color(hex: "f6ca46")!, Color(hex: "eb7766")!]),
         ColorCombo(name: "Green Tea",
                    color: [Color(hex: "2f9311")!, Color(hex: "e0f2e0")!]),
         ColorCombo(name: "Champagne",

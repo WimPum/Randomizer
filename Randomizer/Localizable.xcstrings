@@ -130,6 +130,17 @@
         }
       }
     },
+    "Aurora" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オーロラ"
+          }
+        }
+      }
+    },
     "Background color" : {
       "localizations" : {
         "en" : {
@@ -142,6 +153,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "背景色"
+          }
+        }
+      }
+    },
+    "Beach" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "浜辺"
           }
         }
       }
@@ -212,6 +234,17 @@
         }
       }
     },
+    "Deep Ocean" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "深海"
+          }
+        }
+      }
+    },
     "Default" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -241,23 +274,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完了"
-          }
-        }
-      }
-    },
-    "Dream" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dream"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "夢"
           }
         }
       }
@@ -508,23 +524,6 @@
         }
       }
     },
-    "Miracle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Miracle"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ミラクル"
-          }
-        }
-      }
-    },
     "MIT License" : {
       "localizations" : {
         "en" : {
@@ -558,6 +557,17 @@
         }
       }
     },
+    "Nectar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ネクター"
+          }
+        }
+      }
+    },
     "Next" : {
       "localizations" : {
         "en" : {
@@ -586,6 +596,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選ぶ"
+          }
+        }
+      }
+    },
+    "Night" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "夜"
           }
         }
       }
@@ -892,6 +913,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "夏"
+          }
+        }
+      }
+    },
+    "Teddy bear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テディベア"
           }
         }
       }
