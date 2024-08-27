@@ -35,6 +35,9 @@ struct ContentView: View {
             }
         }
         .onAppear{//起動時に一回だけ実行となる このContentViewしかないから
+            if configStore.configBgNumber > configStore.colorList.count-1{ // crash guard
+                configStore.configBgNumber = 20 // hardcoded
+            }
             configStore.giveRandomBgNumber()
             if let historySeq = randomStore.historySeq, !historySeq.isEmpty{
                 randomStore.drawCount = historySeq.count

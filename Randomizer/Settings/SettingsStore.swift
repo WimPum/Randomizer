@@ -11,8 +11,8 @@ final class SettingsStore: ObservableObject{
     @AppStorage("isHapticsOn") var isHapticsOn: Bool = true
     @AppStorage("isRollingOn") var isRollingOn: Bool = true
     @AppStorage("allowLandscapeNames") var allowLandscapeNames: Bool = true
-    @AppStorage("rollingCountLimit") var rollingCountLimit: Int = 20  //数字は25個だけど最後の数字が答え
-    @AppStorage("rollingSpeed") var rollingSpeed: Int = 4  //1から7まで
+    @AppStorage("rollingCountLimit") var rollingCountLimit: Int = 25  //数字は25個だけど最後の数字が答え
+    @AppStorage("rollingSpeed") var rollingSpeed: Int = 5  //1から10まで
     @AppStorage("backgroundPicker") var backgroundPicker: Int = 0    //今の背景の色設定用　設定画面ではいじれません
     @AppStorage("configBgNumber") var configBgNumber: Int = 20 // hardcodingを避けたかったが仕方なし　シャッフルがデフォ
     @AppStorage("isFirstRunning") var isFirstRunning: Bool = true // 初回起動ですかt/f
@@ -100,8 +100,8 @@ final class SettingsStore: ObservableObject{
     func resetSettings() {
         isHapticsOn = true
         isRollingOn = true
-        rollingCountLimit = 20
-        rollingSpeed = 4
+        rollingCountLimit = 25
+        rollingSpeed = 5
         allowLandscapeNames = true
         configBgNumber = colorList.count-2
         giveRandomBgNumber()

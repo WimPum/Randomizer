@@ -94,7 +94,7 @@ struct SettingsList: View{
                         Text("Animation speed: \(configStore.rollingSpeed)")
                         Spacer()
                     }
-                    IntSlider(value: $configStore.rollingSpeed, in: 1...7, step: 1)
+                    IntSlider(value: $configStore.rollingSpeed, in: 1...8, step: 1)
                         .onChange(of: configStore.rollingSpeed){ _ in
                             giveHaptics(impactType: "select", ifActivate: configStore.isHapticsOn)
                         }
