@@ -19,14 +19,14 @@ final class RandomizerState: ObservableObject{
     @Published var drawLimit: Int = 0       //何回まで引けるか
     @Published var realAnswer: Int = 0      //本当の答え
     
-    private var viewContext: NSManagedObjectContext { // これ何してるん
+    private var viewContext: NSManagedObjectContext {
         return DataController.shared.viewContext
     }
     
     // history&Shuffler
     @Published var historySeq: [Int]? = []      //履歴 ない時は0じゃなくてEmpty　これをCoreDataにする
     private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
-    @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//起動直後はこの0が表示されている
+    @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//履歴保存するんだから直そう
     @Published var rollListCounter: Int = 1     //ロールのリスト上を移動
     @Published var isTimerRunning: Bool = false
     @Published var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
@@ -36,17 +36,26 @@ final class RandomizerState: ObservableObject{
     let rollMaxSpeed: Double = 6
     
     // fileImporter
-    @Published var openedFileName = ""          //ファイル名表示用
-    @Published var isFileSelected: Bool = false
+    @AppStorage("openedFileName") var openedFileName = ""          //ファイル名表示用
+    @AppStorage("isFileSelected") var isFileSelected: Bool = false
     @Published var csvNameStore = [[String]]()  //名前を格納する
     
     static let shared = RandomizerState() // 参考
     
-
-    init() {
-        //DispatchQueue.global(qos: .background).async { // 治らん
-            self.loadHistory()
-        //}
+    init() { // ここで
+        self.loadHistory()
+        self.loadCsvNames()
+        
+        if let historySeq = historySeq, !historySeq.isEmpty{
+            drawCount = historySeq.count
+            rollDisplaySeq?[0] = historySeq[drawCount - 1]
+            print("current draw is \(drawCount)")
+            print("current drawSEQ: \(String(describing: rollDisplaySeq))")
+            print("NAMES is \(csvNameStore)")
+            
+        } else {
+            drawCount = 0
+        }
     }
     
     func randomNumberPicker(mode: Int, configStore: SettingsStore){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
@@ -96,8 +105,7 @@ final class RandomizerState: ObservableObject{
         }
     }
     
-    //タイマーに使用される関数
-    // startTimerからupdateを呼び、stopしてまたstartTimerを呼ぶというのは廃止されます
+    //MARK: TIMER タイマーに使用される関数
     func startTimer(configStore: SettingsStore) {
         isTimerRunning = true
         rollTimer = Timer.scheduledTimer(withTimeInterval: 1 / rollSpeed, repeats: true) { timer in
@@ -142,13 +150,14 @@ final class RandomizerState: ObservableObject{
         }
     }
 
+    //MARK: CoreDataHISTORY
     // 保存された履歴読み込み
     func loadHistory(){
         let fetchRequest: NSFetchRequest<HistoryDataSeq> = HistoryDataSeq.fetchRequest()
         do {
             let items = try viewContext.fetch(fetchRequest)
             if items.isEmpty {
-                print("Nyow items fuwund")
+                print("HISTORY: Nyow items fuwund")
                 historySeq = []
             } else {
                 historySeq = items.map { Int($0.value) }
@@ -190,6 +199,55 @@ final class RandomizerState: ObservableObject{
             try viewContext.execute(deleteRequest)
             try viewContext.save()
             historySeq = []
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    //MARK: CoreDataNAMES
+    // 保存された名前読み込み
+    // CSVの一列目だけを保存/読み込み
+    private func loadCsvNames(){
+        let fetchRequest: NSFetchRequest<CsvNamesSeq> = CsvNamesSeq.fetchRequest()
+        do {
+            let items = try viewContext.fetch(fetchRequest)
+            if items.isEmpty {
+                print("CSV: Nyow items fuwund")
+                csvNameStore = []
+            } else {
+                print(items)
+                let loadedCsvName = items.map { String($0.name!) }
+                csvNameStore.append(loadedCsvName)
+                print(csvNameStore)
+            }
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    // 一列目のみ保存
+    func saveCsvNames(csvNames: [[String]]){
+        let batchInsert = NSBatchInsertRequest(entity: CsvNamesSeq.entity(), objects: csvNames[0].map { ["name": String($0)] })
+        do {
+            print("IMCOMINGNOW")
+            try viewContext.execute(batchInsert)
+            try viewContext.save()
+        } catch {
+            print("Failed to batch insert history sequences: \(error.localizedDescription)")
+        }
+    }
+    
+    // 名前削除 外からも消します
+    func clearCsvNames(){
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CsvNamesSeq.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try viewContext.execute(deleteRequest)
+            try viewContext.save()
+            csvNameStore = [[String]]()
+            print("successfully cleared csv")
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

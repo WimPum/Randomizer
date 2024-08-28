@@ -52,7 +52,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DataController.swift,
-				historyDatas.xcdatamodeld,
+				RunDatas.xcdatamodeld,
 			);
 			target = B1FD99202B07881D00781D1D /* Randomizer */;
 		};

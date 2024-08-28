@@ -39,13 +39,6 @@ struct ContentView: View {
                 configStore.configBgNumber = 20 // hardcoded
             }
             configStore.giveRandomBgNumber()
-            if let historySeq = randomStore.historySeq, !historySeq.isEmpty{
-                randomStore.drawCount = historySeq.count
-                print("current draw is \(randomStore.drawCount)")
-                randomStore.rollDisplaySeq?[0] = historySeq[randomStore.drawCount - 1]
-            } else {
-                randomStore.drawCount = 0
-            }
         }
     }
 }

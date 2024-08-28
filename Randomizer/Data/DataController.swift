@@ -9,7 +9,7 @@ import CoreData
 
 class DataController: ObservableObject{
     static let shared = DataController()
-    let container = NSPersistentContainer(name: "historyDatas")
+    let container = NSPersistentContainer(name: "RunDatas") //
     init(){
         container.loadPersistentStores { description, error in
             if let error = error{
@@ -18,7 +18,7 @@ class DataController: ObservableObject{
         }
     }
     
-    var viewContext: NSManagedObjectContext { // これ何
+    var viewContext: NSManagedObjectContext {
         return container.viewContext
     }
 }

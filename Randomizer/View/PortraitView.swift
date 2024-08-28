@@ -293,33 +293,35 @@ struct PortraitView: View {
                     let fileURL: URL = try result.get().first!
                     self.openedFileLocation = fileURL//これでFullパス
                     if openedFileLocation.startAccessingSecurityScopedResource() {
-                        print("loading files:\(openedFileLocation)")
-                        if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら
-                            //MARK: 改善の余地大いにあり
-                            print(csvNames)
-                            print(csvNames[0].count)
-                            print(csvNames.count)
-                            if csvNames[0].count <= 1{
+                        print("loading csv from \(openedFileLocation)")
+                        if let csvNames = loadCSV(fileURL: openedFileLocation) {//loadCSVでロードできたら（転置済み）
+                            // fileLoading
+                            print("Importer: \(csvNames)")            // print all names
+                            print("Importer: \(csvNames[0].count)")   // 一列目==[0] 一列目しか表示しません
+                            if csvNames[0].count > 1{ // SUCCESS
+                                randomStore.clearCsvNames() // まずクリア
+                                randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
+                                randomStore.csvNameStore = csvNames
+                                randomStore.saveCsvNames(csvNames: csvNames) //store DOES THIS WORK??
+                                randomStore.isFileSelected = true
+                                buttonReset()
+                            }else{ // TOO SHORT 一つの時もmin==maxでエラー
                                 randomStore.isFileSelected = false
                                 print("ERROR list too SHORT!!")
                                 randomStore.openedFileName = ""//リセット
                                 randomStore.csvNameStore = [[String]]()//空
+                                randomStore.clearCsvNames()
                                 showMessage = "Error: List needs to have at least two items."
                                 withAnimation{
                                     showMessageOpacity = 0.6
                                 }
-                            }else{
-                                randomStore.openedFileName = openedFileLocation.lastPathComponent //名前だけ
-                                randomStore.csvNameStore = csvNames
-                                print(randomStore.csvNameStore)
-                                randomStore.isFileSelected = true
-                                buttonReset()
                             }
                         }else{
                             randomStore.isFileSelected = false
                             print("no files")
                             randomStore.openedFileName = ""//リセット
                             randomStore.csvNameStore = [[String]]()//空
+                            randomStore.clearCsvNames()
                             showMessage = "Error loading files. Please load files from local storage." // 改行できない😭
                             withAnimation{
                                 showMessageOpacity = 0.6
@@ -345,6 +347,7 @@ struct PortraitView: View {
             showMessageOpacity = 0.0
             showMessage = "press Start Over to apply changes"//変更するけど見えない
             randomStore.csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
+            randomStore.clearCsvNames()
         }
     }
     
