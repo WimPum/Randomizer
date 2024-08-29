@@ -53,7 +53,12 @@ final class RandomizerState: ObservableObject{
             print("current drawSEQ: \(String(describing: rollDisplaySeq))")
             print("NAMES is \(csvNameStore)")
             
-        } else {
+        } else if self.maxBoxValueLock != csvNameStore.count{ // if loading csv has failed
+            print("Sorry, but csv didn't load properly.")
+            drawCount = 0 // just in case. history shouln't be there tho
+            clearCsvNames()
+            isFileSelected = false
+        }else {
             drawCount = 0
         }
     }
@@ -214,6 +219,7 @@ final class RandomizerState: ObservableObject{
             let items = try viewContext.fetch(fetchRequest)
             if items.isEmpty {
                 print("CSV: Nyow items fuwund")
+                isFileSelected = false // DONT CRASH
                 csvNameStore = []
             } else {
                 print(items)

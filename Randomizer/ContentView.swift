@@ -38,6 +38,7 @@ struct ContentView: View {
             if configStore.configBgNumber > configStore.colorList.count-1{ // crash guard
                 configStore.configBgNumber = 20 // hardcoded
             }
+            // csvSaveの方もcrash guardつける
             configStore.giveRandomBgNumber()
         }
     }
