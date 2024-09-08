@@ -14,10 +14,10 @@ struct PortraitView: View {
     @State private var minBoxValue: String = "1"
     @State private var maxBoxValue: String = "50"
     @State private var showCSVButtonAndName: Bool = true // キーボード入力する時に1番上と名前表示する部分を隠す
-    @FocusState private var isInputMinFocused: Bool//キーボードOn/Off
-    @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
     @State private var showingAlert = false     //アラートは全部で2つ
     @State private var showingAlert2 = false    //数値を入力/StartOver押す指示
+    @FocusState private var isInputMinFocused: Bool//キーボードOn/Off
+    @FocusState private var isInputMaxFocused: Bool//キーボードOn/Off
     private let inputMaxLength: Int = 10                      //最大桁数
 
     //fileImporter
@@ -38,7 +38,8 @@ struct PortraitView: View {
     var body: some View {
         ZStack { //グラデとコンテンツを重ねるからZStack
             TabView(selection: $viewSelection){
-                VStack(){//１ページ目
+                //MARK: 1ページ目
+                VStack(){
                     Spacer().frame(height: 5)
                     if showCSVButtonAndName == true{ //キーボード出す時は隠してます
                         HStack(){
@@ -140,7 +141,10 @@ struct PortraitView: View {
                             }
                             Button(action: {
                                 print("button csvClear! pressed")
-                                fileReset()
+                                fileReset(message: "press Start Over to apply changes")
+                                withAnimation(){
+                                    showMessageOpacity = 0.0
+                                }
                             }){
                                 Text("clear names")
                                     .fontSemiBold(size: 18)
@@ -210,6 +214,7 @@ struct PortraitView: View {
                   Text("Main") }
                 .tag(1)
 
+                //MARK: 2ページ目
                 VStack(){
                     Spacer(minLength: 5)
                     Text("History")//リストを表示
@@ -247,7 +252,8 @@ struct PortraitView: View {
                 .tag(2)
             }
             .tabViewStyle(.page(indexDisplayMode: .never)) // https://stackoverflow.com/questions/68310455/
-            .onChange(of: viewSelection, perform: { _ in // 入力中にページが切り替わっても隠れた物は元に戻る
+            // 入力中にページが切り替わったらopen csvを元に戻す
+            .onChange(of: viewSelection, perform: { _ in
                 if viewSelection == 2{ // 1以外ないけど
                     showCSVButtonAndName = true
                     isInputMinFocused = false
@@ -259,9 +265,11 @@ struct PortraitView: View {
         .onAppear{//画面切り替わり時に実行となる
             initReset()
         }
+        //設定画面
         .sheet(isPresented: self.$isSettingsView){
             SettingsView(isPresentedLocal: self.$isSettingsView)
-        }//設定画面
+        }
+        //CSVヘルプ
         .sheet(isPresented: self.$isShowingCSVTutor){
             if #available(iOS 16, *){
                 HelpView(isPresented: self.$isShowingCSVTutor)
@@ -306,23 +314,16 @@ struct PortraitView: View {
                                 randomStore.isFileSelected = true
                                 buttonReset()
                             }else{ // TOO SHORT 一つの時もmin==maxでエラー
-                                randomStore.isFileSelected = false
                                 print("ERROR list too SHORT!!")
-                                randomStore.openedFileName = ""//リセット
-                                randomStore.csvNameStore = [[String]]()//空
-                                randomStore.clearCsvNames()
-                                showMessage = "Error: List needs to have at least two items."
+                                fileReset(message: "Error: List needs to have at least two items.")
                                 withAnimation{
                                     showMessageOpacity = 0.6
                                 }
                             }
                         }else{
-                            randomStore.isFileSelected = false
                             print("no files")
-                            randomStore.openedFileName = ""//リセット
-                            randomStore.csvNameStore = [[String]]()//空
-                            randomStore.clearCsvNames()
-                            showMessage = "Error loading files. Please load files from local storage." // 改行できない😭
+                            // Message改行できない😭
+                            fileReset(message: "Error loading files. Please load files from local storage.")
                             withAnimation{
                                 showMessageOpacity = 0.6
                             }
@@ -339,22 +340,19 @@ struct PortraitView: View {
         }
     }
     
-    func fileReset() {
-        withAnimation(){
-            print("cleared files")
-            randomStore.openedFileName = ""//リセット
-            randomStore.isFileSelected = false
-            showMessageOpacity = 0.0
-            showMessage = "press Start Over to apply changes"//変更するけど見えない
-            randomStore.csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
-            randomStore.clearCsvNames()
-        }
+    func fileReset(message: String) {
+        print("cleared files")
+        randomStore.isFileSelected = false
+        randomStore.openedFileName = ""//リセット
+        randomStore.csvNameStore = [[String]]()//空　isFileSelected の後じゃないと落ちる
+        randomStore.clearCsvNames()
+        showMessage = message//変更するけど見えない
     }
     
     func initReset() {//起動時に実行 No.0/表示: 0 実行中にこんなんやったらまずすぎ
         minBoxValue = String(randomStore.minBoxValueLock)//保存から復元
         maxBoxValue = String(randomStore.maxBoxValueLock)
-        randomStore.drawLimit = randomStore.maxBoxValueLock - randomStore.minBoxValueLock + 1
+
         if randomStore.isFileSelected == false{
             showMessage = "press Start Over to apply changes"
         } else {
@@ -368,12 +366,12 @@ struct PortraitView: View {
     
     func buttonReset() {
         guard !randomStore.isButtonPressed else { return } // isButtonPressed == trueなら帰る
+        showCSVButtonAndName = true
         randomStore.isButtonPressed = true // 同時押しブロッカー
         
-        showCSVButtonAndName = true
         //Reset固有
-        //randomStore.historySeq = []//リセットだから?????????????
         randomStore.clearHistory()
+        // ここはrndのpublishedな方を参照
         if (minBoxValue == "") { // 入力値が空だったら現在の値で復元
             minBoxValue = String(randomStore.minBoxValueLock)
         }
@@ -395,6 +393,7 @@ struct PortraitView: View {
             }
             showMessage = "press Start Over to apply changes" //違ったら戻す
         }
+        // ここをminMaxSave
         randomStore.minBoxValueLock = Int(minBoxValue)!
         randomStore.maxBoxValueLock = Int(maxBoxValue)!
         print("mmBoxVal: \(minBoxValue), \(maxBoxValue)")

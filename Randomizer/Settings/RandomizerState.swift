@@ -8,41 +8,44 @@
 import SwiftUI
 import CoreData
 
-// 横画面対応
-// 参考：https://useyourloaf.com/blog/swiftui-supporting-external-screens/
+// 参考：https://useyourloaf.com/blog/swiftui-supporting-external-screens/ aka inject it!
 
 final class RandomizerState: ObservableObject{
     // main
+    // AppStorageじゃなくする
     @AppStorage("minValue") var minBoxValueLock: Int = 1 // min->maxの順
     @AppStorage("maxValue") var maxBoxValueLock: Int = 50//Start Overを押すまでここにkeep
     @Published var drawCount: Int = 0       //今何回目か
     @Published var drawLimit: Int = 0       //何回まで引けるか
     @Published var realAnswer: Int = 0      //本当の答え
     
+    // CoreDataアクセス用
     private var viewContext: NSManagedObjectContext {
         return DataController.shared.viewContext
     }
     
     // history&Shuffler
-    @Published var historySeq: [Int]? = []      //履歴 ない時は0じゃなくてEmpty　これをCoreDataにする
-    private var remainderSeq: [Int] = [0]    //弾いていって残った数字 ロール用
-    @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字//履歴保存するんだから直そう
+    @Published var historySeq: [Int]? = []      //履歴 ない時は0じゃなくてEmpty
+    private var remainderSeq: [Int] = [0]       //弾いていって残った数字 ロール用
+    @Published var rollDisplaySeq: [Int]? = [0] //ロール表示用に使う数字
     @Published var rollListCounter: Int = 1     //ロールのリスト上を移動
     @Published var isTimerRunning: Bool = false
-    @Published var isButtonPressed: Bool = false//同時押しを無効にするDirtyHack
+    @Published var isButtonPressed: Bool = false//同時押しを無効にする
     var rollTimer: Timer?
-    var rollSpeed: Double = 25       //実際のスピードをコントロール 25はrollMaxSpeed
-    let rollMinSpeed: Double = 0.4//始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
+    var rollSpeed: Double = 25      //実際のスピードをコントロール 25はrollMaxSpeed
+    let rollMinSpeed: Double = 0.4  //始めは早く段々遅く　の設定 デフォルトは4倍にして使います。
     let rollMaxSpeed: Double = 6
     
     // fileImporter
+    // ここもAppStorageじゃなくしたい
     @AppStorage("openedFileName") var openedFileName = ""          //ファイル名表示用
     @AppStorage("isFileSelected") var isFileSelected: Bool = false
     @Published var csvNameStore = [[String]]()  //名前を格納する
     
     static let shared = RandomizerState() // 参考
     
-    init() { // ここで
+    // ここでCoreDataからデータを復元する(Persistent)
+    init() {
         self.loadHistory()
         self.loadCsvNames()
         
@@ -61,6 +64,8 @@ final class RandomizerState: ObservableObject{
         }else {
             drawCount = 0
         }
+        // 設定
+        drawLimit = maxBoxValueLock - minBoxValueLock + 1
     }
     
     func randomNumberPicker(mode: Int, configStore: SettingsStore){//アクションを一つにまとめた mode 1はNext, mode 2はリセット
