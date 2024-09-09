@@ -16,4 +16,4 @@ Supports loading CSV name list. Winner's name will be shown below the number.
 Only shows the number and hides controls. Works great when connected to a monitor.
 
 ## Future plans
-More efficient numberpicker
+Better code quality and maybe SessionManager(organizes multiple histories)
