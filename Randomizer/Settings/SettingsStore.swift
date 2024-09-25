@@ -105,7 +105,7 @@ final class SettingsStore: ObservableObject{
         allowLandscapeNames = true
         configBgNumber = colorList.count-2
         giveRandomBgNumber()
-        isFirstRunning = true
+        //isFirstRunning = true //permanent
     }
 }
 

@@ -27,6 +27,7 @@ struct AboutView: View {
             }
             Text("© 2024 Ulyssa").padding(1)
             Link("MIT License", destination: URL(string: "https://opensource.org/license/mit")!).padding(1)
+            Link("feedback", destination: URL(string: "https://forms.gle/aYxcCUKScGAzcp9Q6")!).padding(1)
             HStack{
                 Link("Website", destination: URL(string: "https://wimpum.github.io/Rndsite/")!).padding(1)
                 Link("View code on GitHub", destination: URL(string: "https://github.com/WimPum/Randomizer")!).padding(1)
