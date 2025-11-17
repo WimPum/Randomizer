@@ -1,0 +1,167 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.27059,0.49412,0.91765,1.00000",
+          "display-p3:0.61889,0.39848,1.00000,1.00000"
+        ],
+        "orientation" : {
+          "start" : {
+            "x" : 0.5,
+            "y" : 0
+          },
+          "stop" : {
+            "x" : 0.5,
+            "y" : 0.7
+          }
+        }
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.06522,0.12050,0.22537,1.00000",
+          "display-p3:0.39951,0.27442,0.63404,1.00000"
+        ],
+        "orientation" : {
+          "start" : {
+            "x" : 0.5,
+            "y" : 0
+          },
+          "stop" : {
+            "x" : 0.5,
+            "y" : 0.7
+          }
+        }
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "text1.png",
+          "name" : "text1",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              4,
+              -368.7021705498311
+            ]
+          }
+        },
+        {
+          "blend-mode" : "normal",
+          "fill" : "none",
+          "glass" : true,
+          "image-name" : "icono 2.png",
+          "name" : "icono 2",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              -0.33415643779972015
+            ]
+          }
+        },
+        {
+          "blend-mode" : "overlay",
+          "fill-specializations" : [
+            {
+              "value" : "none"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : "none"
+            }
+          ],
+          "glass-specializations" : [
+            {
+              "value" : true
+            },
+            {
+              "appearance" : "dark",
+              "value" : true
+            },
+            {
+              "appearance" : "tinted",
+              "value" : true
+            }
+          ],
+          "image-name" : "text3.png",
+          "name" : "text3",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -237.18193502312948,
+              332.4702920964038
+            ]
+          }
+        },
+        {
+          "blend-mode" : "overlay",
+          "fill-specializations" : [
+            {
+              "value" : "none"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : "none"
+            }
+          ],
+          "glass-specializations" : [
+            {
+              "value" : true
+            },
+            {
+              "appearance" : "dark",
+              "value" : true
+            },
+            {
+              "appearance" : "tinted",
+              "value" : true
+            }
+          ],
+          "image-name" : "text4.png",
+          "name" : "text4",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              237.18193502312954,
+              332.47029209640374
+            ]
+          }
+        },
+        {
+          "hidden" : true,
+          "image-name" : "icono.png",
+          "name" : "icono"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
